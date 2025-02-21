@@ -1,0 +1,100 @@
+---
+interface Props {
+  links?: { text: string; url: string }[];
+}
+
+const { 
+  links = [
+    { text: 'Inicio', url: '/' },
+    { text: 'Servicios', url: '/servicios' },
+    { text: 'Nosotros', url: '/nosotros' },
+    { text: 'Contacto', url: '/contacto' }
+  ]
+} = Astro.props;
+---
+
+<nav class="navbar">
+  <div class="navbar-brand">
+    <a href="/" class="logo">Logo</a>
+  </div>
+  
+  <div class="navbar-menu">
+    {links.map(link => (
+      <a href={link.url} class="nav-link">{link.text}</a>
+    ))}
+  </div>
+</nav>
+
+<style>
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    background: rgb(0, 0, 0); /* Cambiado de rgba(0, 0, 0, 0.3) a rgb(0, 0, 0) */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Añadido sombra sutil */
+    backdrop-filter: blur(10px);
+    z-index: 100;
+  }
+
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+  }
+
+  .logo {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .navbar-menu {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: white;
+    transition: width 0.3s ease;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .navbar {
+      padding: 0 1rem;
+    }
+
+    .navbar-menu {
+      gap: 1rem;
+    }
+
+    .nav-link {
+      font-size: 0.9rem;
+    }
+  }
+</style>

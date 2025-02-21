@@ -1,0 +1,80 @@
+---
+import Carousel from '../components/Carousel.astro';
+import Navbar from '../components/Navbar.astro';
+import Content from '../components/Content.astro';
+
+// Importa tus imágenes
+import imagen1 from '/public/Imagen1.webp';
+import imagen2 from '/public/Imagen2.webp';
+
+const slides = [
+  {
+    image: imagen1,
+    title: "Título 1",
+    description: "Descripción de la primera imagen"
+  },
+  {
+    image: imagen2,
+    title: "Título 2",
+    description: "Descripción de la segunda imagen"
+  },
+  {
+    image: imagen1,
+    title: "Título 3",
+    description: "Descripción de la tercera imagen"
+  },
+  {
+    image: imagen2,
+    title: "Título 4",
+    description: "Descripción de la cuarta imagen"
+  },
+  {
+    image: imagen1,
+    title: "Título 5",
+    description: "Descripción de la quinta imagen"
+  },
+  {
+    image: imagen2,
+    title: "Título 6",
+    description: "Descripción de la sexta imagen"
+  }
+];
+
+const menuLinks = [
+  { text: 'Inicio', url: '/' },
+  { text: 'Servicios', url: '/servicios' },
+  { text: 'Nosotros', url: '/nosotros' },
+  { text: 'Contacto', url: '/contacto' }
+];
+---
+
+<html>
+  <head>
+    <title>Carrusel de Imágenes</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <Navbar links={menuLinks} />
+    <Carousel 
+      slides={slides} 
+      interval={5000}
+      showArrows={true}
+      showDots={true}
+      showText={true}
+    />
+    <Content />
+  </body>
+</html>
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Cambiado de overflow: hidden para permitir scroll vertical */
+    background: #000;
+  }
+</style>

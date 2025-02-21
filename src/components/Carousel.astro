@@ -1,0 +1,391 @@
+---
+import { Image } from 'astro:assets';
+
+interface SlideData {
+  image: ImageMetadata;
+  title?: string;
+  description?: string;
+}
+
+interface Props {
+  slides: SlideData[];
+  interval?: number;
+  showArrows?: boolean;
+  showDots?: boolean;
+  showText?: boolean;
+}
+
+const { 
+  slides, 
+  interval = 5000, 
+  showArrows = true, 
+  showDots = true,
+  showText = true 
+} = Astro.props;
+---
+
+<div class="carousel-wrapper">
+  <div class="carousel-container" id="carousel">
+    <div class="carousel-track">
+      {slides.map((slide, index) => (
+        <div class="carousel-slide" data-index={index}>
+          <div class="slide-image">
+            <Image 
+              src={slide.image} 
+              alt={slide.description || `Slide ${index + 1}`}
+              width={1920}
+              height={1080}
+              quality={90}
+            />
+          </div>
+          {showText && slide.description && (
+            <div class="slide-content">
+              <p>{slide.description}</p>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+
+    {showArrows && (
+      <div class="carousel-arrows">
+        <button class="arrow prev" aria-label="Previous slide">
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
+        </button>
+        <button class="arrow next" aria-label="Next slide">
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
+          </svg>
+        </button>
+      </div>
+    )}
+
+    {showDots && (
+      <div class="carousel-dots">
+        {slides.map((_, index) => (
+          <button 
+            class="dot" 
+            data-index={index} 
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .carousel-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+
+  .carousel-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .carousel-track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+
+  .carousel-slide {
+    flex: 0 0 100%;
+    position: relative;
+    overflow: hidden;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+  }
+
+  .slide-image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .slide-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.1);
+    transition: transform 0.5s ease-out;
+    pointer-events: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+  }
+
+  .carousel-slide.active .slide-image img {
+    transform: scale(1);
+  }
+
+  .slide-content {
+    position: absolute;
+    bottom: 8%;  /* Cambiado de 15% a 8% para que esté más abajo en desktop */
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    color: white;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    z-index: 20;
+  }
+
+  .carousel-slide.active .slide-content {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .slide-content p {
+    margin: 0;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    max-width: 800px;
+    line-height: 1.5;
+    text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.8); /* Mejorada la sombra para mejor legibilidad */
+    padding: 1rem;
+  }
+
+  .carousel-arrows {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+    pointer-events: none;
+  }
+
+  .arrow {
+    width: 3rem;
+    height: 3rem;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    pointer-events: auto;
+  }
+
+  .arrow:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+  }
+
+  .arrow svg {
+    fill: currentColor;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .carousel-dots {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.5rem;
+    z-index: 10;
+  }
+
+  .dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 2px solid white;
+    border-radius: 50%;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .dot.active {
+    background: white;
+    transform: scale(1.2);
+  }
+
+  @media (max-width: 768px) {
+    .arrow {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    .carousel-arrows {
+      padding: 0 0.5rem;
+    }
+
+    .slide-content {
+      bottom: 5%; /* Mantenemos una posición más alta en móviles */
+      padding: 1rem;
+    }
+  }
+
+  @media (hover: none) {
+    .arrow {
+      display: none;
+    }
+  }
+</style>
+
+<script define:vars={{ interval }}>
+  function setupCarousel() {
+    const carousel = document.getElementById('carousel');
+    const track = carousel.querySelector('.carousel-track');
+    const slides = [...carousel.querySelectorAll('.carousel-slide')];
+    const dots = [...carousel.querySelectorAll('.dot')];
+    const prevBtn = carousel.querySelector('.arrow.prev');
+    const nextBtn = carousel.querySelector('.arrow.next');
+
+    let currentSlide = 0;
+    let isAutoPlaying = true;
+    let autoPlayTimer;
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    function updateSlidePosition() {
+      track.style.transform = `translateX(-${currentSlide * 100}%)`;
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+      });
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+      });
+    }
+
+    function moveToSlide(index) {
+      currentSlide = index;
+      if (currentSlide < 0) currentSlide = slides.length - 1;
+      if (currentSlide >= slides.length) currentSlide = 0;
+      updateSlidePosition();
+    }
+
+    function nextSlide() {
+      moveToSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      moveToSlide(currentSlide - 1);
+    }
+
+    function startAutoPlay() {
+      if (!isAutoPlaying) return;
+      autoPlayTimer = setInterval(nextSlide, interval);
+    }
+
+    function stopAutoPlay() {
+      clearInterval(autoPlayTimer);
+    }
+
+    function handleTouchStart(e) {
+      touchStartX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+    }
+
+    function handleTouchMove(e) {
+      if (!touchStartX) return;
+      e.preventDefault();
+      const x = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+      const diff = touchStartX - x;
+
+      if (Math.abs(diff) > 50) {
+        touchStartX = 0;
+        if (diff > 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+      }
+    }
+
+    function handleTouchEnd() {
+      touchStartX = 0;
+    }
+
+    // Event Listeners
+    if (prevBtn) prevBtn.addEventListener('click', () => {
+      stopAutoPlay();
+      prevSlide();
+      startAutoPlay();
+    });
+
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+      stopAutoPlay();
+      nextSlide();
+      startAutoPlay();
+    });
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        stopAutoPlay();
+        moveToSlide(index);
+        startAutoPlay();
+      });
+    });
+
+    carousel.addEventListener('mouseenter', stopAutoPlay);
+    carousel.addEventListener('mouseleave', startAutoPlay);
+
+    // Touch events
+    carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
+    carousel.addEventListener('touchmove', handleTouchMove, { passive: false });
+    carousel.addEventListener('touchend', handleTouchEnd);
+
+    // Mouse events for touch simulation
+    carousel.addEventListener('mousedown', handleTouchStart);
+    carousel.addEventListener('mousemove', handleTouchMove);
+    carousel.addEventListener('mouseup', handleTouchEnd);
+    carousel.addEventListener('mouseleave', handleTouchEnd);
+
+    // Prevenir el comportamiento predeterminado de arrastre
+    carousel.addEventListener('dragstart', (e) => e.preventDefault());
+    carousel.addEventListener('drop', (e) => e.preventDefault());
+    carousel.addEventListener('selectstart', (e) => e.preventDefault());
+
+    // Initialize
+    updateSlidePosition();
+    startAutoPlay();
+
+    // Cleanup on page leave
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopAutoPlay();
+      } else {
+        startAutoPlay();
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupCarousel);
+</script>

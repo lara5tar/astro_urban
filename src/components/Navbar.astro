@@ -40,13 +40,9 @@ const {
         justify-content: space-between;
         align-items: center;
         padding: 0 2rem;
-        background: rgb(
-            0,
-            0,
-            0
-        ); /* Cambiado de rgba(0, 0, 0, 0.3) a rgb(0, 0, 0) */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Añadido sombra sutil */
-        backdrop-filter: blur(10px);
+        background: transparent;
+        box-shadow: none; /* Eliminada la sombra */
+        backdrop-filter: none; /* Eliminado el efecto de desenfoque */
         z-index: 1000;
     }
 
@@ -57,12 +53,13 @@ const {
 
     .logo {
         color: white;
-        font-size: 1.5rem;
-        font-weight: 600;
+        font-size: 1.7rem; /* Aumentado de 1.5rem */
+        font-weight: 700; /* Aumentado de 600 */
         text-decoration: none;
         font-family: "Montserrat", sans-serif;
         transition: color 0.3s ease;
         cursor: pointer;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Añadido sombra de texto */
     }
 
     .logo:hover {
@@ -78,9 +75,11 @@ const {
         color: white;
         text-decoration: none;
         font-family: "Montserrat", sans-serif;
-        font-size: 1rem;
+        font-size: 1.1rem; /* Aumentado de 1rem */
+        font-weight: 600; /* Aumentado de 400 */
         transition: all 0.3s ease;
         position: relative;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Añadido sombra de texto */
     }
 
     .nav-link::after {
@@ -92,6 +91,7 @@ const {
         height: 2px;
         background: white;
         transition: width 0.3s ease;
+        box-shadow: 0 0 4px rgba(255, 255, 255, 0.5); /* Añadido brillo al subrayado */
     }
 
     .nav-link:hover::after {
@@ -108,7 +108,7 @@ const {
         }
 
         .nav-link {
-            font-size: 0.9rem;
+            font-size: 1rem; /* Aumentado de 0.9rem */
         }
     }
 </style>

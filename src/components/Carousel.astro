@@ -86,8 +86,7 @@ const {
   .carousel-wrapper {
     position: relative;
     width: 100%;
-    height: calc(100vh - 70px); /* Restamos la altura del navbar */
-    margin-top: 70px; /* Añadimos margen superior igual a la altura del navbar */
+    height: 100vh; /* Cambiar para ocupar toda la altura */
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
@@ -98,10 +97,8 @@ const {
   .carousel-container {
     position: relative;
     width: 100%;
-    height: calc(
-      100vh - 70px
-    ); /* Ajustado para considerar la altura del Navbar */
-    margin-top: 70px; /* Añadido para empezar después del Navbar */
+    height: 100%; /* Cambiar para ocupar toda la altura */
+    margin-top: 0; /* Eliminar el margen superior */
     overflow: hidden;
   }
 
@@ -249,6 +246,10 @@ const {
   }
 
   @media (max-width: 768px) {
+    .carousel-wrapper {
+      touch-action: pan-y pinch-zoom; /* Permitir scroll vertical */
+    }
+
     .arrow {
       width: 2.5rem;
       height: 2.5rem;
@@ -284,7 +285,11 @@ const {
     let isAutoPlaying = true;
     let autoPlayTimer;
     let touchStartX = 0;
+    let touchStartY = 0;
     let touchEndX = 0;
+    let touchEndY = 0;
+    let minSwipeDistance = 30; // Reducido para mejor respuesta
+    let isScrolling = false;
 
     function updateSlidePosition() {
       track.style.transform = `translateX(-${currentSlide * 100}%)`;
@@ -321,18 +326,33 @@ const {
     }
 
     function handleTouchStart(e) {
-      touchStartX = e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
+      const touch = e.type.includes("mouse") ? e : e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      isScrolling = false;
     }
 
     function handleTouchMove(e) {
       if (!touchStartX) return;
-      e.preventDefault();
-      const x = e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
-      const diff = touchStartX - x;
 
-      if (Math.abs(diff) > 50) {
+      const touch = e.type.includes("mouse") ? e : e.touches[0];
+      const diffX = touchStartX - touch.clientX;
+      const diffY = touchStartY - touch.clientY;
+
+      // Determinar si el usuario está intentando hacer scroll vertical
+      if (!isScrolling) {
+        isScrolling = Math.abs(diffY) > Math.abs(diffX);
+        if (isScrolling) return;
+      }
+
+      // Prevenir scroll solo si es un deslizamiento horizontal
+      if (!isScrolling) {
+        e.preventDefault();
+      }
+
+      if (Math.abs(diffX) > minSwipeDistance && !isScrolling) {
         touchStartX = 0;
-        if (diff > 0) {
+        if (diffX > 0) {
           nextSlide();
         } else {
           prevSlide();
@@ -342,6 +362,8 @@ const {
 
     function handleTouchEnd() {
       touchStartX = 0;
+      touchStartY = 0;
+      isScrolling = false;
     }
 
     // Event Listeners

@@ -40,9 +40,10 @@ const {
         justify-content: space-between;
         align-items: center;
         padding: 0 2rem;
-        background: transparent;
-        box-shadow: none; /* Eliminada la sombra */
-        backdrop-filter: none; /* Eliminado el efecto de desenfoque */
+        background: rgba(0, 0, 0, 0.15); /* Reducida la opacidad del fondo */
+        backdrop-filter: blur(4px); /* Reducido el blur de 8px a 4px */
+        -webkit-backdrop-filter: blur(4px); /* Para Safari */
+        /* border-bottom: 1px solid rgba(255, 255, 255, 0.1); Borde sutil */
         z-index: 1000;
     }
 

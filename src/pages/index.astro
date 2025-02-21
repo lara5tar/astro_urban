@@ -41,7 +41,7 @@ const slides = [
 ];
 
 const menuLinks = [
-  { text: "Portafolio", url: "/" },
+  { text: "Portafolio", url: "/portfolio" },
   { text: "Talleres", url: "/" },
   { text: "Contacto", url: "/" },
 ];
@@ -76,7 +76,15 @@ const menuLinks = [
   body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden; /* Cambiado de overflow: hidden para permitir scroll vertical */
+    overflow-x: hidden;
     background: #000;
+  }
+
+  :global(main) {
+    margin-top: 60px;
+  }
+
+  :global(.carousel-container) {
+    margin-top: 0;
   }
 </style>

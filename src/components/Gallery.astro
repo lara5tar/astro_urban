@@ -1,6 +1,8 @@
 ---
+import { Image } from "astro:assets";
+
 interface GalleryItem {
-    image: string;
+    image: ImageMetadata;
     title: string;
     category: string;
 }
@@ -16,7 +18,12 @@ const { items } = Astro.props;
     {
         items.map((item: GalleryItem) => (
             <div class="gallery-item">
-                <img src={item.image} alt={item.title} />
+                <Image
+                    src={item.image}
+                    alt={item.title}
+                    width={300}
+                    height={300}
+                />
                 <div class="overlay">
                     <h3>{item.title}</h3>
                     <p>{item.category}</p>

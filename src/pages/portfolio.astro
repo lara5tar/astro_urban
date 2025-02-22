@@ -2,6 +2,9 @@
 import Navbar from "../components/Navbar.astro";
 import Gallery from "../components/Gallery.astro";
 
+import imagen1 from "/public/Imagen1.webp";
+import imagen2 from "/public/Imagen2.webp";
+
 const menuLinks = [
     { text: "Portafolio", url: "/portfolio" },
     { text: "Talleres", url: "/" },
@@ -9,20 +12,20 @@ const menuLinks = [
 ];
 
 const galleryItems = [
-    { image: "/public/Imagen1.webp", title: "Proyecto 1", category: "Diseño" },
+    { image: imagen1, title: "Proyecto 1", category: "Diseño" },
     {
-        image: "/public/Imagen2.webp",
+        image: imagen2,
         title: "Proyecto 2",
         category: "Fotografía",
     },
-    { image: "/public/Imagen1.webp", title: "Proyecto 3", category: "Arte" },
-    { image: "/public/Imagen2.webp", title: "Proyecto 4", category: "Diseño" },
+    { image: imagen1, title: "Proyecto 3", category: "Arte" },
+    { image: imagen2, title: "Proyecto 4", category: "Diseño" },
     {
-        image: "/public/Imagen1.webp",
+        image: imagen1,
         title: "Proyecto 5",
         category: "Fotografía",
     },
-    { image: "/public/Imagen2.webp", title: "Proyecto 6", category: "Arte" },
+    { image: imagen2, title: "Proyecto 6", category: "Arte" },
 ];
 ---
 

@@ -1,10 +1,20 @@
 ---
+interface GalleryItem {
+    image: string;
+    title: string;
+    category: string;
+}
+
+interface Props {
+    items: GalleryItem[];
+}
+
 const { items } = Astro.props;
 ---
 
 <div class="gallery">
     {
-        items.map((item) => (
+        items.map((item: GalleryItem) => (
             <div class="gallery-item">
                 <img src={item.image} alt={item.title} />
                 <div class="overlay">

@@ -89,6 +89,8 @@ const {
     width: 100%;
     height: calc(100vh - 80px); /* Ajustado de 90px a 80px */
     margin-top: 80px; /* Ajustado de 90px a 80px */
+    height: calc(100vh - env(safe-area-inset-top) - 80px); /* Adjust height for safe area */
+    margin-top: calc(env(safe-area-inset-top) + 80px); /* Adjust margin for safe area */
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
@@ -274,6 +276,8 @@ const {
       min-height: calc(100vh - 80px);
       height: calc(100dvh - 80px); /* Usar viewport dinámico y restar navbar */
       min-height: calc(-webkit-fill-available - 80px); /* Para iOS */
+      height: calc(100vh - env(safe-area-inset-top) - 80px); /* Adjust height for safe area */
+      margin-top: calc(env(safe-area-inset-top) + 80px); /* Adjust margin for safe area */
     }
 
     .carousel-container {

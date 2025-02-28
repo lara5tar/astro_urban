@@ -15,7 +15,18 @@ const {
 
 <nav class="navbar">
     <div class="navbar-brand">
-        <a href="/" class="logo">Logo</a>
+        <a href="/" class="logo">
+            <img
+                src="/public/icons/logo_web.svg"
+                alt="Logo Desktop"
+                class="logo-web"
+            />
+            <img
+                src="/public/icons/logo_movil.svg"
+                alt="Logo Mobile"
+                class="logo-mobile"
+            />
+        </a>
     </div>
 
     <div class="navbar-menu">
@@ -30,26 +41,47 @@ const {
 </nav>
 
 <style>
+    @import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
+
     .navbar {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
-        height: 70px;
+        height: 80px; /* Reducido de 90px a 80px */
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 0 2rem;
-        background: rgba(0, 0, 0, 0.15); /* Reducida la opacidad del fondo */
-        backdrop-filter: blur(4px); /* Reducido el blur de 8px a 4px */
-        -webkit-backdrop-filter: blur(4px); /* Para Safari */
-        /* border-bottom: 1px solid rgba(255, 255, 255, 0.1); Borde sutil */
+        background: #000000; /* Cambiado a negro sólido */
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
         z-index: 1000;
     }
 
     .navbar-brand {
         display: flex;
         align-items: center;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        font-family: "Lato", sans-serif;
+    }
+
+    .logo img {
+        height: 45px; /* Reducido de 50px a 45px */
+        width: auto;
+        object-fit: contain;
+    }
+
+    .logo-mobile {
+        display: none;
+    }
+
+    .logo-web {
+        display: block;
     }
 
     .logo {
@@ -76,11 +108,12 @@ const {
         color: white;
         text-decoration: none;
         font-family: "Montserrat", sans-serif;
-        font-size: 1.1rem; /* Aumentado de 1rem */
-        font-weight: 600; /* Aumentado de 400 */
+        font-size: 0.9rem; /* Reducido de 1.1rem a 0.9rem */
+        font-weight: 400;
+        letter-spacing: 0.2em; /* Added letter spacing */
         transition: all 0.3s ease;
         position: relative;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Añadido sombra de texto */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     .nav-link::after {
@@ -109,7 +142,16 @@ const {
         }
 
         .nav-link {
-            font-size: 1rem; /* Aumentado de 0.9rem */
+            font-size: 0.8rem; /* Reducido de 1rem a 0.8rem para móvil */
+        }
+
+        .logo-web {
+            display: none;
+        }
+
+        .logo-mobile {
+            display: block;
+            height: 35px; /* Reducido de 40px a 35px */
         }
     }
 </style>

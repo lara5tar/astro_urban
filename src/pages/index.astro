@@ -1,49 +1,58 @@
 ---
 import Carousel from "../components/Carousel.astro";
 import Navbar from "../components/Navbar.astro";
+import HeroWithImage from "../components/HeroWithImage.astro";
+
+import imagen1 from "/public/carousel/Imagen1.webp";
+import imagen2 from "/public/carousel/Imagen2.webp";
+import imagen3 from "/public/carousel/Imagen3.webp";
 import Content from "../components/Content.astro";
 
 // Importa tus imágenes
-import imagen1 from "/public/Imagen1.webp";
-import imagen2 from "/public/Imagen2.webp";
+import imagen4 from "/public/carousel/Imagen4.webp";
+import imagen5 from "/public/carousel/Imagen5.webp";
+import imagen6 from "/public/carousel/Imagen6.webp";
+
+import iconUrban from "/public/icons/icon_urban.svg";
 
 const slides = [
   {
     image: imagen1,
     title: "Título 1",
-    description: "Descripción de la primera imagen",
+    description: "Construya a su gusto y ahorre un 25% con nosotros",
   },
   {
     image: imagen2,
     title: "Título 2",
-    description: "Descripción de la segunda imagen",
+    description: "Contrato de obra y garantía por escrito",
   },
   {
-    image: imagen1,
+    image: imagen3,
     title: "Título 3",
-    description: "Descripción de la tercera imagen",
+    description: "Arquitectura de vanguardia, efiencia y sustentable",
   },
   {
-    image: imagen2,
+    image: imagen4,
     title: "Título 4",
-    description: "Descripción de la cuarta imagen",
+    description: "Servicio profesional en pintura y impermeabilización",
   },
   {
-    image: imagen1,
+    image: imagen5,
     title: "Título 5",
-    description: "Descripción de la quinta imagen",
+    description:
+      "Talleres de acabados finos: Carpintería, Cancelería y Herrería",
   },
   {
-    image: imagen2,
+    image: imagen6,
     title: "Título 6",
-    description: "Descripción de la sexta imagen",
+    description: "Arquitectura y Construccion a la medida de su presupuesto",
   },
 ];
 
 const menuLinks = [
-  { text: "Portafolio", url: "/portfolio" },
-  { text: "Talleres", url: "/" },
-  { text: "Contacto", url: "/" },
+  { text: "PORTAFOLIO", url: "/portfolio" },
+  { text: "TALLERES", url: "/" },
+  { text: "CONTACTO", url: "/" },
 ];
 ---
 
@@ -58,6 +67,14 @@ const menuLinks = [
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <Navbar links={menuLinks} />
@@ -68,7 +85,21 @@ const menuLinks = [
       showDots={true}
       showText={true}
     />
-    <Content />
+    <HeroWithImage
+      title="NOSOTROS"
+      imageSrc="/public/icons/icon_urban.svg"
+      imagePosition="right"
+      height="550px"
+    >
+      <p>
+        Somos un despacho de <strong
+          >Arquitectura y Construcción Residencial</strong
+        >, con más de <strong>25 años de experiencia</strong> en el mercado, nos
+        enfocamos en desarrollar <strong>espcios a la medida</strong> con la más
+        <strong>alta calidad</strong>. Nuestra sede se ubica en Santiago de
+        Querétaro, con cobertura nacional.
+      </p>
+    </HeroWithImage>
   </body>
 </html>
 
@@ -80,9 +111,77 @@ const menuLinks = [
     background: #000;
   }
 
-  /* Eliminar los márgenes globales */
-  :global(main),
-  :global(.carousel-container) {
-    margin-top: 0;
+  .content-wrapper {
+    background-color: white;
+    padding: 120px 20px 120px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .background-icon {
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    transform: translateY(-50%);
+    width: 600px;
+    height: 600px;
+    background-image: url("/icons/icon_urban.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    opacity: 0.1;
+    z-index: 1;
+  }
+
+  .content-container {
+    position: relative;
+    z-index: 2;
+  }
+
+  .title-section {
+    text-align: center;
+  }
+
+  .title-section h1 {
+    color: #2e8d80;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: clamp(60px, 9vw, 140px);
+    margin: 0;
+    padding: 0;
+    filter: drop-shadow(4px 4px 4px rgba(114, 114, 114, 0.95));
+  }
+
+  .description-section {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .description-section p {
+    color: #000000;
+    font-family: "Lato", sans-serif;
+    font-size: clamp(20px, 2vw, 26px);
+    font-weight: 300;
+    line-height: 1.6;
+    text-align: center;
+    margin: 0;
+  }
+
+  .description-section strong {
+    font-weight: 700;
+  }
+
+  /* @media (max-width: 768px) {
+    .content-wrapper {
+      padding: 20px 2rem 20px;
+    }
+  } */
+
+  @media (max-width: 768px) {
+    .background-icon {
+      width: 400px;
+      height: 400px;
+      right: -10%;
+    }
   }
 </style>

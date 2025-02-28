@@ -30,13 +30,14 @@ const {
       {
         slides.map((slide, index) => (
           <div class="carousel-slide" data-index={index}>
-            <div class="slide-image">
+            <div class="slide-image fade-in">
               <Image
                 src={slide.image}
                 alt={slide.description || `Slide ${index + 1}`}
-                width={1920}
-                height={1080}
-                quality={90}
+                width={2400} 
+                height={1350} 
+                quality={100} 
+                format="webp"
               />
             </div>
             {showText && slide.description && (
@@ -86,8 +87,8 @@ const {
   .carousel-wrapper {
     position: relative;
     width: 100%;
-    height: 100vh; /* Altura inicial para desktop */
-    height: 100dvh; /* Altura dinámica del viewport (para navegadores que lo soporten) */
+    height: calc(100vh - 80px); /* Ajustado de 90px a 80px */
+    margin-top: 80px; /* Ajustado de 90px a 80px */
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
@@ -125,24 +126,39 @@ const {
   .slide-image {
     width: 100%;
     height: 100%;
+    opacity: 0;
+    animation: fadeIn 1s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(1.1);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
   .slide-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transform: scale(1.1);
     transition: transform 0.5s ease-out;
     pointer-events: none;
+    image-rendering: -webkit-optimize-contrast; // Mejora la nitidez en webkit
+    image-rendering: crisp-edges; // Mejora la nitidez en general
     -webkit-user-drag: none;
     -khtml-user-drag: none;
     -moz-user-drag: none;
     -o-user-drag: none;
     user-drag: none;
+    transform: none; /* Removemos el scale inicial */
   }
 
   .carousel-slide.active .slide-image img {
-    transform: scale(1);
+    transform: none; /* Ajustamos la transformación */
   }
 
   .slide-content {
@@ -171,14 +187,14 @@ const {
 
   .slide-content p {
     margin: 0;
-    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    font-size: clamp(1.5rem, 3vw, 2.2rem); /* Aumentado de 1.2rem, 2.5vw, 1.8rem */
     font-family: "Montserrat", sans-serif;
     font-weight: 500;
     letter-spacing: 0.02em;
-    max-width: 800px;
-    line-height: 1.5;
+    max-width: 1000px; /* Aumentado de 800px para dar más espacio al texto más grande */
+    line-height: 1.4;
     text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.8); /* Mejorada la sombra para mejor legibilidad */
-    padding: 1rem;
+    padding: 1.5rem; /* Aumentado de 1rem */
   }
 
   .carousel-arrows {
@@ -249,10 +265,15 @@ const {
   @media (max-width: 768px) {
     .carousel-wrapper {
       touch-action: pan-y pinch-zoom; /* Permitir scroll vertical */
+      height: calc(100vh - 80px); /* Ajustado de 90px a 80px */
+      margin-top: 80px; /* Ajustado de 90px a 80px */
       height: 100vh; /* Fallback */
       height: -webkit-fill-available; /* Para iOS */
       height: 100dvh; /* Viewport dinámico */
       min-height: -webkit-fill-available; /* Asegura altura mínima en iOS */
+      min-height: calc(100vh - 80px);
+      height: calc(100dvh - 80px); /* Usar viewport dinámico y restar navbar */
+      min-height: calc(-webkit-fill-available - 80px); /* Para iOS */
     }
 
     .carousel-container {
@@ -271,6 +292,11 @@ const {
     .slide-content {
       bottom: 5%; /* Mantenemos una posición más alta en móviles */
       padding: 1rem;
+    }
+
+    .slide-content p {
+      font-size: clamp(1.3rem, 2.8vw, 2rem); /* Ajustado para móvil */
+      padding: 1.2rem;
     }
   }
 
@@ -437,7 +463,7 @@ const {
   function handleResize() {
     const carousel = document.querySelector(".carousel-wrapper");
     if (carousel) {
-      carousel.style.height = `${window.innerHeight}px`;
+      carousel.style.height = `calc(${window.innerHeight}px - 80px)`; // Ajustar para el navbar
     }
   }
 

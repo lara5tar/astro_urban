@@ -1,0 +1,139 @@
+---
+// components/HeroWithImage.astro
+const {
+    title,
+    imageSrc,
+    imagePosition = "center",
+    height = "400px",
+} = Astro.props;
+---
+
+<section class="hero-section" style={`min-height: ${height};`}>
+    <div class="content-container">
+        <div class="title-section"><h1>{title}</h1></div>
+        <div class="description-section"><slot /></div>
+    </div>
+
+    <div class={`image-container ${imagePosition}`}>
+        <img src={imageSrc} alt="Background" class="background-image" />
+    </div>
+</section>
+
+<style>
+    /* Importar fuentes */
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
+
+    :root {
+        --font-title: "Poppins", sans-serif;
+        --font-body: "Lato", sans-serif;
+        --color-primary: #2e8d80;
+        --color-text: #000000;
+    }
+
+    .hero-section {
+        background-color: white;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .content-container {
+        position: relative;
+        z-index: 2;
+        /* max-width: 600px; */
+        /* padding: 2rem; */
+        text-align: center;
+    }
+
+    .image-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        display: flex;
+    }
+
+    .image-container.left {
+        justify-content: flex-start;
+    }
+
+    .image-container.right {
+        justify-content: flex-end;
+    }
+
+    .image-container.center {
+        justify-content: center;
+    }
+
+    .background-image {
+        height: 100%;
+        width: auto;
+        object-fit: contain;
+        opacity: 0.8;
+    }
+
+    .title-section {
+        text-align: center;
+    }
+
+    .title-section h1 {
+        color: var(--color-primary);
+        font-family: var(--font-title);
+        font-weight: 500;
+        font-size: clamp(60px, 10vw, 140px);
+        margin: 0;
+        padding: 0;
+        filter: drop-shadow(4px 4px 4px rgba(114, 114, 114, 0.95));
+        /* background-color: #2e8d80; */
+        line-height: 1; /* Reduce el espacio vertical del título */
+        margin-bottom: -0.1em; /* Compensa el espacio residual */
+    }
+
+    .description-section {
+        max-width: 900px;
+        margin: 0 auto;
+        color: var(--color-text);
+        font-family: var(--font-body);
+        font-size: clamp(22px, 2vw, 28px);
+        font-weight: 300;
+        line-height: 1.6;
+        text-align: center;
+        margin: 0;
+        margin-top: -1.5rem;
+        margin-bottom: -1rem;
+    }
+
+    .description-section p {
+        color: var(--color-text);
+        font-family: var(--font-body);
+        font-size: clamp(20px, 2vw, 26px);
+        font-weight: 300;
+        line-height: 1.6;
+        text-align: center;
+        margin: 0;
+    }
+
+    .description-section strong {
+        font-weight: 700;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .hero-section {
+            min-height: calc(
+                var(--min-height, 300px)
+            ); /* Fallback para móviles */
+        }
+
+        .background-image {
+            width: 100%;
+            height: auto;
+        }
+    }
+</style>

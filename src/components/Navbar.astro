@@ -1,14 +1,17 @@
 ---
+import { Image } from "astro:assets";
+import logoWeb from "/public/icons/logo_web.svg";
+import logoMovil from "/public/icons/logo_movil.svg";
+
 interface Props {
     links?: { text: string; url: string }[];
 }
 
 const {
     links = [
-        { text: "Inicio", url: "/" },
-        { text: "Servicios", url: "/" },
-        { text: "Nosotros", url: "/" },
-        { text: "Contacto", url: "/" },
+        { text: "PORTAFOLIO", url: "/portfolio" },
+        { text: "TALLERES", url: "/" },
+        { text: "CONTACTO", url: "/" },
     ],
 } = Astro.props;
 ---
@@ -16,16 +19,8 @@ const {
 <nav class="navbar">
     <div class="navbar-brand">
         <a href="/" class="logo">
-            <img
-                src="../public/icons/logo_web.svg"
-                alt="Logo Desktop"
-                class="logo-web"
-            />
-            <img
-                src="../public/icons/logo_movil.svg"
-                alt="Logo Mobile"
-                class="logo-mobile"
-            />
+            <Image src={logoWeb} alt="Logo Desktop" class="logo-web" />
+            <Image src={logoMovil} alt="Logo Mobile" class="logo-mobile" />
         </a>
     </div>
 
@@ -135,6 +130,12 @@ const {
     @media (max-width: 768px) {
         .navbar {
             padding: 0 1rem;
+            height: calc(
+                80px + env(safe-area-inset-top)
+            ); /* Adjust height for safe area */
+            padding-top: env(
+                safe-area-inset-top
+            ); /* Add padding for safe area */
         }
 
         .navbar-menu {

@@ -1,134 +1,143 @@
 ---
-// components/HeroWithImage.astro
+import { Image } from "astro:assets";
+
+interface Props {
+    title: string;
+    imageSrc: ImageMetadata;
+    imagePosition?: "left" | "center" | "right";
+    height?: string;
+}
+
 const {
     title,
     imageSrc,
     imagePosition = "center",
     height = "400px",
-} = Astro.props;
+} = Astro.props as Props;
 ---
 
-<section class="hero-section" style={`min-height: ${height};`}>
+<section
+    class="hero-section"
+    style={`--section-height: ${height};`}
+    aria-labelledby="hero-title"
+>
     <div class="content-container">
-        <div class="title-section"><h1>{title}</h1></div>
-        <div class="description-section"><slot /></div>
+        <div class="title-section">
+            <h1 id="hero-title">{title}</h1>
+        </div>
+        <div class="description-section" role="contentinfo">
+            <slot />
+        </div>
     </div>
 
-    <div class={`image-container ${imagePosition}`}>
-        <img src={imageSrc} alt="Background" class="background-image" />
+    <div class={`image-container image-position-${imagePosition}`}>
+        <Image
+            src={imageSrc}
+            alt="Background decoration"
+            class="background-image"
+            aria-hidden="true"
+        />
     </div>
 </section>
 
 <style>
-    /* Importar fuentes */
-    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap");
-    @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
-
+    /* Variables CSS */
     :root {
         --font-title: "Poppins", sans-serif;
         --font-body: "Lato", sans-serif;
         --color-primary: #2e8d80;
         --color-text: #000000;
+        --color-background: #ffffff;
+        --spacing-base: 1rem;
+        --title-shadow: 4px 4px 4px rgba(114, 114, 114, 0.95);
     }
 
+    /* Layout */
     .hero-section {
-        background-color: white;
+        background-color: var(--color-background);
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
         width: 100%;
+        min-height: var(--section-height);
     }
 
     .content-container {
         position: relative;
         z-index: 2;
-        /* max-width: 600px; */
-        /* padding: 2rem; */
+        width: min(100%, 1200px);
+        /* margin-inline: auto; */
         text-align: center;
+        /* padding-block: calc(var(--spacing-base) * 2); */
+        /* background-color: red; */
     }
 
+    /* Imagen de fondo */
     .image-container {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        inset: 0;
         z-index: 1;
         display: flex;
     }
 
-    .image-container.left {
+    .image-position-left {
         justify-content: flex-start;
     }
-
-    .image-container.right {
-        justify-content: flex-end;
-    }
-
-    .image-container.center {
+    .image-position-center {
         justify-content: center;
+    }
+    .image-position-right {
+        justify-content: flex-end;
     }
 
     .background-image {
         height: 100%;
         width: auto;
         object-fit: contain;
-        opacity: 0.8;
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+        /* background-color: red; */
     }
 
-    .title-section {
-        text-align: center;
-    }
-
+    /* Tipografía */
     .title-section h1 {
         color: var(--color-primary);
         font-family: var(--font-title);
         font-weight: 500;
-        font-size: clamp(60px, 10vw, 140px);
+        font-size: clamp(3.75rem, 10vw, 8.75rem);
+        line-height: 1.1;
         margin: 0;
-        padding: 0;
-        filter: drop-shadow(4px 4px 4px rgba(114, 114, 114, 0.95));
-        /* background-color: #2e8d80; */
-        line-height: 1; /* Reduce el espacio vertical del título */
-        margin-bottom: -0.1em; /* Compensa el espacio residual */
+        filter: drop-shadow(var(--title-shadow));
+        /* background-color: blue; */
     }
 
     .description-section {
-        max-width: 900px;
-        margin: 0 auto;
-        color: var(--color-text);
-        font-family: var(--font-body);
-        font-size: clamp(22px, 2vw, 28px);
-        font-weight: 300;
-        line-height: 1.6;
-        text-align: center;
-        margin: 0;
-        margin-top: -1.5rem;
-        margin-bottom: -1rem;
+        max-width: 90ch;
+        margin-inline: auto;
+        padding-inline: var(--spacing-base);
     }
 
-    .description-section p {
+    .description-section :global(p) {
         color: var(--color-text);
         font-family: var(--font-body);
-        font-size: clamp(20px, 2vw, 26px);
+        font-size: clamp(1.25rem, 2vw, 1.625rem);
         font-weight: 300;
         line-height: 1.6;
-        text-align: center;
+        /* margin-block: calc(var(--spacing-base) * 1.5); */
+        /* background-color: green; */
         margin: 0;
     }
 
-    .description-section strong {
+    .description-section :global(strong) {
         font-weight: 700;
     }
 
-    /* Responsive design */
+    /* Media queries */
     @media (max-width: 768px) {
-        .hero-section {
-            min-height: calc(
-                var(--min-height, 300px)
-            ); /* Fallback para móviles */
+        .content-container {
+            padding-inline: calc(var(--spacing-base) * 0.5);
         }
 
         .background-image {

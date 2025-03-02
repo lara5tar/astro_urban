@@ -5,12 +5,6 @@ import Gallery from "../components/Gallery.astro";
 import imagen1 from "/public/carousel/Imagen1.webp";
 import imagen2 from "/public/carousel/Imagen2.webp";
 
-const menuLinks = [
-    { text: "Portafolio", url: "/portfolio" },
-    { text: "Talleres", url: "/" },
-    { text: "Contacto", url: "/" },
-];
-
 const galleryItems = [
     { image: imagen1, title: "Proyecto 1", category: "Diseño" },
     {
@@ -42,7 +36,7 @@ const galleryItems = [
         />
     </head>
     <body>
-        <Navbar links={menuLinks} />
+        <Navbar />
         <main>
             <h1>Portafolio</h1>
             <Gallery items={galleryItems} />

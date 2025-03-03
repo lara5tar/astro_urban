@@ -31,28 +31,34 @@ const {
       {
         slides.map((slide, index) => (
           <div class="carousel-slide" data-index={index}>
-            <div class="slide-image fade-in">
-              {/* Desktop image - hidden on mobile */}
+            <div class={`slide-image fade-in ${index === 0 ? "first-slide" : ""}`}>
+              {/* Desktop image with optimizations for first slide */}
               <Image
                 src={slide.image}
                 alt={slide.description || `Slide ${index + 1}`}
                 width={2400} 
                 height={1350} 
-                quality={100} 
+                quality={index === 0 ? 100 : 90} 
                 format="webp"
                 class="desktop-image"
+                loading={index === 0 ? "eager" : "lazy"}
+                decoding={index === 0 ? "sync" : "async"}
+                fetchpriority={index === 0 ? "high" : "auto"}
               />
               
-              {/* Mobile image - hidden on desktop */}
+              {/* Mobile image with optimizations for first slide */}
               {slide.mobileImage && (
                 <Image
                   src={slide.mobileImage}
                   alt={slide.description || `Slide ${index + 1}`}
                   width={750}
                   height={1200}
-                  quality={90}
+                  quality={index === 0 ? 100 : 90}
                   format="webp"
                   class="mobile-image"
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding={index === 0 ? "sync" : "async"}
+                  fetchpriority={index === 0 ? "high" : "auto"}
                 />
               )}
             </div>
@@ -352,6 +358,12 @@ const {
       display: none;
     }
   }
+
+  /* Special optimization for first slide */
+  .first-slide img {
+    /* Make first slide load immediately without animation delay */
+    animation-duration: 0.3s !important;
+  }
 </style>
 
 <script define:vars={{ interval }}>
@@ -506,47 +518,68 @@ const {
     });
   }
 
-  // Improved resize handler for mobile viewport adjustments
-  function handleResize() {
+  // Modified resize handler that only sets height once
+  function handleInitialSize() {
     const carousel = document.querySelector(".carousel-wrapper");
     if (!carousel) return;
     
-    const windowHeight = window.innerHeight;
-    const navbarHeight = 80;
+    // Wait a moment to ensure browser UI is settled
+    setTimeout(() => {
+      const windowHeight = window.innerHeight;
+      const navbarHeight = 80;
+      
+      // Get the address bar height by looking at the difference between visual viewport and window
+      const visualViewport = window.visualViewport || { height: windowHeight };
+      const addressBarHeight = Math.max(0, windowHeight - visualViewport.height);
+      
+      // Apply the calculated height and store it
+      const calculatedHeight = windowHeight - navbarHeight - addressBarHeight;
+      carousel.style.height = `${calculatedHeight}px`;
+      
+      // Store the height as a data attribute for reference
+      carousel.dataset.fixedHeight = calculatedHeight;
+      
+      console.log(`Set fixed height: ${calculatedHeight}px (Viewport: ${windowHeight}, Nav: ${navbarHeight}, Address bar: ${addressBarHeight})`);
+      
+      // Remove dynamic height handling after initial setup
+      removeResizeListeners();
+    }, 300); // Wait a bit longer to make sure the browser UI is settled
+  }
+  
+  function removeResizeListeners() {
+    // Remove all the event listeners that would cause resizing
+    if (window.visualViewport) {
+      window.visualViewport.removeEventListener('resize', handleInitialSize);
+      window.visualViewport.removeEventListener('scroll', handleInitialSize);
+    }
     
-    // Get the address bar height by looking at the difference between visual viewport and window
-    const visualViewport = window.visualViewport || { height: windowHeight };
-    const addressBarHeight = Math.max(0, windowHeight - visualViewport.height);
+    window.removeEventListener("resize", handleInitialSize);
+    window.removeEventListener("scroll", handleInitialSize);
     
-    // Apply the calculated height
-    const calculatedHeight = windowHeight - navbarHeight - addressBarHeight;
-    carousel.style.height = `${calculatedHeight}px`;
-    
-    console.log(`Viewport height: ${windowHeight}, Nav: ${navbarHeight}, Address bar: ${addressBarHeight}`);
+    // Keep only orientation change listener with a one-time adjustment
+    window.removeEventListener("orientationchange", handleOrientationChange);
+    window.addEventListener("orientationchange", handleOrientationChange, { once: true });
+  }
+  
+  function handleOrientationChange() {
+    // Only recalculate height when orientation changes
+    setTimeout(handleInitialSize, 500);
   }
 
-  // Run immediately and set up listeners
-  handleResize();
+  // Execute once on load
+  window.addEventListener("load", handleInitialSize);
   
-  // Use visualViewport API if available for more accurate updates
+  // Set up initial event listeners, these will be removed after first calculation
   if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', handleResize);
-    window.visualViewport.addEventListener('scroll', handleResize);
+    window.visualViewport.addEventListener('resize', handleInitialSize, { once: true });
   }
   
-  // Fallback to window events
-  window.addEventListener("load", handleResize);
-  window.addEventListener("resize", handleResize);
-  window.addEventListener("scroll", handleResize);
-  window.addEventListener("orientationchange", () => {
-    // Some browsers need a delay after orientation change
-    setTimeout(handleResize, 100);
-    // Some need an even longer delay
-    setTimeout(handleResize, 500);
-  });
-
-  document.addEventListener("DOMContentLoaded", () => {
+  // Need these for initial calculation, will be removed later
+  window.addEventListener("DOMContentLoaded", () => {
     setupCarousel();
-    handleResize(); // Run again after DOM is ready
+    handleInitialSize(); // Set height after DOM is ready
   });
+  
+  // Handle orientation change, but only allow one resize after change
+  window.addEventListener("orientationchange", handleOrientationChange);
 </script>

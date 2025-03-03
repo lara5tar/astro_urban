@@ -3,6 +3,7 @@ import "../tailwind.css";
 import Carousel from "../components/Carousel.astro";
 import Navbar from "../components/Navbar.astro";
 import HeroWithImage from "../components/HeroWithImage.astro";
+import CriticalStyles from "../components/CriticalStyles.astro";
 
 import imagen1 from "/public/carousel/web/Imagen1.webp";
 import imagen2 from "/public/carousel/web/Imagen2.webp";
@@ -66,20 +67,54 @@ const slides = [
     <title>Carrusel de Imágenes</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Critical CSS for performance -->
+    <CriticalStyles />
+
+    <!-- Preload critical carousel images -->
+    <link
+      rel="preload"
+      href={slides[0].image.src}
+      as="image"
+      type="image/webp"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      href={slides[0].mobileImage.src}
+      as="image"
+      type="image/webp"
+      fetchpriority="high"
+      media="(max-width: 512px)"
+    />
+
+    <!-- Optimized font loading strategy -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Preload critical fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+
+    <!-- Non-blocking font loading -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@500;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap"
-      rel="stylesheet"
-    />
+
+    <!-- Fallback for browsers that don't support JS -->
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@500;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
   </head>
   <body>
     <div class="fixed top-0 left-0 w-full z-50">
@@ -177,12 +212,6 @@ const slides = [
   .description-section strong {
     font-weight: 700;
   }
-
-  /* @media (max-width: 768px) {
-    .content-wrapper {
-      padding: 20px 2rem 20px;
-    }
-  } */
 
   @media (max-width: 768px) {
     .background-icon {

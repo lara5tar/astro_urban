@@ -103,10 +103,9 @@ const {
   .carousel-wrapper {
     position: relative;
     width: 100%;
-    height: calc(100vh - 80px); /* Ajustado de 90px a 80px */
-    margin-top: 80px; /* Ajustado de 90px a 80px */
-    height: calc(100vh - env(safe-area-inset-top) - 80px); /* Adjust height for safe area */
-    margin-top: calc(env(safe-area-inset-top) + 80px); /* Adjust margin for safe area */
+    /* Desktop styles */
+    height: calc(100vh - 80px);
+    margin-top: 80px;
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
@@ -309,22 +308,11 @@ const {
   /* Changed from 768px to 512px for mobile breakpoint */
   @media (max-width: 512px) {
     .carousel-wrapper {
-      touch-action: pan-y pinch-zoom; /* Permitir scroll vertical */
-      height: calc(100vh - 80px - env(safe-area-inset-top)); /* Account for navbar and safe area */
+      touch-action: pan-y pinch-zoom;
+      /* Remove duplicate and conflicting height properties */
+      height: auto; /* Allow height to be set by JS */
       margin-top: 80px;
-      min-height: calc(100vh - 80px - 60px); /* Fallback - 60px accounts for address bar */
-      height: calc(100dvh - 80px); /* Use dynamic viewport height units which account for browser UI */
-      height: calc(100vh - 80px);
-      margin-top: 80px;
-      height: 100vh; /* Fallback */
-      height: -webkit-fill-available; /* Para iOS */
-      height: 100dvh; /* Viewport dinámico */
-      min-height: -webkit-fill-available; /* Asegura altura mínima en iOS */
-      min-height: calc(100vh - 80px);
-      height: calc(100dvh - 80px); /* Usar viewport dinámico y restar navbar */
-      min-height: calc(-webkit-fill-available - 80px); /* Para iOS */
-      height: calc(100vh - env(safe-area-inset-top) - 80px); /* Adjust height for safe area */
-      margin-top: calc(env(safe-area-inset-top) + 80px); /* Adjust margin for safe area */
+      /* These fixed heights are removed, will be handled by JS */
     }
 
     .carousel-container {
@@ -518,34 +506,47 @@ const {
     });
   }
 
-  // Añadir manejo de resize para viewport móvil
+  // Improved resize handler for mobile viewport adjustments
   function handleResize() {
     const carousel = document.querySelector(".carousel-wrapper");
-    if (carousel) {
-      // Calculate the actual visible height
-      const windowHeight = window.innerHeight;
-      const navbarHeight = 80; // Height of your navbar
-      
-      // On iOS the window.innerHeight changes when the address bar shows/hides
-      // This helps adjust the height dynamically
-      carousel.style.height = `${windowHeight - navbarHeight}px`;
-      
-      // Add a bit of delay to recalculate after orientation changes
-      setTimeout(() => {
-        const updatedWindowHeight = window.innerHeight;
-        carousel.style.height = `${updatedWindowHeight - navbarHeight}px`;
-      }, 100);
-    }
+    if (!carousel) return;
+    
+    const windowHeight = window.innerHeight;
+    const navbarHeight = 80;
+    
+    // Get the address bar height by looking at the difference between visual viewport and window
+    const visualViewport = window.visualViewport || { height: windowHeight };
+    const addressBarHeight = Math.max(0, windowHeight - visualViewport.height);
+    
+    // Apply the calculated height
+    const calculatedHeight = windowHeight - navbarHeight - addressBarHeight;
+    carousel.style.height = `${calculatedHeight}px`;
+    
+    console.log(`Viewport height: ${windowHeight}, Nav: ${navbarHeight}, Address bar: ${addressBarHeight}`);
   }
 
-  // Ejecutar al cargar y en resize
+  // Run immediately and set up listeners
+  handleResize();
+  
+  // Use visualViewport API if available for more accurate updates
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', handleResize);
+    window.visualViewport.addEventListener('scroll', handleResize);
+  }
+  
+  // Fallback to window events
   window.addEventListener("load", handleResize);
   window.addEventListener("resize", handleResize);
   window.addEventListener("scroll", handleResize);
   window.addEventListener("orientationchange", () => {
-    // Wait for orientation change to complete
-    setTimeout(handleResize, 300);
+    // Some browsers need a delay after orientation change
+    setTimeout(handleResize, 100);
+    // Some need an even longer delay
+    setTimeout(handleResize, 500);
   });
 
-  document.addEventListener("DOMContentLoaded", setupCarousel);
+  document.addEventListener("DOMContentLoaded", () => {
+    setupCarousel();
+    handleResize(); // Run again after DOM is ready
+  });
 </script>

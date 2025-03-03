@@ -25,7 +25,7 @@ const {
 } = Astro.props;
 ---
 
-<div class="carousel-wrapper">
+<div class="carousel-wrapper fade-in-animation">
   <div class="carousel-container" id="carousel">
     <div class="carousel-track">
       {
@@ -104,6 +104,24 @@ const {
 </div>
 
 <style>
+  /* Animation keyframes */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-animation {
+    opacity: 0;
+    animation: fadeIn 1.2s ease-out forwards;
+    animation-delay: 0.2s; /* Slight delay for better effect */
+  }
+
   .carousel-wrapper {
     position: relative;
     width: 100%;
@@ -352,6 +370,9 @@ const {
         slide.classList.toggle("active", index === currentIndex);
       });
 
+      // Add animation to active slide
+      animateActiveSlide();
+
       // Update dots
       dots.forEach((dot, index) => {
         dot.classList.toggle("active", index === currentIndex);
@@ -421,5 +442,16 @@ const {
     window.addEventListener("orientationchange", () => {
       setTimeout(setCarouselHeight, 300);
     });
+
+    // Additional animation for slides
+    function animateActiveSlide() {
+      slides.forEach((slide, index) => {
+        if (index === currentIndex) {
+          slide.classList.add("slide-animation");
+        } else {
+          slide.classList.remove("slide-animation");
+        }
+      });
+    }
   });
 </script>

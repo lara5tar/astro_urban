@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 
 interface SlideData {
   image: ImageMetadata;
-  mobileImage?: ImageMetadata; // Added mobileImage property
+  mobileImage?: ImageMetadata;
   title?: string;
   description?: string;
 }
@@ -30,16 +30,14 @@ const {
     <div class="carousel-track">
       {
         slides.map((slide, index) => (
-          <div class="carousel-slide" data-index={index} class:list={{"active": index === 0}}>
-            <div class="slide-image fade-in">
+          <div class="carousel-slide" data-index={index}>
+            <div class="slide-image">
               {/* Desktop image - hidden on mobile */}
               <Image
                 src={slide.image}
                 alt={slide.description || `Slide ${index + 1}`}
                 width={2400}
                 height={1500}
-                sizes="(max-width: 600px) 375px, 750px"
-
                 format="webp"
                 class="desktop-image"
                 loading={index === 0 ? "eager" : "lazy"}
@@ -47,16 +45,13 @@ const {
                 fetchpriority={index === 0 ? "high" : "auto"}
               />
 
-              
-              {/* Mobile image with optimizations for first slide */}
+              {/* Mobile image */}
               {slide.mobileImage && (
                 <Image
                   src={slide.mobileImage}
                   alt={slide.description || `Slide ${index + 1}`}
                   width={750}
                   height={1200}
-                  sizes="(max-width: 600px) 375px, 750px"
-   
                   format="webp"
                   class="mobile-image"
                   loading={index === 0 ? "eager" : "lazy"}
@@ -112,22 +107,15 @@ const {
   .carousel-wrapper {
     position: relative;
     width: 100%;
-    /* Desktop styles */
     height: calc(100vh - 80px);
     margin-top: 80px;
     overflow: hidden;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    contain: paint layout;
   }
 
   .carousel-container {
     position: relative;
     width: 100%;
-    height: 100%; /* Cambiar para ocupar toda la altura */
-    margin-top: 0; /* Eliminar el margen superior */
+    height: 100%;
     overflow: hidden;
   }
 
@@ -135,97 +123,48 @@ const {
     display: flex;
     width: 100%;
     height: 100%;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
+    transition: transform 0.5s ease;
   }
 
   .carousel-slide {
     flex: 0 0 100%;
     position: relative;
     overflow: hidden;
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
-    user-drag: none;
   }
 
   .slide-image {
     width: 100%;
     height: 100%;
-    opacity: 0;
-    animation: fadeIn 0.8s ease-out forwards;
-    contain: layout paint;
-    will-change: opacity, transform;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: scale(1.05);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
   }
 
   .slide-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease-out;
-    pointer-events: none;
-    image-rendering: -webkit-optimize-contrast; // Mejora la nitidez en webkit
-    image-rendering: crisp-edges; // Mejora la nitidez en general
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
-    user-drag: none;
-    transform: none; /* Removemos el scale inicial */
-    will-change: transform;
-  }
-
-  .carousel-slide.active .slide-image {
-    opacity: 1;
-    transform: none;
   }
 
   .slide-content {
     position: absolute;
-    bottom: 8%; /* Cambiado de 15% a 8% para que esté más abajo en desktop */
+    bottom: 8%;
     left: 0;
     right: 0;
     padding: 2rem;
     color: white;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    font-family: "Montserrat", sans-serif;
     text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-    z-index: 20;
-  }
-
-  .carousel-slide.active .slide-content {
-    opacity: 1;
-    transform: translateY(0);
+    z-index: 10;
   }
 
   .slide-content p {
     margin: 0;
-    font-size: clamp(1.5rem, 3vw, 2.2rem); /* Aumentado de 1.2rem, 2.5vw, 1.8rem */
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
     font-family: "Montserrat", sans-serif;
     font-weight: 500;
     letter-spacing: 0.02em;
-    max-width: 1000px; /* Aumentado de 800px para dar más espacio al texto más grande */
+    max-width: 1000px;
     line-height: 1.4;
-    text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.8); /* Mejorada la sombra para mejor legibilidad */
-    padding: 1.5rem; /* Aumentado de 1rem */
+    text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.8);
+    padding: 1.5rem;
+    margin: 0 auto;
   }
 
   .carousel-arrows {
@@ -267,20 +206,19 @@ const {
     height: 1.5rem;
   }
 
-  /* Dot styling - increased size */
   .carousel-dots {
     position: absolute;
     bottom: 1.5rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 0.75rem; /* Increased gap between dots */
+    gap: 0.75rem;
     z-index: 10;
   }
 
   .dot {
-    width: 1rem;       /* Increased from 0.75rem to 1rem */
-    height: 1rem;      /* Increased from 0.75rem to 1rem */
+    width: 1rem;
+    height: 1rem;
     border: 2px solid white;
     border-radius: 50%;
     padding: 0;
@@ -291,52 +229,30 @@ const {
 
   .dot.active {
     background: white;
-    transform: scale(1.3); /* Slightly increased the active state scale */
+    transform: scale(1.2);
   }
 
   .desktop-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease-out;
-    pointer-events: none;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    -webkit-user-drag: none;
-    user-drag: none;
   }
 
   .mobile-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease-out;
-    pointer-events: none;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    -webkit-user-drag: none;
-    user-drag: none;
     display: none;
   }
 
-  /* Preload first slide images for both desktop and mobile */
-  .carousel-slide:first-child .desktop-image,
-  .carousel-slide:first-child .mobile-image {
-    content-visibility: auto;
-  }
-  
-  /* Changed from 768px to 512px for mobile breakpoint */
+  /* Mobile styles */
   @media (max-width: 512px) {
-    .carousel-wrapper {
-      touch-action: pan-y pinch-zoom;
-      /* Remove duplicate and conflicting height properties */
-      height: auto; /* Allow height to be set by JS */
-      margin-top: 80px;
-      /* These fixed heights are removed, will be handled by JS */
+    .desktop-image {
+      display: none;
     }
 
-    .carousel-container {
-      height: 100%;
+    .mobile-image {
+      display: block;
     }
 
     .arrow {
@@ -344,26 +260,9 @@ const {
       height: 2.5rem;
     }
 
-    .carousel-arrows {
-      padding: 0 0.5rem;
-    }
-
-    .slide-content {
-      bottom: 5%; /* Mantenemos una posición más alta en móviles */
-      padding: 1rem;
-    }
-
     .slide-content p {
-      font-size: clamp(1.3rem, 2.8vw, 2rem); /* Ajustado para móvil */
+      font-size: clamp(1.3rem, 2.8vw, 2rem);
       padding: 1.2rem;
-    }
-
-    .desktop-image {
-      display: none;
-    }
-
-    .mobile-image {
-      display: block;
     }
   }
 
@@ -372,285 +271,155 @@ const {
       display: none;
     }
   }
-
-  /* Special optimization for first slide */
-  .first-slide img {
-    /* Make first slide load immediately without animation delay */
-    animation-duration: 0.3s !important;
-  }
 </style>
 
 <script define:vars={{ interval }}>
-  function setupCarousel() {
+  document.addEventListener("DOMContentLoaded", function () {
     const carousel = document.getElementById("carousel");
+    if (!carousel) return;
+
     const track = carousel.querySelector(".carousel-track");
-    const slides = [...carousel.querySelectorAll(".carousel-slide")];
-    const dots = [...carousel.querySelectorAll(".dot")];
+    const slides = Array.from(carousel.querySelectorAll(".carousel-slide"));
+    const dots = Array.from(carousel.querySelectorAll(".dot"));
     const prevBtn = carousel.querySelector(".arrow.prev");
     const nextBtn = carousel.querySelector(".arrow.next");
 
-    let currentSlide = 0;
-    let isAutoPlaying = true;
-    let autoPlayTimer;
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchEndX = 0;
-    let touchEndY = 0;
-    let minSwipeDistance = 30; // Reducido para mejor respuesta
-    let isScrolling = false;
+    if (!track || slides.length === 0) return;
 
-    function updateSlidePosition() {
-      track.style.transform = `translateX(-${currentSlide * 100}%)`;
-      slides.forEach((slide, index) => {
-        slide.classList.toggle("active", index === currentSlide);
-        
-        // Preload the next image for smoother transitions
-        if (index === currentSlide + 1 || (currentSlide === slides.length - 1 && index === 0)) {
-          const slideImages = slide.querySelectorAll('img');
-          slideImages.forEach(img => {
-            if (img.hasAttribute('loading')) {
-              img.loading = 'eager';
-            }
-          });
-        }
-      });
-      dots.forEach((dot, index) => {
-        dot.classList.toggle("active", index === currentSlide);
-      });
-    }
+    let currentIndex = 0;
+    let autoplayTimer = null;
 
-    function moveToSlide(index) {
-      currentSlide = index;
-      if (currentSlide < 0) currentSlide = slides.length - 1;
-      if (currentSlide >= slides.length) currentSlide = 0;
-      updateSlidePosition();
-    }
+    // Set initial state
+    updateCarousel();
+    startAutoplay();
 
-    function nextSlide() {
-      moveToSlide(currentSlide + 1);
-    }
-
-    function prevSlide() {
-      moveToSlide(currentSlide - 1);
-    }
-
-    function startAutoPlay() {
-      if (!isAutoPlaying) return;
-      autoPlayTimer = setInterval(nextSlide, interval);
-    }
-
-    function stopAutoPlay() {
-      clearInterval(autoPlayTimer);
-    }
-
-    function handleTouchStart(e) {
-      const touch = e.type.includes("mouse") ? e : e.touches[0];
-      touchStartX = touch.clientX;
-      touchStartY = touch.clientY;
-      isScrolling = false;
-    }
-
-    function handleTouchMove(e) {
-      if (!touchStartX) return;
-
-      const touch = e.type.includes("mouse") ? e : e.touches[0];
-      const diffX = touchStartX - touch.clientX;
-      const diffY = touchStartY - touch.clientY;
-
-      // Determinar si el usuario está intentando hacer scroll vertical
-      if (!isScrolling) {
-        isScrolling = Math.abs(diffY) > Math.abs(diffX);
-        if (isScrolling) return;
-      }
-
-      // Prevenir scroll solo si es un deslizamiento horizontal
-      if (!isScrolling) {
-        e.preventDefault();
-      }
-
-      if (Math.abs(diffX) > minSwipeDistance && !isScrolling) {
-        touchStartX = 0;
-        if (diffX > 0) {
-          nextSlide();
-        } else {
-          prevSlide();
-        }
-      }
-    }
-
-    function handleTouchEnd() {
-      touchStartX = 0;
-      touchStartY = 0;
-      isScrolling = false;
-    }
-
-    // Event Listeners
-    if (prevBtn)
+    // Event listeners
+    if (prevBtn) {
       prevBtn.addEventListener("click", () => {
-        stopAutoPlay();
-        prevSlide();
-        startAutoPlay();
+        navigate("prev");
       });
+    }
 
-    if (nextBtn)
+    if (nextBtn) {
       nextBtn.addEventListener("click", () => {
-        stopAutoPlay();
-        nextSlide();
-        startAutoPlay();
+        navigate("next");
       });
+    }
 
     dots.forEach((dot, index) => {
       dot.addEventListener("click", () => {
-        stopAutoPlay();
-        moveToSlide(index);
-        startAutoPlay();
+        goToSlide(index);
       });
     });
 
-    carousel.addEventListener("mouseenter", stopAutoPlay);
-    carousel.addEventListener("mouseleave", startAutoPlay);
+    // Touch support
+    let touchStartX = 0;
+    let touchEndX = 0;
 
-    // Touch events
-    carousel.addEventListener("touchstart", handleTouchStart, {
-      passive: true,
-    });
-    carousel.addEventListener("touchmove", handleTouchMove, { passive: false });
-    carousel.addEventListener("touchend", handleTouchEnd);
+    carousel.addEventListener(
+      "touchstart",
+      (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      },
+      { passive: true },
+    );
 
-    // Mouse events for touch simulation
-    carousel.addEventListener("mousedown", handleTouchStart);
-    carousel.addEventListener("mousemove", handleTouchMove);
-    carousel.addEventListener("mouseup", handleTouchEnd);
-    carousel.addEventListener("mouseleave", handleTouchEnd);
+    carousel.addEventListener(
+      "touchend",
+      (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      },
+      { passive: true },
+    );
 
-    // Prevenir el comportamiento predeterminado de arrastre
-    carousel.addEventListener("dragstart", (e) => e.preventDefault());
-    carousel.addEventListener("drop", (e) => e.preventDefault());
-    carousel.addEventListener("selectstart", (e) => e.preventDefault());
-
-    // Initialize with first slide active
-    slides[0].classList.add("active");
-    dots[0].classList.add("active");
-    
-    // Explicitly mark the first slide's images as high priority
-    const firstSlideImages = slides[0].querySelectorAll('img');
-    firstSlideImages.forEach(img => {
-      if (img.hasAttribute('fetchpriority')) {
-        img.fetchpriority = 'high';
-      }
-      if (img.hasAttribute('loading')) {
-        img.loading = 'eager';
-      }
-      if (img.hasAttribute('decoding')) {
-        img.decoding = 'sync';
-      }
-    });
-    
-    updateSlidePosition();
-    startAutoPlay();
-
-    // Cleanup on page leave
+    // Handle visibility change for better performance
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
-        stopAutoPlay();
+        stopAutoplay();
       } else {
-        startAutoPlay();
+        startAutoplay();
       }
     });
-  }
 
-  // Modified resize handler that only sets height once
-  function handleInitialSize() {
-    const carousel = document.querySelector(".carousel-wrapper");
-    if (!carousel) return;
-    
-    // Wait a moment to ensure browser UI is settled
-    setTimeout(() => {
-      const windowHeight = window.innerHeight;
-      const navbarHeight = 80;
-      
-      // Get the address bar height by looking at the difference between visual viewport and window
-      const visualViewport = window.visualViewport || { height: windowHeight };
-      const addressBarHeight = Math.max(0, windowHeight - visualViewport.height);
-      
-      // Apply the calculated height and store it
-      const calculatedHeight = windowHeight - navbarHeight - addressBarHeight;
-      carousel.style.height = `${calculatedHeight}px`;
-      
-      // Store the height as a data attribute for reference
-      carousel.dataset.fixedHeight = calculatedHeight;
-      
-      console.log(`Set fixed height: ${calculatedHeight}px (Viewport: ${windowHeight}, Nav: ${navbarHeight}, Address bar: ${addressBarHeight})`);
-      
-      // Remove dynamic height handling after initial setup
-      removeResizeListeners();
-    }, 300); // Wait a bit longer to make sure the browser UI is settled
-  }
-  
-  function removeResizeListeners() {
-    // Remove all the event listeners that would cause resizing
-    if (window.visualViewport) {
-      window.visualViewport.removeEventListener('resize', handleInitialSize);
-      window.visualViewport.removeEventListener('scroll', handleInitialSize);
+    // Functions
+    function updateCarousel() {
+      // Update slide positions
+      track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+      // Update active slide class
+      slides.forEach((slide, index) => {
+        slide.classList.toggle("active", index === currentIndex);
+      });
+
+      // Update dots
+      dots.forEach((dot, index) => {
+        dot.classList.toggle("active", index === currentIndex);
+      });
     }
-    
-    window.removeEventListener("resize", handleInitialSize);
-    window.removeEventListener("scroll", handleInitialSize);
-    
-    // Keep only orientation change listener with a one-time adjustment
-    window.removeEventListener("orientationchange", handleOrientationChange);
-    window.addEventListener("orientationchange", handleOrientationChange, { once: true });
-  }
-  
-  function handleOrientationChange() {
-    // Only recalculate height when orientation changes
-    setTimeout(handleInitialSize, 500);
-  }
 
-  // Execute once on load
-  window.addEventListener("load", handleInitialSize);
-  
-  // Set up initial event listeners, these will be removed after first calculation
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', handleInitialSize, { once: true });
-  }
-  
-  // Fallback to window events
-  window.addEventListener("load", handleResize);
-  window.addEventListener("resize", handleResize);
-  window.addEventListener("scroll", handleResize);
-  window.addEventListener("orientationchange", () => {
-    // Some browsers need a delay after orientation change
-    setTimeout(handleResize, 100);
-    // Some need an even longer delay
-    setTimeout(handleResize, 500);
-  });
+    function goToSlide(index) {
+      stopAutoplay();
+      currentIndex = index;
+      if (currentIndex < 0) currentIndex = slides.length - 1;
+      if (currentIndex >= slides.length) currentIndex = 0;
+      updateCarousel();
+      startAutoplay();
+    }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    // Trigger faster first LCP by preloading main carousel image
-    const preloadFirstImage = () => {
-      const firstSlide = document.querySelector('.carousel-slide[data-index="0"]');
-      if (firstSlide) {
-        const isMobile = window.innerWidth <= 512;
-        const imgSelector = isMobile ? '.mobile-image' : '.desktop-image';
-        const img = firstSlide.querySelector(imgSelector);
-        
-        if (img && img.src) {
-          const preload = document.createElement('link');
-          preload.rel = 'preload';
-          preload.as = 'image';
-          preload.href = img.src;
-          preload.fetchpriority = 'high';
-          document.head.appendChild(preload);
-        }
+    function navigate(direction) {
+      stopAutoplay();
+      if (direction === "next") {
+        currentIndex++;
+        if (currentIndex >= slides.length) currentIndex = 0;
+      } else {
+        currentIndex--;
+        if (currentIndex < 0) currentIndex = slides.length - 1;
       }
-    };
-    
-    preloadFirstImage();
-    setupCarousel();
-    handleInitialSize(); // Set height after DOM is ready
+      updateCarousel();
+      startAutoplay();
+    }
+
+    function startAutoplay() {
+      stopAutoplay();
+      autoplayTimer = setInterval(() => {
+        navigate("next");
+      }, interval);
+    }
+
+    function stopAutoplay() {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    }
+
+    function handleSwipe() {
+      const threshold = 100;
+      if (touchEndX < touchStartX - threshold) {
+        // Swipe left
+        navigate("next");
+      }
+      if (touchEndX > touchStartX + threshold) {
+        // Swipe right
+        navigate("prev");
+      }
+    }
+
+    // Set correct height for mobile
+    function setCarouselHeight() {
+      const wrapper = document.querySelector(".carousel-wrapper");
+      if (!wrapper) return;
+
+      const vh = window.innerHeight;
+      const navbarHeight = 80;
+      wrapper.style.height = `${vh - navbarHeight}px`;
+    }
+
+    setCarouselHeight();
+    window.addEventListener("resize", setCarouselHeight);
+    window.addEventListener("orientationchange", () => {
+      setTimeout(setCarouselHeight, 300);
+    });
   });
-  
-  // Handle orientation change, but only allow one resize after change
-  window.addEventListener("orientationchange", handleOrientationChange);
 </script>

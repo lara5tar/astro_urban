@@ -1,0 +1,425 @@
+---
+import "../tailwind.css";
+export interface Slide {
+    image: ImageMetadata;
+    title: string;
+    description: string;
+}
+
+interface Props {
+    slides: Slide[];
+    interval?: number;
+    showArrows?: boolean;
+    showDots?: boolean;
+    showText?: boolean;
+}
+
+const {
+    slides,
+    interval = 5000,
+    showArrows = true,
+    showDots = true,
+    showText = true,
+} = Astro.props;
+---
+
+<div class="relative overflow-hidden w-full h-screen">
+    <!-- Slides container -->
+    <div id="slides-container" class="w-full h-full relative">
+        {
+            slides.map((slide, index) => (
+                <div
+                    class={`slide absolute top-0 left-0 w-full h-full ${index === 0 ? "active" : ""}`}
+                    data-index={index}
+                >
+                    <div class="slide-image w-full h-full">
+                        <img
+                            src={slide.image.src}
+                            alt={slide.title}
+                            class="w-full h-full object-cover pointer-events-none"
+                        />
+                    </div>
+
+                    {showText && (
+                        <div class="slide-content">
+                            <p class="text-x1 md:text-3xl lg:text-4xl font-['Montserrat'] font-medium">
+                                {slide.description}
+                            </p>
+                        </div>
+                    )}
+                </div>
+            ))
+        }
+    </div>
+
+    {/* Navigation Arrows */}
+    {
+        showArrows && (
+            <div class="carousel-arrows">
+                <button
+                    id="prev"
+                    class="arrow prev"
+                    aria-label="Previous slide"
+                >
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                    </svg>
+                </button>
+                <button id="next" class="arrow next" aria-label="Next slide">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z" />
+                    </svg>
+                </button>
+            </div>
+        )
+    }
+
+    {/* Dots/Indicators */}
+    {
+        showDots && (
+            <div class="carousel-dots">
+                {slides.map((_, index) => (
+                    <button
+                        class="dot"
+                        data-index={index}
+                        aria-label={`Go to slide ${index + 1}`}
+                    />
+                ))}
+            </div>
+        )
+    }
+</div>
+
+<style>
+    /* Image fade in animation */
+    .slide-image {
+        opacity: 0;
+        animation: fadeIn 1s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(1.1);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Text styling and animation */
+    .slide-content {
+        position: absolute;
+        bottom: 8%;
+        left: 0;
+        right: 0;
+        padding: 2rem;
+        color: white;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+        z-index: 20;
+    }
+
+    .slide.active .slide-content {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .slide-content p {
+        margin: 0;
+        font-size: clamp(1.5rem, 3vw, 2.2rem);
+        letter-spacing: 0.02em;
+        max-width: 1000px;
+        line-height: 1.4;
+        text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.8);
+        padding: 1.5rem;
+    }
+
+    /* Arrow styling */
+    .carousel-arrows {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        transform: translateY(-50%);
+        display: flex;
+        justify-content: space-between;
+        padding: 0 1rem;
+        pointer-events: none;
+    }
+
+    .arrow {
+        width: 3rem;
+        height: 3rem;
+        border: none;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(4px);
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        pointer-events: auto;
+    }
+
+    .arrow:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+    }
+
+    .arrow svg {
+        fill: currentColor;
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    /* Dot styling */
+    .carousel-dots {
+        position: absolute;
+        bottom: 1.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 0.5rem;
+        z-index: 10;
+    }
+
+    .dot {
+        width: 0.75rem;
+        height: 0.75rem;
+        border: 2px solid white;
+        border-radius: 50%;
+        padding: 0;
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .dot.active {
+        background: white;
+        transform: scale(1.2);
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 768px) {
+        .arrow {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .carousel-arrows {
+            padding: 0 0.5rem;
+        }
+
+        .slide-content {
+            bottom: 5%;
+            padding: 1rem;
+        }
+
+        .slide-content p {
+            font-size: clamp(1.3rem, 2.8vw, 2rem);
+            padding: 1.2rem;
+        }
+    }
+
+    @media (hover: none) {
+        .arrow {
+            display: none;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const slidesContainer = document.getElementById("slides-container");
+        if (!slidesContainer) return;
+
+        const slides = slidesContainer.querySelectorAll(".slide");
+        const dots = document.querySelectorAll(".dot");
+        const nextBtn = document.getElementById("next");
+        const prevBtn = document.getElementById("prev");
+
+        let currentIndex = 0;
+        let interval = parseFloat(
+            slidesContainer.getAttribute("data-interval") || "5000",
+        );
+        let slideInterval: number;
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let isScrolling = false;
+        let minSwipeDistance = 30;
+
+        // Initialize the active dot
+        if (dots.length > 0) {
+            dots[0].classList.add("active");
+        }
+
+        const goToSlide = (index: number) => {
+            // Hide all slides
+            slides.forEach((slide) => {
+                slide.classList.remove("active");
+            });
+
+            // Show the selected slide
+            slides[index].classList.add("active");
+
+            // Reset the image animation by temporarily removing and re-adding the element
+            const imgContainer = slides[index].querySelector(".slide-image");
+            if (imgContainer) {
+                const parent = imgContainer.parentElement;
+                if (parent) {
+                    const clone = imgContainer.cloneNode(true);
+                    parent.removeChild(imgContainer);
+                    setTimeout(
+                        () => parent.insertBefore(clone, parent.firstChild),
+                        10,
+                    );
+                }
+            }
+
+            // Update dots
+            dots.forEach((dot, dotIndex) => {
+                if (dotIndex === index) {
+                    dot.classList.add("active");
+                } else {
+                    dot.classList.remove("active");
+                }
+            });
+
+            currentIndex = index;
+        };
+
+        const nextSlide = () => {
+            const newIndex =
+                currentIndex === slides.length - 1 ? 0 : currentIndex + 1;
+            goToSlide(newIndex);
+        };
+
+        const prevSlide = () => {
+            const newIndex =
+                currentIndex === 0 ? slides.length - 1 : currentIndex - 1;
+            goToSlide(newIndex);
+        };
+
+        // Touch handling
+        function handleTouchStart(e: MouseEvent | TouchEvent) {
+            const touch = e.type.includes("mouse")
+                ? (e as MouseEvent)
+                : (e as TouchEvent).touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            isScrolling = false;
+        }
+
+        function handleTouchMove(e: MouseEvent | TouchEvent) {
+            if (!touchStartX) return;
+
+            const touch = e.type.includes("mouse")
+                ? (e as MouseEvent)
+                : (e as TouchEvent).touches[0];
+            const diffX = touchStartX - touch.clientX;
+            const diffY = touchStartY - touch.clientY;
+
+            // Determine if user is scrolling vertically
+            if (!isScrolling) {
+                isScrolling = Math.abs(diffY) > Math.abs(diffX);
+                if (isScrolling) return;
+            }
+
+            // Prevent scroll only if horizontal swipe
+            if (!isScrolling) {
+                e.preventDefault();
+            }
+
+            if (Math.abs(diffX) > minSwipeDistance && !isScrolling) {
+                touchStartX = 0;
+                clearInterval(slideInterval);
+                if (diffX > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+                startSlideInterval();
+            }
+        }
+
+        function handleTouchEnd() {
+            touchStartX = 0;
+            touchStartY = 0;
+            isScrolling = false;
+        }
+
+        // Set up auto-sliding
+        const startSlideInterval = () => {
+            slideInterval = setInterval(nextSlide, interval);
+        };
+
+        // Setup event listeners
+        if (nextBtn)
+            nextBtn.addEventListener("click", () => {
+                clearInterval(slideInterval);
+                nextSlide();
+                startSlideInterval();
+            });
+
+        if (prevBtn)
+            prevBtn.addEventListener("click", () => {
+                clearInterval(slideInterval);
+                prevSlide();
+                startSlideInterval();
+            });
+
+        // Setup dots click handlers
+        dots.forEach((dot) => {
+            dot.addEventListener("click", () => {
+                const slideIndex = parseInt(
+                    dot.getAttribute("data-index") || "0",
+                );
+                clearInterval(slideInterval);
+                goToSlide(slideIndex);
+                startSlideInterval();
+            });
+        });
+
+        // Touch events
+        slidesContainer.addEventListener("touchstart", handleTouchStart, {
+            passive: true,
+        });
+        slidesContainer.addEventListener("touchmove", handleTouchMove, {
+            passive: false,
+        });
+        slidesContainer.addEventListener("touchend", handleTouchEnd);
+
+        // Mouse events for touch simulation
+        slidesContainer.addEventListener("mousedown", handleTouchStart);
+        slidesContainer.addEventListener("mousemove", handleTouchMove);
+        slidesContainer.addEventListener("mouseup", handleTouchEnd);
+        slidesContainer.addEventListener("mouseleave", handleTouchEnd);
+
+        slidesContainer.addEventListener("dragstart", (e) =>
+            e.preventDefault(),
+        );
+        slidesContainer.addEventListener("drop", (e) => e.preventDefault());
+
+        // Start auto-sliding
+        startSlideInterval();
+
+        // Visibility change handling
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                clearInterval(slideInterval);
+            } else {
+                startSlideInterval();
+            }
+        });
+    });
+</script>

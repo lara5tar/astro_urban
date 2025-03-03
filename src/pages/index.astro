@@ -10,37 +10,50 @@ import imagen4 from "/public/carousel/web/Imagen4.webp";
 import imagen5 from "/public/carousel/web/Imagen5.webp";
 import imagen6 from "/public/carousel/web/Imagen6.webp";
 
+import imagen1Mobile from "/public/carousel/movil/1.webp";
+import imagen2Mobile from "/public/carousel/movil/2.webp";
+import imagen3Mobile from "/public/carousel/movil/3.webp";
+import imagen4Mobile from "/public/carousel/movil/4.webp";
+import imagen5Mobile from "/public/carousel/movil/5.webp";
+import imagen6Mobile from "/public/carousel/movil/6.webp";
+
 import iconUrban from "/public/icons/icon_urban.svg";
 
 const slides = [
   {
     image: imagen1,
+    mobileImage: imagen1Mobile,
     title: "Título 1",
     description: "Construya a su gusto y ahorre un 25% con nosotros",
   },
   {
     image: imagen2,
+    mobileImage: imagen2Mobile,
     title: "Título 2",
     description: "Contrato de obra y garantía por escrito",
   },
   {
     image: imagen3,
+    mobileImage: imagen3Mobile,
     title: "Título 3",
     description: "Arquitectura de vanguardia, efiencia y sustentable",
   },
   {
     image: imagen4,
+    mobileImage: imagen4Mobile,
     title: "Título 4",
     description: "Servicio profesional en pintura y impermeabilización",
   },
   {
     image: imagen5,
+    mobileImage: imagen5Mobile,
     title: "Título 5",
     description:
       "Talleres de acabados finos: Carpintería, Cancelería y Herrería",
   },
   {
     image: imagen6,
+    mobileImage: imagen6Mobile,
     title: "Título 6",
     description: "Arquitectura y Construccion a la medida de su presupuesto",
   },
@@ -68,7 +81,9 @@ const slides = [
     />
   </head>
   <body>
-    <Navbar />
+    <div class="fixed top-0 left-0 w-full z-50">
+      <Navbar />
+    </div>
     <Carousel
       slides={slides}
       interval={5000}

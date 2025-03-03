@@ -3,7 +3,16 @@ import { Image } from "astro:assets";
 import contactImage from "/public/contacto/Imagen1.webp";
 import Navbar from "../components/Navbar.astro";
 import SocialIconsRow from "../components/SocialIconsRow.astro";
+import Footer from "../components/Footer.astro";
 import "../tailwind.css";
+
+const options = [
+    "Cancelería de Diseño",
+    "Carpintería Dina",
+    "Herrería Artística",
+    "Impermeabilización",
+    "Pintura",
+];
 ---
 
 <html lang="en">
@@ -19,12 +28,9 @@ import "../tailwind.css";
             rel="stylesheet"
         />
     </head>
-
+    <Navbar />
     <body class="font-['Lato'] overflow-hidden">
         <!-- Fixed navbar at the top with proper z-index -->
-        <div class="fixed top-0 left-0 w-full z-50 font-['Montserrat']">
-            <Navbar />
-        </div>
 
         <!-- Main content container with padding to account for navbar -->
         <div class="pt-20 w-full h-screen">
@@ -45,164 +51,165 @@ import "../tailwind.css";
                 <div class="w-2/5"></div>
 
                 <!-- Scrollable content section - takes 60% of screen width -->
-                <div class="w-3/5 h-full overflow-y-auto py-10 pl-10 pr-10">
-                    <!-- Contact information -->
-                    <div class="flex flex-wrap items-star">
-                        <div class="mb-6 pr-4 md:w-1/2">
-                            <p class="font-medium text-gray-800">Querétaro</p>
-                            <p class="mt-1 text-gray-600">
-                                Edificio Querétaro Business Park.
-                            </p>
-                            <p class="mt-1 text-gray-600">
-                                Av. Antea #1088, Piso 3, Querétaro, México,
-                                7600.
-                            </p>
-                        </div>
-
-                        <div class="mb-6 pr-4 md:w-1/2 text-left md:text-right">
-                            <p class="font-medium text-gray-800">
-                                Tel. Oficina
-                            </p>
-                            <p class="mt-1 text-gray-600">442 708 6211</p>
-                            <div class="mb-6 mt-0"></div>
-                            <p class="font-medium text-gray-800">E-mail</p>
-                            <p class="mt-1 text-gray-600">
-                                info@urbanarquitectura.mx
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Social Icons -->
-                    <div class="mb-8 mt-0">
-                        <SocialIconsRow />
-                    </div>
-
-                    <!-- Contact Form -->
-                    <div class="w-full">
-                        <form id="contactForm" class="flex flex-col gap-5">
-                            <!-- Form fields (unchanged) -->
-                            <div class="form-field">
-                                <input
-                                    type="text"
-                                    id="nombre"
-                                    name="nombre"
-                                    placeholder=" "
-                                    required
-                                    class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
-                                />
-                                <label
-                                    for="nombre"
-                                    class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
-                                >
-                                    Nombre
-                                </label>
+                <div class="w-3/5 h-full overflow-y-auto">
+                    <div class="pt-10 pl-10 pr-10">
+                        <!-- Contact information -->
+                        <div class="flex flex-wrap items-star">
+                            <div class="mb-6 pr-4 md:w-1/2">
+                                <p class="font-medium text-gray-800">
+                                    Querétaro
+                                </p>
+                                <p class="mt-1 text-gray-600">
+                                    Edificio Querétaro Business Park.
+                                </p>
+                                <p class="mt-1 text-gray-600">
+                                    Av. Antea #1088, Piso 3, Querétaro, México,
+                                    7600.
+                                </p>
                             </div>
 
-                            <!-- Other form fields remain unchanged -->
-                            <!-- ... existing code for email, telefono, proyecto, mensaje inputs ... -->
-                            <div class="form-field">
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    placeholder=" "
-                                    required
-                                    class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
-                                />
-                                <label
-                                    for="email"
-                                    class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
-                                >
-                                    Email
-                                </label>
-                            </div>
-
-                            <div class="form-field">
-                                <input
-                                    type="tel"
-                                    id="telefono"
-                                    name="telefono"
-                                    placeholder=" "
-                                    required
-                                    class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
-                                />
-                                <label
-                                    for="telefono"
-                                    class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
-                                >
-                                    Teléfono
-                                </label>
-                            </div>
-
-                            <div class="form-field">
-                                <select
-                                    id="proyecto"
-                                    name="proyecto"
-                                    required
-                                    class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition appearance-none"
-                                >
-                                    <option value="" disabled selected></option>
-                                    <option value="residencial"
-                                        >Residencial</option
-                                    >
-                                    <option value="comercial">Comercial</option>
-                                    <option value="industrial"
-                                        >Industrial</option
-                                    >
-                                    <option value="otro">Otro</option>
-                                </select>
-                                <label
-                                    for="proyecto"
-                                    class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
-                                >
-                                    ¿Cuál es su proyecto?
-                                </label>
-                                <div
-                                    class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none"
-                                >
-                                    <svg
-                                        class="w-4 h-4 text-gray-500"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </div>
-                            </div>
-
-                            <div class="form-field">
-                                <textarea
-                                    id="mensaje"
-                                    name="mensaje"
-                                    rows="4"
-                                    placeholder=" "
-                                    required
-                                    class="peer h-32 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition resize-none"
-                                ></textarea>
-                                <label
-                                    for="mensaje"
-                                    class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
-                                >
-                                    Mensaje
-                                </label>
-                            </div>
-
-                            <button
-                                type="submit"
-                                class="bg-[#2ebeab] h-12 text-white font-medium rounded px-6 py-2 mt-2 transition-all duration-200 hover:bg-[#1a9e8c] hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-[#2ebeab] focus:ring-offset-2 w-full"
+                            <div
+                                class="mb-6 pr-4 md:w-1/2 text-left md:text-right"
                             >
-                                Enviar
-                            </button>
-                        </form>
-                    </div>
+                                <p class="font-medium text-gray-800">
+                                    Tel. Oficina
+                                </p>
+                                <p class="mt-1 text-gray-600">442 708 6211</p>
+                                <div class="mb-6 mt-0"></div>
+                                <p class="font-medium text-gray-800">E-mail</p>
+                                <p class="mt-1 text-gray-600">
+                                    info@urbanarquitectura.mx
+                                </p>
+                            </div>
+                        </div>
 
-                    <!-- Add some extra space at the bottom for comfortable scrolling -->
-                    <div class="h-10"></div>
+                        <!-- Contact Form -->
+                        <div class="w-full mt-10">
+                            <form id="contactForm" class="flex flex-col gap-5">
+                                <!-- Form fields (unchanged) -->
+                                <div class="form-field">
+                                    <input
+                                        type="text"
+                                        id="nombre"
+                                        name="nombre"
+                                        placeholder=" "
+                                        required
+                                        class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
+                                    />
+                                    <label
+                                        for="nombre"
+                                        class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
+                                    >
+                                        Nombre
+                                    </label>
+                                </div>
+
+                                <!-- Other form fields remain unchanged -->
+                                <!-- ... existing code for email, telefono, proyecto, mensaje inputs ... -->
+                                <div class="form-field">
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        placeholder=" "
+                                        required
+                                        class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
+                                    />
+                                    <label
+                                        for="email"
+                                        class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
+                                    >
+                                        Email
+                                    </label>
+                                </div>
+
+                                <div class="form-field">
+                                    <input
+                                        type="tel"
+                                        id="telefono"
+                                        name="telefono"
+                                        placeholder=" "
+                                        required
+                                        class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
+                                    />
+                                    <label
+                                        for="telefono"
+                                        class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
+                                    >
+                                        Teléfono
+                                    </label>
+                                </div>
+
+                                <div class="form-field">
+                                    <select
+                                        id="proyecto"
+                                        name="proyecto"
+                                        required
+                                        class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition appearance-none"
+                                    >
+                                        <option value="" disabled selected
+                                        ></option>
+                                        {
+                                            options.map((option) => (
+                                                <option value={option}>
+                                                    {option}
+                                                </option>
+                                            ))
+                                        }
+                                    </select>
+                                    <label
+                                        for="proyecto"
+                                        class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
+                                    >
+                                        ¿Cuál es su proyecto?
+                                    </label>
+                                    <div
+                                        class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none"
+                                    >
+                                        <svg
+                                            class="w-4 h-4 text-gray-500"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <div class="form-field">
+                                    <textarea
+                                        id="mensaje"
+                                        name="mensaje"
+                                        rows="4"
+                                        placeholder=" "
+                                        required
+                                        class="peer h-32 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition resize-none"
+                                    ></textarea>
+                                    <label
+                                        for="mensaje"
+                                        class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
+                                    >
+                                        Mensaje
+                                    </label>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    class="bg-[#2ebeab] h-12 text-white font-medium rounded px-6 py-2 mt-2 transition-all duration-200 hover:bg-[#1a9e8c] hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-[#2ebeab] focus:ring-offset-2 w-full"
+                                >
+                                    Enviar
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Add some extra space at the bottom for comfortable scrolling -->
+                    </div>
+                    <Footer />
                 </div>
             </div>
 
@@ -222,7 +229,7 @@ import "../tailwind.css";
                     </div>
 
                     <!-- Content follows the image and scrolls together -->
-                    <div class="px-6 py-8">
+                    <div class="px-6 pt-8">
                         <!-- Contact information -->
                         <div class="flex flex-wrap mb-8">
                             <div class="w-full mb-4">
@@ -249,11 +256,6 @@ import "../tailwind.css";
                                     info@urbanarquitectura.mx
                                 </p>
                             </div>
-                        </div>
-
-                        <!-- Social Icons -->
-                        <div class="mb-8">
-                            <SocialIconsRow />
                         </div>
 
                         <!-- Contact Form (same form, just mobile optimized) -->
@@ -383,120 +385,124 @@ import "../tailwind.css";
                                 </button>
                             </form>
                         </div>
-
-                        <div class="h-10"></div>
                     </div>
+                    <Footer />
                 </div>
             </div>
         </div>
     </body>
-</html>
 
-<style>
-    /* Custom animation that Tailwind doesn't have by default */
-    @keyframes fadeIn {
-        0% {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        100% {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .animate-fade-in {
-        animation: fadeIn 1.5s ease-out forwards;
-    }
-
-    /* Form field container styling */
-    .form-field {
-        @apply relative w-full;
-    }
-
-    /* Ensure labels maintain background color in all states */
-    .form-field label {
-        background-color: #f3f4f6; /* This matches Tailwind's bg-gray-100 */
-        padding: 0 4px; /* Horizontal padding to not cut off text */
-    }
-
-    /* Customize scrollbar for the content section */
-    .overflow-y-auto::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .overflow-y-auto::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-
-    .overflow-y-auto::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 3px;
-    }
-
-    .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-        background: #a1a1a1;
-    }
-
-    /* Media queries for responsiveness */
-    @media (max-width: 768px) {
-        .w-2\/5 {
-            width: 0; /* Hide the spacer on mobile */
-        }
-
-        .w-3\/5 {
-            width: 100%; /* Make content full width on mobile */
-            padding-left: 4rem; /* Add space for the fixed image */
-        }
-    }
-</style>
-
-<script>
-    // Basic form handling for desktop form
-    const contactForm = document.getElementById(
-        "contactForm",
-    ) as HTMLFormElement;
-
-    if (contactForm) {
-        contactForm.addEventListener("submit", function (e) {
-            e.preventDefault();
-            submitForm(this);
-        });
-    }
-
-    // Basic form handling for mobile form
-    const mobileContactForm = document.getElementById(
-        "mobileContactForm",
-    ) as HTMLFormElement;
-
-    if (mobileContactForm) {
-        mobileContactForm.addEventListener("submit", function (e) {
-            e.preventDefault();
-            submitForm(this);
-        });
-    }
-
-    // Shared form submit function
-    function submitForm(form: HTMLFormElement) {
-        const formData = new FormData(form);
-        const formObject = Object.fromEntries(formData);
-
-        // Here you would typically send the data to your server
-        // For now, let's just show an alert
-        alert("Formulario enviado con éxito! Gracias por contactarnos.");
-
-        // Reset the form
-        form.reset();
-    }
-
-    // Add script to handle select element label for both forms
-    document.querySelectorAll("select").forEach((select) => {
-        select.addEventListener("change", function (this: HTMLSelectElement) {
-            if (this.value) {
-                this.classList.add("has-value");
-            } else {
-                this.classList.remove("has-value");
+    <style>
+        /* Custom animation that Tailwind doesn't have by default */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
             }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1.5s ease-out forwards;
+        }
+
+        /* Form field container styling */
+        .form-field {
+            @apply relative w-full;
+        }
+
+        /* Ensure labels maintain background color in all states */
+        .form-field label {
+            background-color: #f3f4f6; /* This matches Tailwind's bg-gray-100 */
+            padding: 0 4px; /* Horizontal padding to not cut off text */
+        }
+
+        /* Customize scrollbar for the content section */
+        .overflow-y-auto::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Media queries for responsiveness */
+        @media (max-width: 768px) {
+            .w-2\/5 {
+                width: 0; /* Hide the spacer on mobile */
+            }
+
+            .w-3\/5 {
+                width: 100%; /* Make content full width on mobile */
+                padding-left: 4rem; /* Add space for the fixed image */
+            }
+        }
+    </style>
+
+    <script>
+        // Basic form handling for desktop form
+        const contactForm = document.getElementById(
+            "contactForm",
+        ) as HTMLFormElement;
+
+        if (contactForm) {
+            contactForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                submitForm(this);
+            });
+        }
+
+        // Basic form handling for mobile form
+        const mobileContactForm = document.getElementById(
+            "mobileContactForm",
+        ) as HTMLFormElement;
+
+        if (mobileContactForm) {
+            mobileContactForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                submitForm(this);
+            });
+        }
+
+        // Shared form submit function
+        function submitForm(form: HTMLFormElement) {
+            const formData = new FormData(form);
+            const formObject = Object.fromEntries(formData);
+
+            // Here you would typically send the data to your server
+            // For now, let's just show an alert
+            alert("Formulario enviado con éxito! Gracias por contactarnos.");
+
+            // Reset the form
+            form.reset();
+        }
+
+        // Add script to handle select element label for both forms
+        document.querySelectorAll("select").forEach((select) => {
+            select.addEventListener(
+                "change",
+                function (this: HTMLSelectElement) {
+                    if (this.value) {
+                        this.classList.add("has-value");
+                    } else {
+                        this.classList.remove("has-value");
+                    }
+                },
+            );
         });
-    });
-</script>
+    </script>
+
+
+</html>

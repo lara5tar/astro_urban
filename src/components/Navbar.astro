@@ -17,20 +17,35 @@ const {
 } = Astro.props;
 ---
 
-<nav class="navbar">
-    <div class="navbar-brand">
-        <a href="/" class="logo">
-            <Image src={logoWeb} alt="Logo Desktop" class="logo-web" />
-            <Image src={logoMovil} alt="Logo Mobile" class="logo-mobile" />
+<nav
+    class="fixed top-0 left-0 right-0 flex justify-between items-center px-8 bg-black z-50 md:px-8 sm:px-4 pt-safe"
+    style="height: calc(5rem + env(safe-area-inset-top));"
+>
+    <div class="flex items-center">
+        <a href="/" class="flex items-center">
+            <Image
+                src={logoWeb}
+                alt="Logo Desktop"
+                class="h-[45px] w-auto object-contain hidden md:block"
+            />
+            <Image
+                src={logoMovil}
+                alt="Logo Mobile"
+                class="h-[35px] w-auto object-contain block md:hidden"
+            />
         </a>
     </div>
     <div class="w-5"></div>
 
-    <div class="navbar-menu">
+    <div class="flex md:gap-8 gap-4">
         {
             links.map((link) => (
-                <a href={link.url} class="nav-link">
+                <a
+                    href={link.url}
+                    class="text-white font-montserrat md:text-[0.9rem] text-xs font-normal tracking-wider hover:text-gray-200 transition-colors duration-300 relative group"
+                >
                     {link.text}
+                    <span class="absolute bottom-[-5px] left-0 w-0 h-0.5 bg-white shadow-glow transition-all duration-300 ease-in-out group-hover:w-full" />
                 </a>
             ))
         }
@@ -38,123 +53,13 @@ const {
 </nav>
 
 <style>
-    @import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
-
-    .navbar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 80px; /* Reducido de 90px a 80px */
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 2rem;
-        background: #000000; /* Cambiado a negro sólido */
-        backdrop-filter: none;
-        -webkit-backdrop-filter: none;
-        z-index: 1000;
+    /* Only minimal custom styling for the shadow glow effect */
+    .shadow-glow {
+        box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
     }
 
-    .navbar-brand {
-        display: flex;
-        align-items: center;
-    }
-
-    .logo {
-        display: flex;
-        align-items: center;
-        font-family: "Lato", sans-serif;
-    }
-
-    .logo img {
-        height: 45px; /* Reducido de 50px a 45px */
-        width: auto;
-        object-fit: contain;
-    }
-
-    .logo-mobile {
-        display: none;
-    }
-
-    .logo-web {
-        display: block;
-    }
-
-    .logo {
-        color: white;
-        font-size: 1.7rem; /* Aumentado de 1.5rem */
-        font-weight: 700; /* Aumentado de 600 */
-        text-decoration: none;
-        font-family: "Montserrat", sans-serif;
-        transition: color 0.3s ease;
-        cursor: pointer;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Añadido sombra de texto */
-    }
-
-    .logo:hover {
-        color: #ccc;
-    }
-
-    .navbar-menu {
-        display: flex;
-        gap: 2rem;
-    }
-
-    .nav-link {
-        color: white;
-        text-decoration: none;
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.9rem; /* Reducido de 1.1rem a 0.9rem */
-        font-weight: 400;
-        letter-spacing: 0.2em; /* Added letter spacing */
-        transition: all 0.3s ease;
-        position: relative;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    }
-
-    .nav-link::after {
-        content: "";
-        position: absolute;
-        bottom: -5px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: white;
-        transition: width 0.3s ease;
-        box-shadow: 0 0 4px rgba(255, 255, 255, 0.5); /* Añadido brillo al subrayado */
-    }
-
-    .nav-link:hover::after {
-        width: 100%;
-    }
-
-    @media (max-width: 768px) {
-        .navbar {
-            padding: 0 1rem;
-            height: calc(
-                80px + env(safe-area-inset-top)
-            ); /* Adjust height for safe area */
-            padding-top: env(
-                safe-area-inset-top
-            ); /* Add padding for safe area */
-        }
-
-        .navbar-menu {
-            gap: 1rem;
-        }
-
-        .nav-link {
-            font-size: 0.8rem; /* Reducido de 1rem a 0.8rem para móvil */
-        }
-
-        .logo-web {
-            display: none;
-        }
-
-        .logo-mobile {
-            display: block;
-            height: 35px; /* Reducido de 40px a 35px */
-        }
+    /* For iOS safe area */
+    .pt-safe {
+        padding-top: env(safe-area-inset-top, 0);
     }
 </style>

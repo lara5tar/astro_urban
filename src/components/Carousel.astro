@@ -30,21 +30,23 @@ const {
     <div class="carousel-track">
       {
         slides.map((slide, index) => (
-          <div class="carousel-slide" data-index={index}>
-            <div class={`slide-image fade-in ${index === 0 ? "first-slide" : ""}`}>
-              {/* Desktop image with optimizations for first slide */}
+          <div class="carousel-slide" data-index={index} class:list={{"active": index === 0}}>
+            <div class="slide-image fade-in">
+              {/* Desktop image - hidden on mobile */}
               <Image
                 src={slide.image}
                 alt={slide.description || `Slide ${index + 1}`}
-                width={2400} 
-                height={1350} 
-                quality={index === 0 ? 100 : 90} 
+                width={2400}
+                height={1500}
+                sizes="(max-width: 600px) 375px, 750px"
+
                 format="webp"
                 class="desktop-image"
                 loading={index === 0 ? "eager" : "lazy"}
                 decoding={index === 0 ? "sync" : "async"}
                 fetchpriority={index === 0 ? "high" : "auto"}
               />
+
               
               {/* Mobile image with optimizations for first slide */}
               {slide.mobileImage && (
@@ -53,7 +55,8 @@ const {
                   alt={slide.description || `Slide ${index + 1}`}
                   width={750}
                   height={1200}
-                  quality={index === 0 ? 100 : 90}
+                  sizes="(max-width: 600px) 375px, 750px"
+   
                   format="webp"
                   class="mobile-image"
                   loading={index === 0 ? "eager" : "lazy"}
@@ -117,6 +120,7 @@ const {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    contain: paint layout;
   }
 
   .carousel-container {
@@ -150,13 +154,15 @@ const {
     width: 100%;
     height: 100%;
     opacity: 0;
-    animation: fadeIn 1s ease-out forwards;
+    animation: fadeIn 0.8s ease-out forwards;
+    contain: layout paint;
+    will-change: opacity, transform;
   }
 
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: scale(1.1);
+      transform: scale(1.05);
     }
     to {
       opacity: 1;
@@ -178,10 +184,12 @@ const {
     -o-user-drag: none;
     user-drag: none;
     transform: none; /* Removemos el scale inicial */
+    will-change: transform;
   }
 
-  .carousel-slide.active .slide-image img {
-    transform: none; /* Ajustamos la transformación */
+  .carousel-slide.active .slide-image {
+    opacity: 1;
+    transform: none;
   }
 
   .slide-content {
@@ -311,6 +319,12 @@ const {
     display: none;
   }
 
+  /* Preload first slide images for both desktop and mobile */
+  .carousel-slide:first-child .desktop-image,
+  .carousel-slide:first-child .mobile-image {
+    content-visibility: auto;
+  }
+  
   /* Changed from 768px to 512px for mobile breakpoint */
   @media (max-width: 512px) {
     .carousel-wrapper {
@@ -389,6 +403,16 @@ const {
       track.style.transform = `translateX(-${currentSlide * 100}%)`;
       slides.forEach((slide, index) => {
         slide.classList.toggle("active", index === currentSlide);
+        
+        // Preload the next image for smoother transitions
+        if (index === currentSlide + 1 || (currentSlide === slides.length - 1 && index === 0)) {
+          const slideImages = slide.querySelectorAll('img');
+          slideImages.forEach(img => {
+            if (img.hasAttribute('loading')) {
+              img.loading = 'eager';
+            }
+          });
+        }
       });
       dots.forEach((dot, index) => {
         dot.classList.toggle("active", index === currentSlide);
@@ -504,7 +528,24 @@ const {
     carousel.addEventListener("drop", (e) => e.preventDefault());
     carousel.addEventListener("selectstart", (e) => e.preventDefault());
 
-    // Initialize
+    // Initialize with first slide active
+    slides[0].classList.add("active");
+    dots[0].classList.add("active");
+    
+    // Explicitly mark the first slide's images as high priority
+    const firstSlideImages = slides[0].querySelectorAll('img');
+    firstSlideImages.forEach(img => {
+      if (img.hasAttribute('fetchpriority')) {
+        img.fetchpriority = 'high';
+      }
+      if (img.hasAttribute('loading')) {
+        img.loading = 'eager';
+      }
+      if (img.hasAttribute('decoding')) {
+        img.decoding = 'sync';
+      }
+    });
+    
     updateSlidePosition();
     startAutoPlay();
 
@@ -574,8 +615,38 @@ const {
     window.visualViewport.addEventListener('resize', handleInitialSize, { once: true });
   }
   
-  // Need these for initial calculation, will be removed later
-  window.addEventListener("DOMContentLoaded", () => {
+  // Fallback to window events
+  window.addEventListener("load", handleResize);
+  window.addEventListener("resize", handleResize);
+  window.addEventListener("scroll", handleResize);
+  window.addEventListener("orientationchange", () => {
+    // Some browsers need a delay after orientation change
+    setTimeout(handleResize, 100);
+    // Some need an even longer delay
+    setTimeout(handleResize, 500);
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Trigger faster first LCP by preloading main carousel image
+    const preloadFirstImage = () => {
+      const firstSlide = document.querySelector('.carousel-slide[data-index="0"]');
+      if (firstSlide) {
+        const isMobile = window.innerWidth <= 512;
+        const imgSelector = isMobile ? '.mobile-image' : '.desktop-image';
+        const img = firstSlide.querySelector(imgSelector);
+        
+        if (img && img.src) {
+          const preload = document.createElement('link');
+          preload.rel = 'preload';
+          preload.as = 'image';
+          preload.href = img.src;
+          preload.fetchpriority = 'high';
+          document.head.appendChild(preload);
+        }
+      }
+    };
+    
+    preloadFirstImage();
     setupCarousel();
     handleInitialSize(); // Set height after DOM is ready
   });

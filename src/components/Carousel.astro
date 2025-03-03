@@ -254,19 +254,20 @@ const {
     height: 1.5rem;
   }
 
+  /* Dot styling - increased size */
   .carousel-dots {
     position: absolute;
     bottom: 1.5rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 0.5rem;
+    gap: 0.75rem; /* Increased gap between dots */
     z-index: 10;
   }
 
   .dot {
-    width: 0.75rem;
-    height: 0.75rem;
+    width: 1rem;       /* Increased from 0.75rem to 1rem */
+    height: 1rem;      /* Increased from 0.75rem to 1rem */
     border: 2px solid white;
     border-radius: 50%;
     padding: 0;
@@ -277,7 +278,7 @@ const {
 
   .dot.active {
     background: white;
-    transform: scale(1.2);
+    transform: scale(1.3); /* Slightly increased the active state scale */
   }
 
   .desktop-image {
@@ -309,6 +310,10 @@ const {
   @media (max-width: 512px) {
     .carousel-wrapper {
       touch-action: pan-y pinch-zoom; /* Permitir scroll vertical */
+      height: calc(100vh - 80px - env(safe-area-inset-top)); /* Account for navbar and safe area */
+      margin-top: 80px;
+      min-height: calc(100vh - 80px - 60px); /* Fallback - 60px accounts for address bar */
+      height: calc(100dvh - 80px); /* Use dynamic viewport height units which account for browser UI */
       height: calc(100vh - 80px);
       margin-top: 80px;
       height: 100vh; /* Fallback */
@@ -517,13 +522,30 @@ const {
   function handleResize() {
     const carousel = document.querySelector(".carousel-wrapper");
     if (carousel) {
-      carousel.style.height = `calc(${window.innerHeight}px - 80px)`; // Ajustar para el navbar
+      // Calculate the actual visible height
+      const windowHeight = window.innerHeight;
+      const navbarHeight = 80; // Height of your navbar
+      
+      // On iOS the window.innerHeight changes when the address bar shows/hides
+      // This helps adjust the height dynamically
+      carousel.style.height = `${windowHeight - navbarHeight}px`;
+      
+      // Add a bit of delay to recalculate after orientation changes
+      setTimeout(() => {
+        const updatedWindowHeight = window.innerHeight;
+        carousel.style.height = `${updatedWindowHeight - navbarHeight}px`;
+      }, 100);
     }
   }
 
   // Ejecutar al cargar y en resize
   window.addEventListener("load", handleResize);
   window.addEventListener("resize", handleResize);
+  window.addEventListener("scroll", handleResize);
+  window.addEventListener("orientationchange", () => {
+    // Wait for orientation change to complete
+    setTimeout(handleResize, 300);
+  });
 
   document.addEventListener("DOMContentLoaded", setupCarousel);
 </script>

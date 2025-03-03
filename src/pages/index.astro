@@ -1,4 +1,5 @@
 ---
+import "../tailwind.css";
 import Carousel from "../components/Carousel.astro";
 import Navbar from "../components/Navbar.astro";
 import HeroWithImage from "../components/HeroWithImage.astro";
@@ -86,7 +87,7 @@ const slides = [
     </div>
     <Carousel
       slides={slides}
-      interval={5000}
+      interval={3000}
       showArrows={true}
       showDots={true}
       showText={true}

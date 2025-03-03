@@ -39,6 +39,7 @@ const {
                 width={2400}
                 height={1500}
                 sizes="(max-width: 600px) 375px, 750px"
+
                 format="webp"
                 class="desktop-image"
                 loading={index === 0 ? "eager" : "lazy"}
@@ -47,7 +48,7 @@ const {
               />
 
               
-              {/* Mobile image - hidden on desktop */}
+              {/* Mobile image with optimizations for first slide */}
               {slide.mobileImage && (
                 <Image
                   src={slide.mobileImage}
@@ -55,6 +56,7 @@ const {
                   width={750}
                   height={1200}
                   sizes="(max-width: 600px) 375px, 750px"
+   
                   format="webp"
                   class="mobile-image"
                   loading={index === 0 ? "eager" : "lazy"}
@@ -370,6 +372,12 @@ const {
       display: none;
     }
   }
+
+  /* Special optimization for first slide */
+  .first-slide img {
+    /* Make first slide load immediately without animation delay */
+    animation-duration: 0.3s !important;
+  }
 </style>
 
 <script define:vars={{ interval }}>
@@ -551,32 +559,60 @@ const {
     });
   }
 
-  // Improved resize handler for mobile viewport adjustments
-  function handleResize() {
+  // Modified resize handler that only sets height once
+  function handleInitialSize() {
     const carousel = document.querySelector(".carousel-wrapper");
     if (!carousel) return;
     
-    const windowHeight = window.innerHeight;
-    const navbarHeight = 80;
+    // Wait a moment to ensure browser UI is settled
+    setTimeout(() => {
+      const windowHeight = window.innerHeight;
+      const navbarHeight = 80;
+      
+      // Get the address bar height by looking at the difference between visual viewport and window
+      const visualViewport = window.visualViewport || { height: windowHeight };
+      const addressBarHeight = Math.max(0, windowHeight - visualViewport.height);
+      
+      // Apply the calculated height and store it
+      const calculatedHeight = windowHeight - navbarHeight - addressBarHeight;
+      carousel.style.height = `${calculatedHeight}px`;
+      
+      // Store the height as a data attribute for reference
+      carousel.dataset.fixedHeight = calculatedHeight;
+      
+      console.log(`Set fixed height: ${calculatedHeight}px (Viewport: ${windowHeight}, Nav: ${navbarHeight}, Address bar: ${addressBarHeight})`);
+      
+      // Remove dynamic height handling after initial setup
+      removeResizeListeners();
+    }, 300); // Wait a bit longer to make sure the browser UI is settled
+  }
+  
+  function removeResizeListeners() {
+    // Remove all the event listeners that would cause resizing
+    if (window.visualViewport) {
+      window.visualViewport.removeEventListener('resize', handleInitialSize);
+      window.visualViewport.removeEventListener('scroll', handleInitialSize);
+    }
     
-    // Get the address bar height by looking at the difference between visual viewport and window
-    const visualViewport = window.visualViewport || { height: windowHeight };
-    const addressBarHeight = Math.max(0, windowHeight - visualViewport.height);
+    window.removeEventListener("resize", handleInitialSize);
+    window.removeEventListener("scroll", handleInitialSize);
     
-    // Apply the calculated height
-    const calculatedHeight = windowHeight - navbarHeight - addressBarHeight;
-    carousel.style.height = `${calculatedHeight}px`;
-    
-    console.log(`Viewport height: ${windowHeight}, Nav: ${navbarHeight}, Address bar: ${addressBarHeight}`);
+    // Keep only orientation change listener with a one-time adjustment
+    window.removeEventListener("orientationchange", handleOrientationChange);
+    window.addEventListener("orientationchange", handleOrientationChange, { once: true });
+  }
+  
+  function handleOrientationChange() {
+    // Only recalculate height when orientation changes
+    setTimeout(handleInitialSize, 500);
   }
 
-  // Run immediately and set up listeners
-  handleResize();
+  // Execute once on load
+  window.addEventListener("load", handleInitialSize);
   
-  // Use visualViewport API if available for more accurate updates
+  // Set up initial event listeners, these will be removed after first calculation
   if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', handleResize);
-    window.visualViewport.addEventListener('scroll', handleResize);
+    window.visualViewport.addEventListener('resize', handleInitialSize, { once: true });
   }
   
   // Fallback to window events
@@ -612,6 +648,9 @@ const {
     
     preloadFirstImage();
     setupCarousel();
-    handleResize(); // Run again after DOM is ready
+    handleInitialSize(); // Set height after DOM is ready
   });
+  
+  // Handle orientation change, but only allow one resize after change
+  window.addEventListener("orientationchange", handleOrientationChange);
 </script>

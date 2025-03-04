@@ -1,0 +1,220 @@
+---
+import "../tailwind.css";
+import Navbar from "../components/Navbar.astro";
+import CriticalStyles from "../components/CriticalStyles.astro";
+import { Image } from "astro:assets";
+
+// Import all portfolio images (0.webp through 26.webp)
+import img0 from "/public/portafolio/0.webp";
+import img1 from "/public/portafolio/1.webp";
+import img2 from "/public/portafolio/2.webp";
+import img3 from "/public/portafolio/3.webp";
+import img4 from "/public/portafolio/4.webp";
+import img5 from "/public/portafolio/5.webp";
+import img6 from "/public/portafolio/6.webp";
+import img7 from "/public/portafolio/7.webp";
+import img8 from "/public/portafolio/8.webp";
+import img9 from "/public/portafolio/9.webp";
+import img10 from "/public/portafolio/10.webp";
+import img11 from "/public/portafolio/11.webp";
+import img12 from "/public/portafolio/12.webp";
+import img13 from "/public/portafolio/13.webp";
+import img14 from "/public/portafolio/14.webp";
+import img15 from "/public/portafolio/15.webp";
+import img16 from "/public/portafolio/16.webp";
+import img17 from "/public/portafolio/17.webp";
+import img18 from "/public/portafolio/18.webp";
+import img19 from "/public/portafolio/19.webp";
+import img20 from "/public/portafolio/20.webp";
+import img21 from "/public/portafolio/21.webp";
+import img22 from "/public/portafolio/22.webp";
+import img23 from "/public/portafolio/23.webp";
+import img24 from "/public/portafolio/24.webp";
+import img25 from "/public/portafolio/25.webp";
+import img26 from "/public/portafolio/26.webp";
+
+// Store all images in an array for easier mapping
+const portfolioImages = [
+    img0,
+    img1,
+    img2,
+    img3,
+    img4,
+    img5,
+    img6,
+    img7,
+    img8,
+    img9,
+    img10,
+    img11,
+    img12,
+    img13,
+    img14,
+    img15,
+    img16,
+    img17,
+    img18,
+    img19,
+    img20,
+    img21,
+    img22,
+    img23,
+    img24,
+    img25,
+    img26,
+];
+---
+
+<html>
+    <head>
+        <title>Portafolio</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <!-- Critical CSS for performance -->
+        <CriticalStyles />
+
+        <!-- Font loading -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@500;700&display=swap"
+            rel="stylesheet"
+            media="print"
+            onload="this.media='all'"
+        />
+        <noscript>
+            <link
+                href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@500;700&display=swap"
+                rel="stylesheet"
+            />
+        </noscript>
+    </head>
+    <body>
+        <Navbar />
+
+        <div class="portfolio-container">
+            <div class="image-grid">
+                {
+                    portfolioImages.map((image, index) => (
+                        <div class="grid-item" data-index={index}>
+                            <Image
+                                src={image}
+                                alt={`Portfolio image ${index}`}
+                                class="portfolio-image"
+                                loading={index < 6 ? "eager" : "lazy"}
+                            />
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+
+        <script>
+            // Improved domino animation effect
+            document.addEventListener("DOMContentLoaded", () => {
+                const items = document.querySelectorAll(".grid-item");
+
+                // Check if element is approaching viewport (much earlier than before)
+                const isApproachingViewport = (element: Element) => {
+                    const rect = element.getBoundingClientRect();
+                    const windowHeight =
+                        window.innerHeight ||
+                        document.documentElement.clientHeight;
+                    // Element is considered "approaching" if it's within 1.5 screen heights
+                    return rect.top <= windowHeight * 1.5;
+                };
+
+                // Animate items that are approaching the viewport
+                const animateItems = () => {
+                    items.forEach((item) => {
+                        if (
+                            isApproachingViewport(item) &&
+                            !item.classList.contains("animated")
+                        ) {
+                            const index = parseInt(
+                                (item as HTMLElement).dataset.index ?? "0",
+                            );
+                            const delay = index * 70; // Faster delay (70ms instead of 100ms)
+                            setTimeout(() => {
+                                item.classList.add("animated");
+                            }, delay);
+                        }
+                    });
+                };
+
+                // Run animation on load and scroll
+                animateItems();
+                window.addEventListener("scroll", animateItems);
+
+                // Additional trigger for any images that might be missed
+                setTimeout(animateItems, 300);
+            });
+        </script>
+    </body>
+</html>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        background: #000;
+    }
+
+    .portfolio-container {
+        width: 100%;
+        padding: 0;
+        margin-top: 5rem; /* Add space for fixed navbar */
+    }
+
+    .image-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Default 3 columns */
+        grid-gap: 0;
+        width: 100%;
+    }
+
+    .grid-item {
+        overflow: hidden;
+        position: relative;
+        aspect-ratio: 1 / 1;
+        opacity: 0;
+        transform: translateY(
+            30px
+        ); /* Reduced from 50px for subtler animation */
+        transition:
+            opacity 0.4s ease,
+            transform 0.4s ease; /* Faster transition */
+    }
+
+    .grid-item.animated {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .portfolio-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .grid-item:hover .portfolio-image {
+        transform: scale(1.05);
+    }
+
+    /* Medium screens - 2 columns */
+    @media (max-width: 1024px) {
+        .image-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    /* Small screens - 1 column */
+    @media (max-width: 640px) {
+        .image-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

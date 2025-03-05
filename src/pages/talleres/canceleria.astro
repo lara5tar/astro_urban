@@ -5,9 +5,9 @@ import CriticalStyles from "../../components/CriticalStyles.astro";
 import TallerDetail from "../../components/TallerDetail.astro";
 
 // Import images directly
-import mainImage from "/public/talleres/main.webp";
-import ventanasImage from "/public/talleres/aluminio.webp";
-import puertasImage from "/public/talleres/pvc.webp";
+import mainImage from "/public/talleres/canceleria/main.webp";
+import ventanasImage from "/public/talleres/canceleria/aluminio.webp";
+import puertasImage from "/public/talleres/canceleria/pvc.webp";
 
 // Define options for cancelería
 const options = [
@@ -47,6 +47,13 @@ const description =
     </head>
     <body>
         <Navbar />
+
+        <TallerDetail
+            title="Cancelería"
+            mainImage={mainImage}
+            description={description}
+            options={options}
+        />
     </body>
 </html>
 

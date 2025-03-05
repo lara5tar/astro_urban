@@ -69,8 +69,12 @@ const talleres = [
         <main class="talleres-main">
             <section class="talleres-gallery">
                 {
-                    talleres.map((taller) => (
-                        <a href={taller.url} class="taller-item">
+                    talleres.map((taller, index) => (
+                        <a
+                            href={taller.url}
+                            class="taller-item animate-item"
+                            data-index={index}
+                        >
                             {/* Desktop image - hidden on mobile */}
                             <div class="desktop-only">
                                 <Image
@@ -95,6 +99,18 @@ const talleres = [
                 }
             </section>
         </main>
+
+        <script>
+            // Animation for items when page loads
+            document.addEventListener("DOMContentLoaded", () => {
+                const items = document.querySelectorAll(".animate-item");
+                items.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.classList.add("visible");
+                    }, index * 200); // Stagger the animations
+                });
+            });
+        </script>
     </body>
     <style>
         body {
@@ -129,6 +145,24 @@ const talleres = [
             text-decoration: none; /* Remove default link styling */
             display: block;
             cursor: pointer;
+            opacity: 0;
+            transform: translateY(50px);
+            transition:
+                opacity 0.6s ease,
+                transform 0.6s ease,
+                filter 0.3s ease;
+            filter: grayscale(0.3);
+        }
+
+        .taller-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .taller-item:hover {
+            transform: scale(1.02);
+            z-index: 2;
+            filter: grayscale(0);
         }
 
         .taller-image {
@@ -136,6 +170,11 @@ const talleres = [
             height: 100%;
             object-fit: cover;
             display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .taller-item:hover .taller-image {
+            transform: scale(1.05);
         }
 
         .desktop-only {
@@ -160,7 +199,9 @@ const talleres = [
             align-items: center;
             justify-content: center;
             background: rgba(0, 0, 0, 0.5);
-            transition: background 0.3s ease;
+            transition:
+                background 0.3s ease,
+                transform 0.3s ease;
         }
 
         .taller-overlay:hover {
@@ -175,6 +216,11 @@ const talleres = [
             text-align: center;
             padding: 0 0.5rem;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            transition: transform 0.3s ease;
+        }
+
+        .taller-item:hover .taller-title {
+            transform: scale(1.05);
         }
 
         @media (max-width: 768px) {

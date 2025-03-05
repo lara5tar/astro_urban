@@ -4,6 +4,7 @@ import Carousel from "../components/Carousel.astro";
 import Navbar from "../components/Navbar.astro";
 import HeroWithImage from "../components/HeroWithImage.astro";
 import CriticalStyles from "../components/CriticalStyles.astro";
+import Talleres from "../components/Talleres.astro";
 
 import imagen1 from "/public/carousel/web/Imagen1.webp";
 import imagen2 from "/public/carousel/web/Imagen2.webp";
@@ -52,6 +53,25 @@ const slides = [
     image: imagen6,
     mobileImage: imagen6Mobile,
     description: "Arquitectura y Construccion a la medida de su presupuesto",
+  },
+];
+
+const talleresItems = [
+  {
+    title: "Carpintería",
+    imageSrc: "/public/talleres/carpinteria.webp",
+  },
+  {
+    title: "Cancelería",
+    imageSrc: "/public/talleres/canceleria.webp",
+  },
+  {
+    title: "Herrería",
+    imageSrc: "/public/talleres/herreria.webp",
+  },
+  {
+    title: "Acabados",
+    imageSrc: "/public/talleres/acabados.webp",
   },
 ];
 ---
@@ -134,6 +154,8 @@ const slides = [
         Querétaro, con cobertura nacional.
       </p>
     </HeroWithImage>
+
+    <Talleres items={talleresItems} />
   </body>
 </html>
 

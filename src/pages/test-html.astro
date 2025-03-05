@@ -1,0 +1,47 @@
+---
+import "../tailwind.css";
+import Navbar from "../components/Navbar.astro";
+---
+
+<html>
+    <head>
+        <title>Test HTML Rendering</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </head>
+    <body>
+        <Navbar />
+        <div class="container mx-auto mt-20 p-8">
+            <h1 class="text-2xl font-bold mb-4">Test HTML Rendering</h1>
+
+            <div class="bg-gray-100 p-6 rounded-lg mb-6">
+                <h2 class="text-xl mb-2">Using set:html directive:</h2>
+                <div
+                    class="border p-4 bg-white"
+                    set:html={`
+                    <p>This is a test with <strong>bold text</strong> and line breaks.<br><br>
+                    Second paragraph after break.</p>
+                `}
+                />
+            </div>
+
+            <div class="bg-gray-100 p-6 rounded-lg">
+                <h2 class="text-xl mb-2">Normal HTML:</h2>
+                <div class="border p-4 bg-white">
+                    <p>
+                        This is a test with <strong>bold text</strong> and line breaks.<br
+                        /><br />
+                        Second paragraph after break.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+<style>
+    :global(strong) {
+        font-weight: 700;
+        color: #2e8d80;
+    }
+</style>

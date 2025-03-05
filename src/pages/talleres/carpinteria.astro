@@ -1,0 +1,66 @@
+---
+import "../../tailwind.css";
+import Navbar from "../../components/Navbar.astro";
+import CriticalStyles from "../../components/CriticalStyles.astro";
+import TallerDetail from "../../components/TallerDetail.astro";
+
+// Import images directly
+import mainImage from "/public/talleres/carpinteria/main.webp";
+import mdf from "/public/talleres/carpinteria/mdf.webp";
+import madera from "/public/talleres/carpinteria/madera.webp";
+
+// Define options for carpintería with HTML formatting
+const options = [
+    {
+        id: "mdf",
+        title: "Carpintería en melamina (MDF)",
+        description:
+            "Ofrecemos <strong>soluciones integrales</strong> a particulares y empresas constructoras diseñando y fabricando toda la carpintería que un nuevo proyecto requiere, minimizando el tiempo de entrega.<br><br>Fabricamos entre otras cosas, <strong>cocinas integrales</strong>, closet, vestidores, muebles de lavabo, alacenas, recamaras integrales.",
+        image: mdf,
+    },
+    {
+        id: "madera",
+        title: "Carpintería en madera",
+        description:
+            "Nuestros <strong>artesanos</strong> darán forma a maderas finas, nacionales e importadas, creando piezas únicas, cuidando con especial atención los detalles y acabados finales.<br><br>Especialistas en diseño y fabricación a la medida de <strong>puertas principales</strong>, mobiliario residencial y de oficina.",
+        image: madera,
+    },
+];
+
+// Main description with HTML formatting
+const description =
+    "Nuestro taller de <strong>carpintería</strong> ofrece servicios de la más alta calidad, con maestros artesanos que trabajan la madera con precisión y dedicación.<br><br>Fabricamos muebles a medida, acabados de interior, y todo tipo de elementos decorativos en madera que darán a su hogar un toque de elegancia y exclusividad. Utilizamos las mejores maderas y técnicas tanto tradicionales como modernas para garantizar <strong>resultados excepcionales</strong> que perduran en el tiempo.";
+---
+
+<html>
+    <head>
+        <title>Taller de Carpintería</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <CriticalStyles />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@500;700&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <Navbar />
+
+        <TallerDetail
+            title="Carpintería"
+            mainImage={mainImage}
+            description={description}
+            options={options}
+        />
+    </body>
+</html>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+</style>

@@ -1,0 +1,114 @@
+---
+interface TallerItem {
+    title: string;
+    imageSrc: string;
+}
+
+interface Props {
+    items: TallerItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<section class="talleres-section">
+    <div class="talleres-container">
+        {
+            items.map((item) => (
+                <div class="taller-item">
+                    <img
+                        src={item.imageSrc}
+                        alt={item.title}
+                        class="taller-image"
+                    />
+                    <div class="taller-overlay">
+                        <h3 class="taller-title">{item.title}</h3>
+                    </div>
+                </div>
+            ))
+        }
+    </div>
+</section>
+
+<style>
+    .talleres-section {
+        padding: 2rem 0;
+        background-color: #ffffff;
+        width: 100%;
+    }
+
+    .talleres-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+        gap: 1.5rem;
+    }
+
+    .taller-item {
+        position: relative;
+        flex: 1;
+        overflow: hidden;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .taller-item:hover {
+        transform: translateY(-5px);
+    }
+
+    .taller-image {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .taller-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.4);
+        transition: background-color 0.3s ease;
+    }
+
+    .taller-item:hover .taller-overlay {
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .taller-title {
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 500;
+        text-align: center;
+        padding: 0 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    @media (max-width: 768px) {
+        .talleres-container {
+            flex-direction: column;
+        }
+
+        .taller-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .taller-image {
+            height: 200px;
+        }
+
+        .taller-title {
+            font-size: 1.25rem;
+        }
+    }
+</style>

@@ -1,0 +1,455 @@
+---
+import "../tailwind.css";
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Option {
+    id: string;
+    title: string;
+    description: string;
+    image: ImageMetadata;
+}
+
+interface Props {
+    title: string;
+    mainImage: ImageMetadata;
+    description: string;
+    options: Option[];
+}
+
+const { title, mainImage, description, options } = Astro.props;
+---
+
+<div class="relative w-full h-screen overflow-hidden">
+    <!-- Main image background -->
+    <div
+        id="background-container"
+        class="absolute top-0 left-0 w-full h-full z-10"
+    >
+        <div
+            class="absolute w-full h-full opacity-0 transition-opacity duration-500 ease-in-out"
+            id="main-image"
+        >
+            <Image
+                src={mainImage}
+                alt={title}
+                class="w-full h-full object-cover"
+            />
+        </div>
+
+        {
+            options.map((option) => (
+                <div
+                    class="absolute w-full h-full opacity-0 transition-opacity duration-500 ease-in-out"
+                    id={`image-${option.id}`}
+                >
+                    <Image
+                        src={option.image}
+                        alt={option.title}
+                        class="w-full h-full object-cover image-content"
+                    />
+                </div>
+            ))
+        }
+    </div>
+
+    <!-- Content layout -->
+    <div class="absolute top-0 left-0 w-full h-full flex z-20 pt-20 box-border">
+        <!-- Main description panel (left side) -->
+        <div
+            class="w-[40%] max-w-[500px] h-full bg-black/80 text-white p-8 flex flex-col overflow-y-auto content-panel"
+        >
+            <h1
+                class="font-poppins text-[clamp(2rem,4vw,3rem)] font-bold m-0 opacity-0"
+            >
+                {title}
+            </h1>
+            <div class="w-100% h-[3px] bg-[#2e8d80] my-4 divider opacity-0">
+            </div>
+
+            <div class="flex-grow">
+                <div
+                    id="main-description"
+                    class="block description text-justify opacity-0"
+                    set:html={description}
+                />
+            </div>
+
+            <div class="mt-auto opacity-0">
+                <h3 class="font-montserrat text-lg my-4">Servicios</h3>
+                <div class="flex flex-wrap gap-2.5 mb-8 options-list">
+                    {
+                        options.map((option) => (
+                            <button
+                                class="relative w-full bg-[#2e8d80]/30 border border-[#2e8d80] text-white py-2 px-4 rounded cursor-pointer font-montserrat font-medium transition-all duration-300 hover:bg-[#2e8d80] option-button"
+                                data-option-id={option.id}
+                            >
+                                {option.title}
+                            </button>
+                        ))
+                    }
+                </div>
+
+                <!-- Option descriptions for mobile - Only visible on mobile via CSS -->
+                <!-- Moved below the buttons -->
+                <div class="mobile-descriptions">
+                    {
+                        options.map((option) => (
+                            <div
+                                id={`mobile-description-${option.id}`}
+                                class="mobile-option-description"
+                                data-option-id={option.id}
+                            >
+                                <h3 class="text-xl font-poppins mb-2 text-[#2e8d80]">
+                                    {option.title}
+                                </h3>
+                                <div
+                                    class="text-justify"
+                                    set:html={option.description}
+                                />
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Option descriptions panel (right side) - Only visible on desktop via CSS -->
+        <div
+            class="w-[80%] h-full flex items-end justify-center relative pb-16 desktop-descriptions"
+        >
+            {
+                options.map((option) => (
+                    <div
+                        id={`description-${option.id}`}
+                        class="hidden w-full mx-auto bg-black/70 text-white p-8 option-description"
+                        data-option-id={option.id}
+                    >
+                        <div
+                            class="text-justify"
+                            set:html={option.description}
+                        />
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    // Use window load event instead of DOMContentLoaded for more reliable timing
+    window.addEventListener("load", function () {
+        // Get elements
+        const optionButtons = document.querySelectorAll(".option-button");
+        const mainImage = document.getElementById("main-image");
+        const mainDescription = document.getElementById("main-description");
+        const title = document.querySelector(".content-panel h1");
+        const divider = document.querySelector(".content-panel .divider");
+        const optionsSection = document.querySelector(
+            ".content-panel .mt-auto",
+        );
+
+        // Ensure all animations start with a small delay after page load
+        setTimeout(() => {
+            // Add entrance animations on page load to inner content elements
+            if (mainImage) {
+                mainImage.classList.add("entrance-animation", "image-visible");
+            }
+
+            // Animate inner elements instead of the container
+            if (mainDescription) {
+                mainDescription.classList.add("content-entrance-animation");
+            }
+
+            if (title) {
+                title.classList.add("content-entrance-animation");
+            }
+
+            if (divider) {
+                divider.classList.add("content-entrance-animation");
+                (divider as HTMLElement).style.animationDelay = "0.2s";
+            }
+
+            if (optionsSection) {
+                optionsSection.classList.add("content-entrance-animation");
+                (optionsSection as HTMLElement).style.animationDelay = "0.4s";
+            }
+        }, 50); // Small delay to ensure CSS has applied
+
+        // Rest of the event handlers
+        // Handle option selection - SIMPLIFIED TO ONE EVENT HANDLER
+        optionButtons.forEach((button) => {
+            button.addEventListener("click", function (this: HTMLElement) {
+                const optionId = this.getAttribute("data-option-id");
+
+                // Reset active states
+                resetAllActiveStates();
+
+                // Set active state for selected option
+                const selectedImage = document.getElementById(
+                    `image-${optionId}`,
+                );
+
+                // Get relevant descriptions
+                const desktopDesc = document.getElementById(
+                    `description-${optionId}`,
+                );
+                const mobileDesc = document.getElementById(
+                    `mobile-description-${optionId}`,
+                );
+
+                // Show image with animation first but not entrance animation
+                if (selectedImage) {
+                    selectedImage.classList.add("image-visible");
+                    selectedImage.classList.remove("entrance-animation");
+                }
+
+                // Show descriptions with animation after a delay
+                setTimeout(() => {
+                    if (desktopDesc) {
+                        desktopDesc.style.display = "block"; // Force display
+                        desktopDesc.classList.add(
+                            "description-visible",
+                            "!block",
+                        );
+                    }
+
+                    if (mobileDesc) {
+                        mobileDesc.style.display = "block"; // Force display
+                        mobileDesc.classList.add(
+                            "description-visible",
+                            "!block",
+                        );
+                        // Scroll to mobile description
+                        if (window.innerWidth <= 768) {
+                            setTimeout(() => {
+                                mobileDesc.scrollIntoView({
+                                    behavior: "smooth",
+                                    block: "start",
+                                });
+                            }, 100);
+                        }
+                    }
+                }, 600); // Delay equal to image animation duration
+
+                // Update active button
+                optionButtons.forEach((btn) => {
+                    btn.classList.remove("bg-[#2e8d80]", "active-button");
+                    btn.setAttribute("aria-pressed", "false");
+                });
+
+                this.classList.add("bg-[#2e8d80]", "active-button");
+                this.setAttribute("aria-pressed", "true");
+            });
+        });
+
+        // Helper function to reset active states
+        function resetAllActiveStates() {
+            document
+                .querySelectorAll(
+                    ".option-description, .mobile-option-description",
+                )
+                .forEach((desc) => {
+                    desc.classList.remove("description-visible", "!block");
+                    (desc as HTMLElement).style.display = "none"; // Force hide
+                });
+
+            document.querySelectorAll(`[id^="image-"]`).forEach((img) => {
+                img.classList.remove("image-visible");
+            });
+
+            if (mainImage) {
+                mainImage.classList.remove("image-visible");
+                // Re-add the main image with default animation, not entrance
+                setTimeout(() => {
+                    mainImage.classList.add("image-visible");
+                    mainImage.classList.remove("entrance-animation");
+                }, 10);
+            }
+        }
+    });
+</script>
+
+<style>
+    /* ANIMATION STYLES - PREVENT FLASH OF CONTENT */
+
+    /* Base styles for option descriptions and images */
+    .option-description,
+    .mobile-option-description {
+        display: none;
+    }
+
+    /* Hide all images initially */
+    [id^="image-"],
+    #main-image {
+        opacity: 0;
+    }
+
+    /* Hide content initially - now redundant with inline styles but keeping as a fallback */
+    .content-panel h1,
+    .content-panel .divider,
+    #main-description,
+    .content-panel .mt-auto {
+        opacity: 0;
+    }
+
+    /* Revised animation keyframes */
+    @keyframes floatUp {
+        0% {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* New entrance animations */
+    @keyframes slideRight {
+        0% {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideDown {
+        0% {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Image animation */
+    .image-visible {
+        opacity: 1 !important;
+        transition: opacity 0.1s ease;
+    }
+
+    /* Add animation to inner elements with reduced initial opacity flash */
+    .content-entrance-animation {
+        animation: slideDown 0.8s ease-out forwards;
+        animation-fill-mode: forwards;
+    }
+
+    /* Text section animation - fix for description visibility */
+    .description-visible {
+        display: block !important;
+        animation: floatUp 0.6s ease-out forwards;
+    }
+
+    /* Also support the old class name for backward compatibility */
+    .!block {
+        display: block !important;
+    }
+
+    .image-visible .image-content {
+        animation: floatUp 0.6s ease-out forwards;
+    }
+
+    /* Entrance animations - apply to inner content only */
+    #main-image.entrance-animation {
+        opacity: 1 !important;
+        animation: slideRight 0.8s ease-out forwards;
+    }
+
+    /* Rest of the existing styles */
+    /* Hide mobile descriptions by default */
+    .mobile-descriptions {
+        display: none;
+    }
+
+    .mobile-option-description {
+        width: 100%;
+        margin: 0.5rem 0 2rem;
+        padding: 1rem;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-left: 4px solid #2e8d80;
+    }
+
+    /* Active button styling */
+    .active-button {
+        box-shadow:
+            0 0 0 2px white,
+            0 0 0 4px #2e8d80;
+        transform: translateY(-2px);
+    }
+
+    /* Media query for mobile */
+    @media (max-width: 768px) {
+        .options-list {
+            flex-direction: column;
+            margin-bottom: 1rem; /* Reduce bottom margin of options list */
+        }
+
+        .option-button {
+            width: 100%;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Full height main panel on mobile */
+        .content-panel {
+            width: 100%;
+            max-width: none;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Show mobile descriptions section */
+        .mobile-descriptions {
+            display: block;
+            margin-bottom: 2rem;
+        }
+
+        /* Hide desktop descriptions panel */
+        .desktop-descriptions {
+            display: none;
+        }
+
+        .mt-auto {
+            margin-top: 2rem; /* Add some space between main description and options */
+        }
+
+        .active-button {
+            border-width: 2px;
+        }
+
+        /* Add highlighting to the selected option description */
+        .mobile-option-description.description-visible {
+            border-left: 6px solid #2e8d80;
+            background-color: rgba(46, 141, 128, 0.2);
+        }
+    }
+
+    /* Add justify text styling for all paragraphs */
+    p {
+        font-family: "Lato", sans-serif;
+        font-size: 1.1rem;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+        text-align: justify;
+    }
+
+    /* Make sure strong tags are properly rendered */
+    :global(strong) {
+        font-weight: 700;
+        color: #2e8d80;
+    }
+
+    /* Add some spacing after break tags if needed */
+    :global(br + br) {
+        display: block;
+        content: "";
+        margin-top: 0.5em;
+    }
+</style>

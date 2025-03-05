@@ -1,180 +1,200 @@
 ---
 import "../tailwind.css";
 import Navbar from "../components/Navbar.astro";
-import SocialIconsRow from "../components/SocialIconsRow.astro";
+import CriticalStyles from "../components/CriticalStyles.astro";
+import { Image } from "astro:assets";
 
-// Sample workshop data
-const workshops = [
+// Import web images
+import carpinteriaWeb from "/public/menu-talleres/web/carpinteria.webp";
+import canceleriaWeb from "/public/menu-talleres/web/canceleria.webp";
+import herreriaWeb from "/public/menu-talleres/web/herreria.webp";
+import acabadosWeb from "/public/menu-talleres/web/acabados.webp";
+
+// Import mobile images
+import carpinteriaMovil from "/public/menu-talleres/movil/carpinteria.webp";
+import canceleriaMovil from "/public/menu-talleres/movil/canceleria.webp";
+import herreriaMovil from "/public/menu-talleres/movil/herreria.webp";
+import acabadosMovil from "/public/menu-talleres/movil/acabados.webp";
+
+// Define workshop items with image configurations and URLs
+const talleres = [
     {
-        id: 1,
-        title: "Diseño Arquitectónico Sustentable",
-        description:
-            "Aprende las mejores prácticas para diseñar espacios que sean amigables con el medio ambiente y energéticamente eficientes.",
-        date: "25-26 Agosto 2023",
-        instructor: "Arq. Carlos Mendoza",
-        image: "/public/carousel/Imagen1.webp",
-        schedule: "Sábado y Domingo, 9:00 AM - 1:00 PM",
+        title: "Carpintería",
+        webImage: carpinteriaWeb,
+        movilImage: carpinteriaMovil,
+        url: "/talleres/carpinteria",
     },
     {
-        id: 2,
-        title: "Visualización 3D Avanzada",
-        description:
-            "Domina las técnicas de renderizado y visualización arquitectónica para presentar proyectos de manera profesional.",
-        date: "15-16 Septiembre 2023",
-        instructor: "Arq. María González",
-        image: "/public/carousel/Imagen1.webp",
-        schedule: "Sábado y Domingo, 10:00 AM - 2:00 PM",
+        title: "Cancelería",
+        webImage: canceleriaWeb,
+        movilImage: canceleriaMovil,
+        url: "/talleres/canceleria",
     },
     {
-        id: 3,
-        title: "Diseño de Espacios Comerciales",
-        description:
-            "Especialízate en el diseño de espacios comerciales funcionales y atractivos que incrementen las ventas y mejoren la experiencia del cliente.",
-        date: "7-8 Octubre 2023",
-        instructor: "Arq. Luis Ramírez",
-        image: "/public/carousel/Imagen1.webp",
-        schedule: "Sábado y Domingo, 9:30 AM - 1:30 PM",
+        title: "Herrería",
+        webImage: herreriaWeb,
+        movilImage: herreriaMovil,
+        url: "/talleres/herreria",
+    },
+    {
+        title: "Acabados",
+        webImage: acabadosWeb,
+        movilImage: acabadosMovil,
+        url: "/talleres/acabados",
     },
 ];
 ---
 
-<html lang="es">
+<html>
     <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Talleres de Arquitectura</title>
+        <title>Talleres</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <!-- Critical CSS for performance -->
+        <CriticalStyles />
+
+        <!-- Font loading -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@500;700&display=swap"
             rel="stylesheet"
         />
     </head>
-    <Navbar />
-
-    <body class="bg-gray-50 font-['Lato']">
+    <nav>
         <Navbar />
-
-        <main class="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Hero Section -->
-            <section class="py-12 md:py-16">
-                <div class="text-center">
-                    <h1
-                        class="text-4xl md:text-5xl font-bold text-gray-800 mb-4"
-                    >
-                        Talleres de Arquitectura
-                    </h1>
-                    <p
-                        class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto"
-                    >
-                        Desarrolla nuevas habilidades y conocimientos con
-                        nuestros talleres especializados en arquitectura y
-                        diseño.
-                    </p>
-                </div>
-            </section>
-
-            <!-- Workshops List -->
-            <section class="py-8">
-                <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                    {
-                        workshops.map((workshop) => (
-                            <div class="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:shadow-lg hover:-translate-y-1">
-                                <div class="h-48 bg-gray-200 relative">
-                                    <img
-                                        src={workshop.image}
-                                        alt={workshop.title}
-                                        class="w-full h-full object-cover"
-                                    />
-                                </div>
-                                <div class="p-6">
-                                    <div class="flex justify-between items-start mb-2">
-                                        <h2 class="text-xl font-bold text-gray-800">
-                                            {workshop.title}
-                                        </h2>
-                                    </div>
-                                    <div class="mb-4">
-                                        <span class="inline-block bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded-full mr-2 mb-2">
-                                            {workshop.date}
-                                        </span>
-                                        <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mb-2">
-                                            {workshop.schedule}
-                                        </span>
-                                    </div>
-                                    <p class="text-gray-600 mb-4">
-                                        {workshop.description}
-                                    </p>
-                                    <div class="flex items-center text-sm text-gray-500 mb-4">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            class="h-4 w-4 mr-1"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                            />
-                                        </svg>
-                                        <span>
-                                            Instructor: {workshop.instructor}
-                                        </span>
-                                    </div>
-                                    <button class="w-full bg-emerald-600 text-white py-2 px-4 rounded hover:bg-emerald-700 transition">
-                                        Inscribirse
-                                    </button>
-                                </div>
+    </nav>
+    <body>
+        <main class="talleres-main">
+            <section class="talleres-gallery">
+                {
+                    talleres.map((taller) => (
+                        <a href={taller.url} class="taller-item">
+                            {/* Desktop image - hidden on mobile */}
+                            <div class="desktop-only">
+                                <Image
+                                    src={taller.webImage}
+                                    alt={taller.title}
+                                    class="taller-image"
+                                />
                             </div>
-                        ))
-                    }
-                </div>
-            </section>
-
-            <!-- Newsletter Section -->
-            <section class="py-12 bg-emerald-50 rounded-lg my-12">
-                <div class="max-w-3xl mx-auto text-center px-4">
-                    <h2
-                        class="text-2xl md:text-3xl font-bold text-gray-800 mb-4"
-                    >
-                        Mantente Informado
-                    </h2>
-                    <p class="text-gray-600 mb-6">
-                        Suscríbete para recibir información sobre futuros
-                        talleres y eventos.
-                    </p>
-                    <form
-                        class="flex flex-col sm:flex-row gap-2 max-w-md mx-auto"
-                    >
-                        <input
-                            type="email"
-                            placeholder="Tu correo electrónico"
-                            class="flex-1 px-4 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                        />
-                        <button
-                            type="submit"
-                            class="bg-emerald-600 text-white py-2 px-6 rounded hover:bg-emerald-700 transition"
-                        >
-                            Suscribirse
-                        </button>
-                    </form>
-                </div>
+                            {/* Mobile image - hidden on desktop */}
+                            <div class="mobile-only">
+                                <Image
+                                    src={taller.movilImage}
+                                    alt={taller.title}
+                                    class="taller-image"
+                                />
+                            </div>
+                            <div class="taller-overlay">
+                                <h2 class="taller-title">{taller.title}</h2>
+                            </div>
+                        </a>
+                    ))
+                }
             </section>
         </main>
-
-        <footer class="bg-gray-800 text-white py-8">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <SocialIconsRow />
-                <div class="text-center mt-8">
-                    <p class="text-gray-400">
-                        © {new Date().getFullYear()} Urban Arquitectura. Todos los
-                        derechos reservados.
-                    </p>
-                </div>
-            </div>
-        </footer>
     </body>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            font-family: "Lato", sans-serif;
+            overflow-x: hidden;
+        }
 
+        .talleres-main {
+            height: calc(100vh - var(--navbar-height, 80px));
+            width: 100%;
+            margin-top: var(--navbar-height, 80px);
+        }
+
+        .talleres-gallery {
+            display: flex;
+            flex-direction: row;
+            padding: 0;
+            margin: 0;
+            gap: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .taller-item {
+            position: relative;
+            flex: 1;
+            height: 100%;
+            overflow: hidden;
+            text-decoration: none; /* Remove default link styling */
+            display: block;
+            cursor: pointer;
+        }
+
+        .taller-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .desktop-only {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .mobile-only {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .taller-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            transition: background 0.3s ease;
+        }
+
+        .taller-overlay:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .taller-title {
+            color: white;
+            font-family: "Poppins", sans-serif;
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 500;
+            text-align: center;
+            padding: 0 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        @media (max-width: 768px) {
+            .talleres-gallery {
+                flex-direction: column-reverse; /* Display from bottom to top on mobile */
+                height: calc(100vh - var(--navbar-height, 60px));
+            }
+
+            .taller-item {
+                width: 100%;
+                height: 25%;
+            }
+
+            .desktop-only {
+                display: none;
+            }
+
+            .mobile-only {
+                display: block;
+            }
+        }
+    </style>
 </html>

@@ -3,8 +3,8 @@ import "../tailwind.css";
 import Carousel from "../components/Carousel.astro";
 import Navbar from "../components/Navbar.astro";
 import HeroWithImage from "../components/HeroWithImage.astro";
+import HeroWithImageFull from "../components/HeroWithFullImage.astro";
 import CriticalStyles from "../components/CriticalStyles.astro";
-import Talleres from "../components/Talleres.astro";
 
 import imagen1 from "/public/carousel/web/Imagen1.webp";
 import imagen2 from "/public/carousel/web/Imagen2.webp";
@@ -21,6 +21,9 @@ import imagen5Mobile from "/public/carousel/movil/5.webp";
 import imagen6Mobile from "/public/carousel/movil/6.webp";
 
 import iconUrban from "/public/icons/icon_urban.svg";
+import arquitecturaImage from "/public/inicio/arquitectura.webp";
+import construccionImage from "/public/inicio/construccion.webp";
+import Footer from "../components/Footer.astro";
 
 const slides = [
   {
@@ -139,11 +142,12 @@ const talleresItems = [
       showDots={true}
       showText={true}
     />
+    <div class="h-5"></div>
     <HeroWithImage
       title="NOSOTROS"
       imageSrc={iconUrban}
       imagePosition="right"
-      height="550px"
+      height="600px"
     >
       <p>
         Somos un despacho de <strong
@@ -154,9 +158,36 @@ const talleresItems = [
         Querétaro, con cobertura nacional.
       </p>
     </HeroWithImage>
+    <div class="h-5"></div>
 
-    <Talleres items={talleresItems} />
-  </body>
+    <HeroWithImageFull
+      title="ARQUITECTURA"
+      imageSrc={arquitecturaImage}
+      textPosition="right"
+      height="600px"
+    >
+      <p>
+        Elaboramos propuestas arquitectónicas enfocadas a satisfacer sus
+        necesidades, <strong
+          >creando espacios inteligentes y funcionales con diseños únicos</strong
+        > y amigables con el medio ambiente. Aprovechamos al máximo las características
+        geográficas del espacio de construccion.
+      </p>
+    </HeroWithImageFull>
+    <div class="h-5"></div>
+    <HeroWithImageFull
+      title="CONTRUSCCIÓN"
+      imageSrc={construccionImage}
+      textPosition="left"
+      height="600px"
+    >
+      <p>
+        Nuestro equipo de <strong>expertos en ingeniería civil</strong> materializará
+        sus proyectos con técnicas innovadoras, materiales de última generacion y
+        con los más altos estánderes de calidad, optimizando al maximo su presupuesto
+      </p>
+    </HeroWithImageFull>
+  </body><Footer />
 </html>
 
 <style>

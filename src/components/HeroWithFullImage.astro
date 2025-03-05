@@ -1,0 +1,214 @@
+---
+import { Image } from "astro:assets";
+
+interface Props {
+    title: string;
+    imageSrc: ImageMetadata;
+    textPosition: "left" | "right";
+    height?: string;
+}
+
+const {
+    title,
+    imageSrc,
+    textPosition = "left",
+    height = "400px",
+} = Astro.props as Props;
+
+// Extract the first letter of the title
+const firstLetter = title.charAt(0);
+---
+
+<section
+    class="hero-section"
+    style={`--section-height: ${height};`}
+    aria-labelledby="hero-title"
+>
+    <div class={`content-container text-position-${textPosition}`}>
+        <div class="content-wrapper">
+            <div class="content-inner">
+                <div class="title-section">
+                    <h1 id="hero-title">{title}</h1>
+                </div>
+                <div class="description-section" role="contentinfo">
+                    <slot />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div
+        class={`first-letter-overlay letter-position-${textPosition}`}
+        aria-hidden="true"
+    >
+        {firstLetter}
+    </div>
+
+    <div class="image-container">
+        <Image
+            src={imageSrc}
+            alt="Background decoration"
+            class="background-image"
+            aria-hidden="true"
+        />
+    </div>
+</section>
+
+<style>
+    /* Variables CSS */
+    :root {
+        --font-title: "Poppins", sans-serif;
+        --font-body: "Lato", sans-serif;
+        /* --color-primary: #2e8d80; */
+        /* --color-text: #ffffff; */
+        /* --color-background: #000000; */
+        --spacing-base: 1rem;
+        --title-shadow: 4px 4px 4px rgba(114, 114, 114, 0.95);
+    }
+
+    /* Layout */
+    .hero-section {
+        background-color: white;
+        position: relative;
+        display: flex;
+        width: 100%;
+        height: var(--section-height);
+        overflow: hidden;
+        /* padding: 2rem; */
+    }
+
+    .content-container {
+        position: relative;
+        z-index: 3; /* Increased to ensure content is always on top */
+        width: 100%;
+        height: 100%;
+        display: flex;
+    }
+
+    .text-position-left {
+        justify-content: flex-start;
+    }
+
+    .text-position-right {
+        justify-content: flex-end;
+    }
+
+    .content-wrapper {
+        width: 60%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.767);
+        display: flex;
+        align-items: center;
+    }
+
+    /* Large First Letter Overlay */
+    .first-letter-overlay {
+        position: absolute;
+        bottom: -0.13em;
+        transform: translateX(-50%);
+        font-family: var(--font-title);
+        font-size: 30rem;
+        font-weight: 700;
+        color: white;
+        z-index: 4; /* Highest layer - in front of everything on desktop */
+        line-height: 1;
+        pointer-events: none;
+    }
+
+    .letter-position-left {
+        left: 58%;
+    }
+
+    .letter-position-right {
+        left: 42%;
+    }
+
+    .content-inner {
+        /* padding: 0 calc(var(--spacing-base) * 11) calc(var(--spacing-base) * 11);s */
+        width: 100%;
+    }
+
+    /* Imagen de fondo */
+    .image-container {
+        position: absolute;
+        inset: 0;
+        z-index: 1; /* Bottom layer - background */
+    }
+
+    .background-image {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+
+    /* Tipografía */
+    .title-section h1 {
+        color: white;
+        font-family: var(--font-title);
+        font-weight: 500;
+        font-size: clamp(2rem, 6vw, 3rem);
+        line-height: 1.2;
+        margin: 0;
+        filter: drop-shadow(var(--title-shadow));
+        text-align: center;
+    }
+
+    .description-section {
+        margin-top: 0;
+        padding: calc(var(--spacing-base) * 2) calc(var(--spacing-base) * 12) 0;
+    }
+
+    .description-section :global(p) {
+        color: white;
+        font-family: var(--font-body);
+        font-size: clamp(1.5rem, 1.5vw, 2rem);
+        font-weight: 300;
+        line-height: 1.1;
+        word-spacing: 0.1rem;
+        margin: 0;
+        text-align: center;
+    }
+
+    .description-section :global(strong) {
+        font-weight: 700;
+    }
+
+    /* Media queries */
+    @media (max-width: 900px) {
+        .content-wrapper {
+            width: 100%;
+        }
+
+        .content-inner {
+            /* padding: 0 var(--spacing-base) var(--spacing-base); */
+        }
+
+        .content-container {
+            justify-content: center;
+        }
+
+        .first-letter-overlay {
+            font-size: 40rem;
+            top: 50%;
+            bottom: auto;
+            transform: translate(
+                -50%,
+                -50%
+            ); /* Center both horizontally and vertically */
+            color: rgb(255, 255, 255); /* Semi-transparent white */
+            z-index: 2; /* Return to middle layer on mobile */
+            filter: drop-shadow(4px 4px 4px rgba(114, 114, 114, 0.525));
+        }
+
+        .letter-position-left,
+        .letter-position-right {
+            left: 50%; /* Center on mobile regardless of text position */
+        }
+
+        .description-section {
+            padding: 0rem 2rem;
+        }
+    }
+</style>

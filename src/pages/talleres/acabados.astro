@@ -1,0 +1,82 @@
+---
+import "../../tailwind.css";
+import Navbar from "../../components/Navbar.astro";
+import CriticalStyles from "../../components/CriticalStyles.astro";
+import TallerDetail from "../../components/TallerDetail.astro";
+
+// Import images directly
+import mainImage from "/public/talleres/canceleria/main.webp";
+import ventanasImage from "/public/talleres/canceleria/aluminio.webp";
+import puertasImage from "/public/talleres/canceleria/pvc.webp";
+
+// Define options for cancelería
+const options = [
+    {
+        id: "acrilico",
+        title: "Impermeabilizante acrílico",
+        description:
+            "Es un <strong>recubrimiento impermeable y aislante térmico</strong> acrílico elastomérico integral base agua 100% ecológico de aplicación en frío, para proteger la humedad en cualquier superficie horizontal con una pendiente mínima del 2% y en superficies verticales tales como muros y fachadas. Estos productos nos permiten otorgar <strong>garantías a elegir de 3, 5 y 8 años</strong>, en colores blanco y terracota.",
+        image: ventanasImage,
+    },
+    {
+        id: "prefabricado",
+        title: "Impermeabilizante prefabricado",
+        description:
+            "Es un <strong>sistema impermeable laminar prefabricado de alto desempeño</strong> compuesto por una malla de fibra de vidrio o poliéster a escoger, cubierto en ambas caras por una película de asfalto modificado con polímero estireno-butadieno-estireno (SBS), de aplicación en caliente. Este sistema ofrece <strong>espesores desde 3.0 mm a 5.0 mm</strong> con garantías que van desde los <strong>3 hasta los 12 años</strong>, es ideal para prácticamente cualquier superficie horizontal con pendiente mínima del 2%. ",
+        image: puertasImage,
+    },
+    {
+        id: "nanotecnologico",
+        title: "Impermeabilizante nanotecnológico",
+        description:
+            "Es un repelente de líquidos de penetración profunda y repelente solar UV 100% ecológico y orgánico a base de microcristales líquidos, <strong>nanotecnología de última generación</strong>. Las partículas entran por los poros y se fusionan con la superficie volviéndose parte de la estructura atómica del sustrato. Sellan prácticamente cualquier superficie horizontal y vertical, de secado rápido y resultados inmediatos. Su aplicación es por aspersión y tiene una <strong>durabilidad de 25 años.</strong>",
+        image: puertasImage,
+    },
+    {
+        id: "comercial",
+        title: "Pintura residencial y comercial",
+        description:
+            "Personal capacitado en diferentes técnicas solucionarán sus trabajos de <strong>pintura residencial comercial e industrial</strong> de cualquier magnitud, optimizando los materiales y realizando el servicio en un mínimo de tiempo. Damos servicio a: <strong>casas, edificios, plazas comerciales, estructuras metálicas y naves industriales.</strong>",
+        image: puertasImage,
+    },
+];
+
+// Main description
+
+const titulo = "Impermeabilizaciones y Pintura";
+const description =
+    "Contamos con <strong>profesionales altamente capacitados</strong> para darle la solución definitiva a problemas de pintura y humedad, tanto en el <strong>ámbito residencial, comercial e industrial</strong>, utilizando productos de la más alta calidad lo que nos permite otorgar garantía en todos nuestros servicios. \bCon más de <strong>20 años de experiencia</strong>, nos especializamos en estos 3 tipos de impermeabilizantes:";
+---
+
+<html>
+    <head>
+        <title>{titulo}</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <CriticalStyles />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@500;700&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <Navbar />
+
+        <TallerDetail
+            title={titulo}
+            mainImage={mainImage}
+            description={description}
+            options={options}
+        />
+    </body>
+</html>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+</style>

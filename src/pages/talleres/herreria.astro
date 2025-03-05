@@ -1,0 +1,68 @@
+---
+import "../../tailwind.css";
+import Navbar from "../../components/Navbar.astro";
+import CriticalStyles from "../../components/CriticalStyles.astro";
+import TallerDetail from "../../components/TallerDetail.astro";
+
+// Import images directly
+import mainImage from "/public/talleres/herreria/main.webp";
+import tradicionalImage from "/public/talleres/herreria/tradicional.webp";
+import celosiasImage from "/public/talleres/herreria/celosias.webp";
+
+// Define options for cancelería
+const options = [
+    {
+        id: "tradicional",
+        title: "Herrería tradicional",
+        description:
+            "Ofrecemos la <strong>elegancia y fuerza</strong> del acero con soldaduras especiales para crear artesanalmente <strong>barandales, puertas, protecciones, bardas y portones</strong> que aportarán la seguridad que usted y su familia necesita.",
+        image: tradicionalImage,
+    },
+    {
+        id: "celosias",
+        title: "Celosías",
+        description:
+            "Las celosías son un elemento arquitectónico que marca una tendencia a nivel mundial. <strong>Diseñamos y fabricamos paneles y celosías metálicas de acero, madera o aluminio</strong> para decorar espacios interiores y exteriores, proporcionando un control de luz, seguridad y belleza decorativa a tu espacio.",
+        image: celosiasImage,
+    },
+];
+
+// Main description
+
+const titulo = "Herrería Artística";
+const description =
+    "Nuestro equipo de arte diseña con profesionalismo <strong>piezas únicas y exclusivas</strong>, que después finos artesanos <strong>trabajarán a detalle</strong> con técnicas antiguas de forja combinadas con soldadura moderna creando bellas obras de arte en hierro, las cuales <strong>harán lucir cualquier espacio en su hogar.</strong>";
+---
+
+<html>
+    <head>
+        <title>{titulo}</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <CriticalStyles />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@500;700&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <Navbar />
+
+        <TallerDetail
+            title={titulo}
+            mainImage={mainImage}
+            description={description}
+            options={options}
+        />
+    </body>
+</html>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+</style>

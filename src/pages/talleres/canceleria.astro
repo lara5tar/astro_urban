@@ -6,35 +6,37 @@ import TallerDetail from "../../components/TallerDetail.astro";
 
 // Import images directly
 import mainImage from "/public/talleres/canceleria/main.webp";
-import ventanasImage from "/public/talleres/canceleria/aluminio.webp";
-import puertasImage from "/public/talleres/canceleria/pvc.webp";
+import aluminioImage from "/public/talleres/canceleria/aluminio.webp";
+import pvcImage from "/public/talleres/canceleria/pvc.webp";
 
 // Define options for cancelería
 const options = [
     {
-        id: "ventanas",
-        title: "Ventanas",
+        id: "aluminio",
+        title: "Cancelería en aluminio",
         description:
-            "Fabricamos e instalamos ventanas en diversos sistemas como corredizas, proyectables, abatibles y fijas. Utilizamos perfiles de aluminio de alta calidad o PVC con excelentes propiedades térmicas y acústicas. Combinamos estos con cristales templados, laminados o con cámaras de aire según sus necesidades de aislamiento y seguridad.",
-        image: ventanasImage,
+            "<strong>Expertos en cancelería de aluminio</strong> nacional, así como certificados en la fabricación de cancelería Eurovent, para crear lo que su obra requiere, utilizando cristales claros, oscurecidos y templados.",
+        image: aluminioImage,
     },
     {
-        id: "puertas",
-        title: "Puertas",
+        id: "pvc",
+        title: "Cancelería en PVC",
         description:
-            "Diseñamos puertas de acceso, interiores y de paso con los más altos estándares de calidad. Trabajamos con perfiles de aluminio reforzado, acero inoxidable y combinaciones con cristal para lograr soluciones elegantes y funcionales. Incorporamos sistemas de seguridad y herrajes de primera línea para garantizar durabilidad y facilidad de uso.",
-        image: puertasImage,
+            "Canceles <strong>fabricados bajo normas europeas</strong> con perfiles alemanes de PVC, de doble cristal y herrajes perimetrales. Permiten crear <strong>ambientes confortables</strong> totalmente herméticos, protegidos de factores ambientales como el ruido y el clima.",
+        image: pvcImage,
     },
 ];
 
 // Main description
+
+const titulo = "Cancelería de Diseño";
 const description =
-    "Ofrecemos soluciones de cancelería en aluminio, cristal y PVC de la más alta calidad para su hogar o negocio. Diseñamos, fabricamos e instalamos ventanas, puertas, cancelería para baños y todo tipo de divisiones de espacios con materiales modernos y duraderos. Nuestros diseños combinan funcionalidad, seguridad y estética, adaptándose perfectamente a sus necesidades específicas y al estilo arquitectónico de su espacio.";
+    "Proveemos <strong>cancelería de aluminio, PVC y cristal templado</strong> de la masalta calidad y buen gusto, con diseños elegantes y funcionales, creando ambientesúnicos tanto en fachadas como en interiores. Satisfacemos sus necesidades residencialesy comerciales, tanto para <strong>proyectos individuales como producción en serie para proyectos a granescala.</strong>";
 ---
 
 <html>
     <head>
-        <title>Taller de Cancelería</title>
+        <title>{titulo}</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <CriticalStyles />
@@ -49,7 +51,7 @@ const description =
         <Navbar />
 
         <TallerDetail
-            title="Cancelería"
+            title={titulo}
             mainImage={mainImage}
             description={description}
             options={options}

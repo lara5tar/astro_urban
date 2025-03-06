@@ -16,15 +16,6 @@ const {
 } = Astro.props;
 ---
 
-<!-- Preload de logo móvil -->
-<link
-    rel="preload"
-    href={logoMovil.src}
-    as="image"
-    type="image/svg+xml"
-    fetchpriority="high"
-/>
-
 <nav
     class="fixed top-0 left-0 right-0 flex justify-between items-center px-4 md:px-8 bg-black z-50 pt-safe"
     style="height: calc(5rem + env(safe-area-inset-top));"
@@ -57,16 +48,22 @@ const {
                 </svg>
             </div>
 
-            <!-- Logo Mobile -->
-            <div class="md:hidden">
-                <Image
-                    src={logoMovil}
-                    alt="Urban Architecture Logo Mobile"
-                    class="h-[35px] w-auto"
-                    width={35}
-                    height={35}
-                    loading="eager"
-                />
+            <!-- Logo Mobile - SVG completo (versión más pequeña) -->
+            <div class="block md:hidden">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    xml:space="preserve"
+                    viewBox="70 5 80 80"
+                    width="30"
+                    height="30"
+                    class="h-[30px] w-auto"
+                    aria-label="Urban Architecture Mobile Logo"
+                >
+                    <path
+                        fill="#2EB09C"
+                        d="M124.9 17.4 76.6 33.7v57.9h66.8V44.8H94.9v28.5h30V48.7h7v31.6H88.2V37.7h62.2v61.1H69.5V28.6l62.4-20.9v25.8h-7z"
+                        class="st0"></path>
+                </svg>
             </div>
         </a>
     </div>
@@ -102,5 +99,15 @@ const {
         display: block;
         shape-rendering: geometricPrecision;
         text-rendering: optimizeLegibility;
+        width: auto;
+        height: 100%;
+        max-height: 45px;
+        overflow: visible;
+    }
+
+    /* Estilo específico para el logo móvil */
+    .block.md\:hidden svg {
+        transform-origin: left center;
+        margin-left: 0.5rem; /* Añade un pequeño margen izquierdo */
     }
 </style>

@@ -60,7 +60,7 @@ const { title, mainImage, description, options } = Astro.props;
             class="w-[40%] max-w-[500px] h-full bg-black/80 text-white p-8 flex flex-col overflow-y-auto content-panel"
         >
             <h1
-                class="font-poppins text-[clamp(2rem,4vw,3rem)] font-bold m-0 opacity-0"
+                class="font-poppins text-[clamp(1.7rem,3.5vw,2.8rem)] font-bold m-0 opacity-0 leading-tight break-words hyphens-auto"
             >
                 {title}
             </h1>
@@ -460,6 +460,20 @@ const { title, mainImage, description, options } = Astro.props;
             border-left: 6px solid #2e8d80;
             background-color: rgba(46, 141, 128, 0.2);
         }
+
+        /* Adjust title size on mobile */
+        .font-poppins {
+            font-size: clamp(1.5rem, 6vw, 2.2rem) !important;
+            line-height: 1.2;
+        }
+    }
+
+    /* Add specific styling for long titles */
+    .font-poppins {
+        max-width: 100%;
+        padding-right: 0.5rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     /* Add justify text styling for all paragraphs */

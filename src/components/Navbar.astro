@@ -17,6 +17,22 @@ const {
 } = Astro.props;
 ---
 
+<!-- Preload de logos -->
+<link
+    rel="preload"
+    href={logoWeb.src}
+    as="image"
+    type="image/svg+xml"
+    fetchpriority="high"
+/>
+<link
+    rel="preload"
+    href={logoMovil.src}
+    as="image"
+    type="image/svg+xml"
+    fetchpriority="high"
+/>
+
 <nav
     class="fixed top-0 left-0 right-0 flex justify-between items-center px-8 bg-black z-50 md:px-8 sm:px-4 pt-safe"
     style="height: calc(5rem + env(safe-area-inset-top));"
@@ -27,11 +43,17 @@ const {
                 src={logoWeb}
                 alt="Logo Desktop"
                 class="h-[45px] w-auto object-contain hidden md:block"
+                width={180}
+                height={45}
+                loading="eager"
             />
             <Image
                 src={logoMovil}
                 alt="Logo Mobile"
                 class="h-[35px] w-auto object-contain block md:hidden"
+                width={35}
+                height={35}
+                loading="eager"
             />
         </a>
     </div>

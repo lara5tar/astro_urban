@@ -12,24 +12,35 @@ const { color = "gray-900" } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
-<div class="mt-10">
+<div class="mt-0">
     <footer class=`bg-gray-800 text-white py-10 pb-safe`>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-center">
                 <SocialIconsRow />
             </div>
-            <div class="text-center mt-10">
-                <p class="text-gray-400 pb-12 md:pb-8">
+            <div class="text-center mt-10 pb-12 md:pb-8">
+                <p class="text-gray-300">
                     © {year} Urban Arquitectura. Todos los derechos reservados.
                 </p>
+                <div class="text-gray-400">
+                    <p>
+                        Desarrollado por <a
+                            href="https://campustd.mx/"
+                            class="text-white"
+                        >
+                            © Campus TD</a
+                        >
+                    </p>
+                </div>
+                <div class="text-center text-gray-600 mt-4"></div>
             </div>
         </div>
     </footer>
-</div>
 
-<style>
-    /* Add safe area padding for mobile devices with bottom navigation bars */
-    .pb-safe {
-        padding-bottom: env(safe-area-inset-bottom, 2rem);
-    }
-</style>
+    <style>
+        /* Add safe area padding for mobile devices with bottom navigation bars */
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 2rem);
+        }
+    </style>
+</div>

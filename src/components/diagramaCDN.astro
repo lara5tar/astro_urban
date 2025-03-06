@@ -1,0 +1,94 @@
+---
+// Componente de diagrama de flujo con decisiones de sí/no usando Mermaid.js desde CDN
+---
+
+<div class="diagrama-container">
+    <pre
+        class="mermaid">
+        flowchart TD
+            A[Inicio] --> B{"¿Primera pregunta?"}
+            B -->|Sí| C{"¿Segunda pregunta?"}
+            B -->|No| D{"¿Pregunta alternativa?"}
+            C -->|Sí| E{"¿Tercera pregunta?"}
+            C -->|No| F[Resultado 1]
+            D -->|Sí| G[Resultado 2]
+            D -->|No| H[Resultado 3]
+            E -->|Sí| I[Resultado Final 1]
+            E -->|No| J[Resultado Final 2]
+            F --> K[Fin]
+            G --> K
+            H --> K
+            I --> K
+            J --> K
+    </pre>
+</div>
+
+<!-- Incluir Mermaid desde CDN -->
+<script
+    is:inline
+    src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"
+></script>
+<script is:inline>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof window.mermaid !== "undefined") {
+            window.mermaid.initialize({
+                startOnLoad: true,
+                theme: "default",
+                securityLevel: "loose",
+                flowchart: {
+                    useMaxWidth: true,
+                    htmlLabels: true,
+                    curve: "basis",
+                },
+            });
+
+            // Aseguramos que se renderice el diagrama
+            setTimeout(function () {
+                try {
+                    window.mermaid.init(
+                        undefined,
+                        document.querySelectorAll(".mermaid"),
+                    );
+                } catch (e) {
+                    console.error("Error inicializando mermaid:", e);
+                }
+            }, 300);
+        } else {
+            console.error("Mermaid no se ha cargado correctamente");
+        }
+    });
+</script>
+
+<style>
+    .diagrama-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Quitar el margen predeterminado del pre */
+    .mermaid {
+        margin: 0;
+    }
+
+    /* Estilos personalizados para los nodos del diagrama */
+    :global(.mermaid .node) {
+        fill: #e1f5fe;
+        stroke: #0277bd;
+    }
+
+    :global(.mermaid .node.rhombus) {
+        fill: #fff8e1;
+        stroke: #ffa000;
+    }
+
+    :global(.mermaid .edgeLabel) {
+        background-color: white;
+        padding: 2px 4px;
+        border-radius: 4px;
+    }
+</style>

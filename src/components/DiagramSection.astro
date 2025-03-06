@@ -1,0 +1,130 @@
+---
+import { Image } from "astro:assets";
+
+import diagrama1 from "/public/inicio/diagrama1.png";
+import diagrama2 from "/public/inicio/diagrama2.png";
+---
+
+<div class="diagram-section">
+    <div class="diagram-container">
+        <Image
+            src={diagrama1}
+            alt="Diagrama de Proceso"
+            class="diagrama-gif hidden-diagram"
+            id="diagram-1"
+        />
+    </div>
+    <div class="diagram-container">
+        <Image
+            src={diagrama2}
+            alt="Diagrama de Proceso"
+            class="diagrama-gif hidden-diagram"
+            id="diagram-2"
+        />
+    </div>
+</div>
+
+<script>
+    // Add intersection observer to trigger animations when elements are visible
+    document.addEventListener("DOMContentLoaded", () => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        // When element is visible, add the animation class
+                        if (entry.target.id === "diagram-1") {
+                            entry.target.classList.add("diagram-1");
+                        } else if (entry.target.id === "diagram-2") {
+                            entry.target.classList.add("diagram-2");
+                        }
+                        // Once we've applied the animation, we don't need to observe it anymore
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            {
+                threshold: 0.2, // Trigger when at least 20% of the element is visible
+            },
+        );
+
+        // Observe the diagrams
+        const diagram1 = document.getElementById("diagram-1");
+        const diagram2 = document.getElementById("diagram-2");
+        if (diagram1) observer.observe(diagram1);
+        if (diagram2) observer.observe(diagram2);
+    });
+</script>
+
+<style>
+    .diagram-section {
+        background-color: white;
+    }
+
+    .diagram-container {
+        width: 100%;
+        padding: 0 200px;
+        text-align: center;
+        background-color: white;
+        border-radius: 8px;
+    }
+
+    .diagrama-gif {
+        width: 600px;
+        max-width: 100%;
+        margin: 0 auto;
+        border-radius: 8px;
+    }
+
+    /* Initial hidden state for diagrams */
+    .hidden-diagram {
+        opacity: 0;
+    }
+
+    /* Animation for the first diagram */
+    .diagram-1 {
+        animation: slide-in-right 0.6s ease-out forwards;
+    }
+
+    /* Animation for the second diagram */
+    .diagram-2 {
+        animation: slide-in-left 0.6s ease-out forwards;
+    }
+
+    @keyframes slide-in-right {
+        0% {
+            transform: translateX(-30px);
+            opacity: 0;
+        }
+        50% {
+            opacity: 0.8;
+        }
+        100% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slide-in-left {
+        0% {
+            transform: translateX(30px);
+            opacity: 0;
+        }
+        50% {
+            opacity: 0.8;
+        }
+        100% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .diagram-container {
+            padding: 0 20px;
+        }
+
+        .diagrama-gif {
+            width: 100%;
+        }
+    }
+</style>

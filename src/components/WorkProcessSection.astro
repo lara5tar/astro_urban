@@ -1,0 +1,66 @@
+---
+const workProcessSteps = [
+    {
+        number: 1,
+        title: "Evaluación inicial",
+        description:
+            "Inspección del terreno y reunión para definir necesidades, estilo y presupuesto.",
+    },
+    {
+        number: 2,
+        title: "Planeación",
+        description: "Cálculo de áreas y presupuesto preliminar.",
+    },
+    {
+        number: 3,
+        title: "Contratación",
+        description: "Firma del contrato de diseño y pago inicial.",
+    },
+    {
+        number: 4,
+        title: "Diseño",
+        description:
+            "Desarrollo de planos detallados, renders y diseño técnico.",
+    },
+    {
+        number: 5,
+        title: "Entrega",
+        description: "Entrega del diseño aprobado en formato digital.",
+    },
+];
+---
+
+<section class="py-16 px-4 bg-gradient-to-r from-gray-50 to-gray-100">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+            <h2
+                class="text-4xl md:text-5xl font-bold text-[#2e8d80] mb-4 font-poppins drop-shadow-md"
+            >
+                Proceso de Trabajo
+            </h2>
+            <div class="w-24 h-1 bg-[#2e8d80] mx-auto"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mt-10">
+            {
+                workProcessSteps.map((step) => (
+                    <div class="relative bg-white p-6 rounded-lg shadow-lg transition-transform hover:translate-y-[-8px] flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-[#2e8d80] text-white flex items-center justify-center text-2xl font-bold mb-4">
+                            {step.number}
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2 font-poppins">
+                            {step.title}
+                        </h3>
+                        <p class="text-gray-600 font-lato">
+                            {step.description}
+                        </p>
+
+                        {step.number !== 5 && (
+                            <div class="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 w-6 h-6 rotate-45 border-t-2 border-r-2 border-[#2e8d80]" />
+                        )}
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</section>

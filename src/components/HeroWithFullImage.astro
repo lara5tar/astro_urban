@@ -15,8 +15,9 @@ const {
     height = "400px",
 } = Astro.props as Props;
 
-// Extract the first letter of the title
-const firstLetter = title.charAt(0);
+// Make sure we extract the first letter correctly, handling empty strings too
+const firstLetter =
+    title && title.length > 0 ? title.charAt(0).toUpperCase() : "";
 ---
 
 <section
@@ -55,6 +56,9 @@ const firstLetter = title.charAt(0);
 </section>
 
 <style>
+    /* Import the font directly in the component for testing */
+    @import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap");
+
     /* Variables CSS */
     :root {
         --font-title: "Poppins", sans-serif;
@@ -106,17 +110,20 @@ const firstLetter = title.charAt(0);
         position: absolute;
         bottom: -0.13em;
         transform: translateX(-50%);
-        font-family: var(--font-title);
+        font-family: "DM Serif Display", serif !important;
         font-size: 30rem;
         font-weight: 700;
         color: white;
         z-index: 4; /* Highest layer - in front of everything on desktop */
         line-height: 1;
         pointer-events: none;
+        /* Debug styles to make sure letter is showing */
+        opacity: 1;
+        text-transform: uppercase;
     }
 
     .letter-position-left {
-        left: 58%;
+        left: 62%;
     }
 
     .letter-position-right {
@@ -157,7 +164,7 @@ const firstLetter = title.charAt(0);
 
     .description-section {
         margin-top: 0;
-        padding: calc(var(--spacing-base) * 2) calc(var(--spacing-base) * 12) 0;
+        padding: calc(var(--spacing-base) * 2) calc(var(--spacing-base) * 8) 0;
     }
 
     .description-section :global(p) {
@@ -179,6 +186,12 @@ const firstLetter = title.charAt(0);
     @media (max-width: 900px) {
         .content-wrapper {
             width: 100%;
+            background-color: rgba(
+                0,
+                0,
+                0,
+                0.7
+            ); /* Less transparent background on mobile */
         }
 
         .content-inner {
@@ -200,6 +213,7 @@ const firstLetter = title.charAt(0);
             color: rgb(255, 255, 255); /* Semi-transparent white */
             z-index: 2; /* Return to middle layer on mobile */
             filter: drop-shadow(4px 4px 4px rgba(114, 114, 114, 0.525));
+            font-family: "DM Serif Display", serif !important;
         }
 
         .letter-position-left,
@@ -208,7 +222,7 @@ const firstLetter = title.charAt(0);
         }
 
         .description-section {
-            padding: 0rem 2rem;
+            padding: 0rem 1.5rem;
         }
     }
 </style>

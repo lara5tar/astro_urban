@@ -5,6 +5,14 @@ import Navbar from "../components/Navbar.astro";
 import HeroWithImage from "../components/HeroWithImage.astro";
 import HeroWithImageFull from "../components/HeroWithFullImage.astro";
 import CriticalStyles from "../components/CriticalStyles.astro";
+import Footer from "../components/Footer.astro";
+import WhatsAppButton from "../components/WhatsAppButton.astro";
+
+// Import the new section components
+import DecisionFlowchartSection from "../components/DecisionFlowchartSection.astro";
+import WorkProcessSection from "../components/WorkProcessSection.astro";
+import ContractSection from "../components/ContractSection.astro";
+import TimelineSection from "../components/TimelineSection.astro";
 
 import imagen1 from "/public/carousel/web/Imagen1.webp";
 import imagen2 from "/public/carousel/web/Imagen2.webp";
@@ -23,39 +31,42 @@ import imagen6Mobile from "/public/carousel/movil/6.webp";
 import iconUrban from "/public/icons/icon_urban.svg";
 import arquitecturaImage from "/public/inicio/arquitectura.webp";
 import construccionImage from "/public/inicio/construccion.webp";
-import Footer from "../components/Footer.astro";
 
 const slides = [
   {
     image: imagen1,
     mobileImage: imagen1Mobile,
-    description: "Construya a su gusto y ahorre un 25% con nosotros",
+    description:
+      "Personalice su proyecto y ahorre hasta un 25% con nuestros servicios",
   },
   {
     image: imagen2,
     mobileImage: imagen2Mobile,
-    description: "Contrato de obra y garantía por escrito",
+    description: "Respaldo total con contrato de obra y garantía por escrito",
   },
   {
     image: imagen3,
     mobileImage: imagen3Mobile,
-    description: "Arquitectura de vanguardia, efiencia y sustentable",
+    description:
+      "Arquitectura vanguardista, eficiente y comprometida con la sustentabilidad",
   },
   {
     image: imagen4,
     mobileImage: imagen4Mobile,
-    description: "Servicio profesional en pintura y impermeabilización",
+    description:
+      "Servicio profesional especializado en pintura e impermeabilización",
   },
   {
     image: imagen5,
     mobileImage: imagen5Mobile,
     description:
-      "Talleres de acabados finos: Carpintería, Cancelería y Herrería",
+      "Talleres especializados en acabados finos: Carpintería, Cancelería y Herrería",
   },
   {
     image: imagen6,
     mobileImage: imagen6Mobile,
-    description: "Arquitectura y Construccion a la medida de su presupuesto",
+    description:
+      "Soluciones arquitectónicas y de construcción adaptadas a su presupuesto",
   },
 ];
 
@@ -75,6 +86,58 @@ const talleresItems = [
   {
     title: "Acabados",
     imageSrc: "/public/talleres/acabados.webp",
+  },
+];
+
+// Work process steps
+const workProcessSteps = [
+  {
+    number: 1,
+    title: "Evaluación inicial",
+    description:
+      "Inspección del terreno y reunión para definir necesidades, estilo y presupuesto.",
+  },
+  {
+    number: 2,
+    title: "Planeación",
+    description: "Cálculo de áreas y presupuesto preliminar.",
+  },
+  {
+    number: 3,
+    title: "Contratación",
+    description: "Firma del contrato de diseño y pago inicial.",
+  },
+  {
+    number: 4,
+    title: "Diseño",
+    description: "Desarrollo de planos detallados, renders y diseño técnico.",
+  },
+  {
+    number: 5,
+    title: "Entrega",
+    description: "Entrega del diseño aprobado en formato digital.",
+  },
+];
+
+// Project timeline data
+const projectTimeline = [
+  {
+    phase: "Elaboración del Proyecto Arquitectónico",
+    time: "1 mes",
+    description:
+      "Incluye el diseño conceptual y desarrollo de planos arquitectónicos.",
+  },
+  {
+    phase: "Gestión de Permisos",
+    time: "2 meses",
+    description:
+      "Tiempo estimado para tramitar las licencias y autorizaciones necesarias.",
+  },
+  {
+    phase: "Ejecución de la Obra",
+    time: "6 meses",
+    description:
+      "Desde la preparación del terreno hasta la entrega final de la obra.",
   },
 ];
 ---
@@ -150,15 +213,17 @@ const talleresItems = [
       height="600px"
     >
       <p>
-        Somos un despacho de <strong
-          >Arquitectura y Construcción Residencial</strong
-        >, con más de <strong>25 años de experiencia</strong> en el mercado, nos
-        enfocamos en desarrollar <strong>espcios a la medida</strong> con la más
-        <strong>alta calidad</strong>. Nuestra sede se ubica en Santiago de
-        Querétaro, con cobertura nacional.
+        <strong>Transformamos sueños en espacios únicos.</strong>
+        Con más de 25 años de experiencia, en nuestro despacho de Arquitectura y
+        Construcción Residencial combinamos <strong
+          >innovación tecnológica e inteligencia artificial</strong
+        >
+        para diseñar y construir hogares personalizados de la más alta calidad. Con
+        sede en Santiago de Querétaro y <strong>cobertura nacional</strong>,
+        creamos espacios que inspiran.
       </p>
     </HeroWithImage>
-    <div class="h-5"></div>
+    <div class="h-5 w-[100%] bg-black"></div>
 
     <HeroWithImageFull
       title="ARQUITECTURA"
@@ -167,102 +232,53 @@ const talleresItems = [
       height="600px"
     >
       <p>
-        Elaboramos propuestas arquitectónicas enfocadas a satisfacer sus
-        necesidades, <strong
-          >creando espacios inteligentes y funcionales con diseños únicos</strong
-        > y amigables con el medio ambiente. Aprovechamos al máximo las características
-        geográficas del espacio de construccion.
+        <strong> Diseños que reflejan tu estilo de vida.</strong>
+        Fusionamos estética, funcionalidad y sostenibilidad para <strong
+          >maximizar el potencial</strong
+        >
+        de cada espacio, integrando características naturales del entorno con propuestas
+        innovadoras.
       </p>
     </HeroWithImageFull>
-    <div class="h-5"></div>
+    <div class="h-5 w-[100%] bg-black"></div>
     <HeroWithImageFull
-      title="CONTRUSCCIÓN"
+      title="CONSTRUCCIÓN"
       imageSrc={construccionImage}
       textPosition="left"
       height="600px"
     >
       <p>
-        Nuestro equipo de <strong>expertos en ingeniería civil</strong> materializará
-        sus proyectos con técnicas innovadoras, materiales de última generacion y
-        con los más altos estánderes de calidad, optimizando al maximo su presupuesto
+        <strong>Excelencia en cada detalle.</strong>
+        Nuestro equipo de ingeniería civil utiliza tecnología de vanguardia y materiales
+        de alto rendimiento para ofrecer <strong
+          >construcciones que superan expectativas</strong
+        >, garantizando calidad y eficiencia en cada proyecto.
       </p>
     </HeroWithImageFull>
-  </body><Footer />
+    <div class="h-5 w-[100%] bg-black"></div>
+
+    <!-- Replaced diagram code with the new component -->
+    <!-- <DiagramSection /> -->
+
+    <!-- Decision Flowchart Section -->
+    <DecisionFlowchartSection />
+
+    <div class="h-5 w-[100%] bg-black"></div>
+
+    <!-- Work Process Section -->
+    <WorkProcessSection />
+
+    <div class="h-5 w-[100%] bg-black"></div>
+
+    <!-- Contract Section -->
+    <ContractSection />
+
+    <div class="h-5 w-[100%] bg-black"></div>
+
+    <!-- Timeline Section -->
+    <TimelineSection />
+
+    <WhatsAppButton />
+    <Footer />
+  </body>
 </html>
-
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    background: #000;
-  }
-
-  .content-wrapper {
-    background-color: white;
-    padding: 120px 20px 120px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .background-icon {
-    position: absolute;
-    top: 50%;
-    right: 5%;
-    transform: translateY(-50%);
-    width: 600px;
-    height: 600px;
-    background-image: url("/icons/icon_urban.svg");
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    opacity: 0.1;
-    z-index: 1;
-  }
-
-  .content-container {
-    position: relative;
-    z-index: 2;
-  }
-
-  .title-section {
-    text-align: center;
-  }
-
-  .title-section h1 {
-    color: #2e8d80;
-    font-family: "Poppins", sans-serif;
-    font-weight: 500;
-    font-size: clamp(60px, 9vw, 140px);
-    margin: 0;
-    padding: 0;
-    filter: drop-shadow(4px 4px 4px rgba(114, 114, 114, 0.95));
-  }
-
-  .description-section {
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  .description-section p {
-    color: #000000;
-    font-family: "Lato", sans-serif;
-    font-size: clamp(20px, 2vw, 26px);
-    font-weight: 300;
-    line-height: 1.6;
-    text-align: center;
-    margin: 0;
-  }
-
-  .description-section strong {
-    font-weight: 700;
-  }
-
-  @media (max-width: 768px) {
-    .background-icon {
-      width: 400px;
-      height: 400px;
-      right: -10%;
-    }
-  }
-</style>

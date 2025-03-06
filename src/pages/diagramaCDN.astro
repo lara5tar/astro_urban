@@ -1,0 +1,52 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Diagrama from "../components/diagrama.astro";
+---
+
+<Layout title="Diagrama de Flujo (CDN)">
+    <main>
+        <h1>Diagrama de Flujo usando CDN</h1>
+        <p>
+            Este diagrama utiliza Mermaid.js cargado directamente desde un CDN:
+        </p>
+
+        <Diagrama />
+
+        <div class="instrucciones">
+            <h2>Solución de problemas:</h2>
+            <p>Si el diagrama no se muestra correctamente:</p>
+            <ul>
+                <li>
+                    Comprueba que JavaScript está habilitado en tu navegador
+                </li>
+                <li>Verifica que el CDN de Mermaid está accesible</li>
+                <li>Abre la consola del navegador para ver si hay errores</li>
+            </ul>
+        </div>
+    </main>
+</Layout>
+
+<style>
+    main {
+        margin: 0 auto;
+        max-width: 1000px;
+        padding: 2rem;
+    }
+
+    h1 {
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .instrucciones {
+        margin-top: 2rem;
+        padding: 1rem;
+        background-color: #f0f7ff;
+        border-radius: 8px;
+        border-left: 4px solid #0277bd;
+    }
+
+    ul {
+        margin-left: 1.5rem;
+    }
+</style>

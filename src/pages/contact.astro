@@ -3,10 +3,12 @@ import { Image } from "astro:assets";
 import contactImage from "/public/contacto/Imagen1.webp";
 import Navbar from "../components/Navbar.astro";
 import SocialIconsRow from "../components/SocialIconsRow.astro";
-import Footer from "../components/Footer.astro";
+import ContactFormSection from "../components/ContactFormSection.astro";
 import "../tailwind.css";
+import Footer from "../components/Footer.astro";
 
 const options = [
+    "Construcción",
     "Cancelería de Diseño",
     "Carpintería Dina",
     "Herrería Artística",
@@ -19,7 +21,7 @@ const options = [
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Contact Us</title>
+        <title>Contacto</title>
         <!-- Add Lato font from Google Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -49,8 +51,6 @@ const options = [
     </head>
     <Navbar />
     <body class="font-['Lato'] overflow-hidden">
-        <!-- Fixed navbar at the top with proper z-index -->
-
         <!-- Main content container with padding to account for navbar -->
         <div class="pt-20 w-full h-screen">
             <!-- Desktop Layout (hidden on mobile) -->
@@ -72,181 +72,12 @@ const options = [
                 <!-- Scrollable content section - takes 60% of screen width -->
                 <div class="w-3/5 h-full overflow-y-auto">
                     <div class="pt-10 pl-10 pr-10">
-                        <!-- Contact information -->
-                        <div class="flex flex-wrap items-star">
-                            <div class="mb-6 pr-4 md:w-1/2">
-                                <p class="font-medium text-gray-800">
-                                    Querétaro
-                                </p>
-                                <p class="mt-1 text-gray-600">
-                                    Edificio Querétaro Business Park.
-                                </p>
-                                <p class="mt-1 text-gray-600">
-                                    <a
-                                        href="https://www.google.com/maps/search/?api=1&query=Edificio+Querétaro+Business+Park,+Av.+Antea+%231088,+Piso+3,+Querétaro,+México,+7600"
-                                        target="_blank"
-                                        class="text-blue-500 underline"
-                                    >
-                                        Av. Antea #1088, Piso 3, Querétaro,
-                                        México, 7600.
-                                    </a>
-                                </p>
-                            </div>
-
-                            <div
-                                class="mb-6 pr-4 md:w-1/2 text-left md:text-right"
-                            >
-                                <p class="font-medium text-gray-800">
-                                    Tel. Oficina
-                                </p>
-                                <p class="mt-1 text-gray-600">
-                                    <a
-                                        href="tel:4427086211"
-                                        class="text-blue-500 underline"
-                                    >
-                                        442 708 6211
-                                    </a>
-                                </p>
-                                <div class="mb-6 mt-0"></div>
-                                <p class="font-medium text-gray-800">E-mail</p>
-                                <p class="mt-1 text-gray-600">
-                                    <a
-                                        href="mailto:info@urbanarquitectura.mx"
-                                        class="text-blue-500 underline"
-                                    >
-                                        info@urbanarquitectura.mx
-                                    </a>
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Contact Form -->
-                        <div class="w-full mt-10">
-                            <form id="contactForm" class="flex flex-col gap-5">
-                                <!-- Form fields (unchanged) -->
-                                <div class="form-field">
-                                    <input
-                                        type="text"
-                                        id="nombre"
-                                        name="nombre"
-                                        placeholder=" "
-                                        required
-                                        class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
-                                    />
-                                    <label
-                                        for="nombre"
-                                        class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
-                                    >
-                                        Nombre
-                                    </label>
-                                </div>
-
-                                <!-- Other form fields remain unchanged -->
-                                <!-- ... existing code for email, telefono, proyecto, mensaje inputs ... -->
-                                <div class="form-field">
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        placeholder=" "
-                                        required
-                                        class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
-                                    />
-                                    <label
-                                        for="email"
-                                        class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
-                                    >
-                                        Email
-                                    </label>
-                                </div>
-
-                                <div class="form-field">
-                                    <input
-                                        type="tel"
-                                        id="telefono"
-                                        name="telefono"
-                                        placeholder=" "
-                                        required
-                                        class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
-                                    />
-                                    <label
-                                        for="telefono"
-                                        class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
-                                    >
-                                        Teléfono
-                                    </label>
-                                </div>
-
-                                <div class="form-field">
-                                    <select
-                                        id="proyecto"
-                                        name="proyecto"
-                                        required
-                                        class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition appearance-none"
-                                    >
-                                        <option value="" disabled selected
-                                        ></option>
-                                        {
-                                            options.map((option) => (
-                                                <option value={option}>
-                                                    {option}
-                                                </option>
-                                            ))
-                                        }
-                                    </select>
-                                    <label
-                                        for="proyecto"
-                                        class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
-                                    >
-                                        ¿Cuál es su proyecto?
-                                    </label>
-                                    <div
-                                        class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none"
-                                    >
-                                        <svg
-                                            class="w-4 h-4 text-gray-500"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-
-                                <div class="form-field">
-                                    <textarea
-                                        id="mensaje"
-                                        name="mensaje"
-                                        rows="4"
-                                        placeholder=" "
-                                        required
-                                        class="peer h-32 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition resize-none"
-                                    ></textarea>
-                                    <label
-                                        for="mensaje"
-                                        class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
-                                    >
-                                        Mensaje
-                                    </label>
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    class="bg-[#2ebeab] h-12 text-white font-medium rounded px-6 py-2 mt-2 transition-all duration-200 hover:bg-[#1a9e8c] hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-[#2ebeab] focus:ring-offset-2 w-full"
-                                >
-                                    Enviar
-                                </button>
-                            </form>
-                        </div>
-
-                        <!-- Add some extra space at the bottom for comfortable scrolling -->
+                        <!-- Contact form section component (desktop) -->
+                        <ContactFormSection
+                            options={options}
+                            isDesktop={true}
+                        />
                     </div>
-                    <div class="h-10"></div>
                     <Footer />
                 </div>
             </div>
@@ -268,181 +99,12 @@ const options = [
 
                     <!-- Content follows the image and scrolls together -->
                     <div class="px-6 pt-8">
-                        <!-- Contact information -->
-                        <div class="flex flex-wrap mb-8">
-                            <div class="w-full mb-4">
-                                <p class="font-medium text-gray-800">
-                                    Querétaro
-                                </p>
-                                <p class="text-gray-600">
-                                    Edificio Querétaro Business Park.
-                                </p>
-                                <p class="text-gray-600">
-                                    <a
-                                        href="https://www.google.com/maps/search/?api=1&query=Edificio+Querétaro+Business+Park,+Av.+Antea+%231088,+Piso+3,+Querétaro,+México,+7600"
-                                        target="_blank"
-                                        class="text-blue-500 underline"
-                                    >
-                                        Av. Antea #1088, Piso 3, Querétaro,
-                                        México, 7600.
-                                    </a>
-                                </p>
-                            </div>
-
-                            <div class="w-1/2 mb-4">
-                                <p class="font-medium text-gray-800">
-                                    Tel. Oficina
-                                </p>
-                                <p class="text-gray-600">
-                                    <a
-                                        href="tel:4427086211"
-                                        class="text-blue-500 underline"
-                                    >
-                                        442 708 6211
-                                    </a>
-                                </p>
-                                <div class="h-5"></div>
-                                <p class="font-medium text-gray-800">E-mail</p>
-                                <p class="text-gray-600">
-                                    <a
-                                        href="mailto:info@urbanarquitectura.mx"
-                                        class="text-blue-500 underline"
-                                    >
-                                        info@urbanarquitectura.mx
-                                    </a>
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Contact Form (same form, just mobile optimized) -->
-                        <div class="w-full">
-                            <form
-                                id="mobileContactForm"
-                                class="flex flex-col gap-4"
-                            >
-                                <!-- Same form fields as desktop -->
-                                <div class="form-field">
-                                    <input
-                                        type="text"
-                                        id="mobile-nombre"
-                                        name="nombre"
-                                        placeholder=" "
-                                        required
-                                        class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
-                                    />
-                                    <label
-                                        for="mobile-nombre"
-                                        class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
-                                    >
-                                        Nombre
-                                    </label>
-                                </div>
-
-                                <div class="form-field">
-                                    <input
-                                        type="email"
-                                        id="mobile-email"
-                                        name="email"
-                                        placeholder=" "
-                                        required
-                                        class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
-                                    />
-                                    <label
-                                        for="mobile-email"
-                                        class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
-                                    >
-                                        Email
-                                    </label>
-                                </div>
-
-                                <div class="form-field">
-                                    <input
-                                        type="tel"
-                                        id="mobile-telefono"
-                                        name="telefono"
-                                        placeholder=" "
-                                        required
-                                        class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
-                                    />
-                                    <label
-                                        for="mobile-telefono"
-                                        class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
-                                    >
-                                        Teléfono
-                                    </label>
-                                </div>
-
-                                <div class="form-field">
-                                    <select
-                                        id="mobile-proyecto"
-                                        name="proyecto"
-                                        required
-                                        class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition appearance-none"
-                                    >
-                                        <option value="" disabled selected
-                                        ></option>
-                                        <option value="residencial"
-                                            >Residencial</option
-                                        >
-                                        <option value="comercial"
-                                            >Comercial</option
-                                        >
-                                        <option value="industrial"
-                                            >Industrial</option
-                                        >
-                                        <option value="otro">Otro</option>
-                                    </select>
-                                    <label
-                                        for="mobile-proyecto"
-                                        class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
-                                    >
-                                        ¿Cuál es su proyecto?
-                                    </label>
-                                    <div
-                                        class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none"
-                                    >
-                                        <svg
-                                            class="w-4 h-4 text-gray-500"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-
-                                <div class="form-field">
-                                    <textarea
-                                        id="mobile-mensaje"
-                                        name="mensaje"
-                                        rows="4"
-                                        placeholder=" "
-                                        required
-                                        class="peer h-32 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition resize-none"
-                                    ></textarea>
-                                    <label
-                                        for="mobile-mensaje"
-                                        class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
-                                    >
-                                        Mensaje
-                                    </label>
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    class="bg-[#2ebeab] h-12 text-white font-medium rounded px-6 py-2 mt-2 transition-all duration-200 hover:bg-[#1a9e8c] w-full"
-                                >
-                                    Enviar
-                                </button>
-                            </form>
-                        </div>
+                        <!-- Contact form section component (mobile) -->
+                        <ContactFormSection
+                            options={options}
+                            isDesktop={false}
+                        />
                     </div>
-                    <div class="h-10"></div><div class="h-10"></div>
                     <Footer />
                 </div>
             </div>
@@ -464,17 +126,6 @@ const options = [
 
         .animate-fade-in {
             animation: fadeIn 1.5s ease-out forwards;
-        }
-
-        /* Form field container styling */
-        .form-field {
-            @apply relative w-full;
-        }
-
-        /* Ensure labels maintain background color in all states */
-        .form-field label {
-            background-color: #f3f4f6; /* This matches Tailwind's bg-gray-100 */
-            padding: 0 4px; /* Horizontal padding to not cut off text */
         }
 
         /* Customize scrollbar for the content section */
@@ -507,59 +158,6 @@ const options = [
             }
         }
     </style>
-
-    <script>
-        // Basic form handling for desktop form
-        const contactForm = document.getElementById(
-            "contactForm",
-        ) as HTMLFormElement;
-
-        if (contactForm) {
-            contactForm.addEventListener("submit", function (e) {
-                e.preventDefault();
-                submitForm(this);
-            });
-        }
-
-        // Basic form handling for mobile form
-        const mobileContactForm = document.getElementById(
-            "mobileContactForm",
-        ) as HTMLFormElement;
-
-        if (mobileContactForm) {
-            mobileContactForm.addEventListener("submit", function (e) {
-                e.preventDefault();
-                submitForm(this);
-            });
-        }
-
-        // Shared form submit function
-        function submitForm(form: HTMLFormElement) {
-            const formData = new FormData(form);
-            const formObject = Object.fromEntries(formData);
-
-            // Here you would typically send the data to your server
-            // For now, let's just show an alert
-            alert("Formulario enviado con éxito! Gracias por contactarnos.");
-
-            // Reset the form
-            form.reset();
-        }
-
-        // Add script to handle select element label for both forms
-        document.querySelectorAll("select").forEach((select) => {
-            select.addEventListener(
-                "change",
-                function (this: HTMLSelectElement) {
-                    if (this.value) {
-                        this.classList.add("has-value");
-                    } else {
-                        this.classList.remove("has-value");
-                    }
-                },
-            );
-        });
-    </script>
 
 
 </html>

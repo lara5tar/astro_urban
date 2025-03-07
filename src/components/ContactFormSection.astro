@@ -1,0 +1,275 @@
+---
+import Footer from "./Footer.astro";
+
+interface Props {
+    options: string[];
+    isDesktop: boolean;
+}
+
+const { options, isDesktop } = Astro.props;
+const formId = isDesktop ? "contactForm" : "mobileContactForm";
+const idPrefix = isDesktop ? "" : "mobile-";
+---
+
+<div class="w-full">
+    <!-- Contact information -->
+    {
+        isDesktop ? (
+            <div class="flex flex-wrap items-star">
+                <div class="mb-6 pr-4 md:w-1/2">
+                    <p class="font-medium text-gray-800">Ubicación</p>
+                    <p class="mt-1 text-gray-600">
+                        <a
+                            href="https://www.google.com/maps/place/URBAN+%7C+Arquitectura/@20.6752015,-100.4450208,17z/data=!3m1!4b1!4m6!3m5!1s0x85d344bca762dab3:0x86ec34c193d2f77c!8m2!3d20.6751965!4d-100.4401499!16s%2Fg%2F12q4rljfl?entry=ttu&g_ep=EgoyMDI1MDMwNC4wIKXMDSoASAFQAw%3D%3D"
+                            target="_blank"
+                            class="text-blue-500 underline"
+                        >
+                            Edificio Querétaro Business Park, Av. Antea #1088,
+                            Piso 3, Querétaro, México, 7600.
+                        </a>
+                    </p>
+                </div>
+                <div class="mb-6 pr-4 md:w-1/2 text-left md:text-right">
+                    <p class="font-medium text-gray-800">Teléfono</p>
+                    <p class="mt-1 text-gray-600">
+                        <a
+                            href="tel:4427086211"
+                            class="text-blue-500 underline"
+                        >
+                            442 708 6211
+                        </a>
+                    </p>
+                    <div class="mb-6 mt-0" />
+                    <p class="font-medium text-gray-800">E-mail</p>
+                    <p class="mt-1 text-gray-600">
+                        <a
+                            href="mailto:info@urbanarquitectura.mx"
+                            class="text-blue-500 underline"
+                        >
+                            info@urbanarquitectura.mx
+                        </a>
+                    </p>
+                </div>
+            </div>
+        ) : (
+            <div class="flex flex-wrap mb-8">
+                <div class="w-full mb-4">
+                    <p class="font-medium text-gray-800">Querétaro</p>
+                    <p class="text-gray-600">
+                        Edificio Querétaro Business Park.
+                    </p>
+                    <p class="text-gray-600">
+                        <a
+                            href="https://www.google.com/maps/search/?api=1&query=Edificio+Querétaro+Business+Park,+Av.+Antea+%231088,+Piso+3,+Querétaro,+México,+7600"
+                            target="_blank"
+                            class="text-blue-500 underline"
+                        >
+                            Av. Antea #1088, Piso 3, Querétaro, México, 7600.
+                        </a>
+                    </p>
+                </div>
+                <div class="w-1/2 mb-4">
+                    <p class="font-medium text-gray-800">Tel. Oficina</p>
+                    <p class="text-gray-600">
+                        <a
+                            href="tel:4427086211"
+                            class="text-blue-500 underline"
+                        >
+                            442 708 6211
+                        </a>
+                    </p>
+                    <div class="h-5" />
+                    <p class="font-medium text-gray-800">E-mail</p>
+                    <p class="text-gray-600">
+                        <a
+                            href="mailto:info@urbanarquitectura.mx"
+                            class="text-blue-500 underline"
+                        >
+                            info@urbanarquitectura.mx
+                        </a>
+                    </p>
+                </div>
+            </div>
+        )
+    }
+
+    <!-- Contact Form -->
+    <div class="w-full mt-0">
+        <form id={formId} class="flex flex-col gap-4">
+            <!-- Name Field -->
+            <div class="form-field">
+                <input
+                    type="text"
+                    id={`${idPrefix}nombre`}
+                    name="nombre"
+                    placeholder=" "
+                    required
+                    class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
+                />
+                <label
+                    for={`${idPrefix}nombre`}
+                    class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
+                >
+                    Nombre
+                </label>
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-field">
+                <input
+                    type="email"
+                    id={`${idPrefix}email`}
+                    name="email"
+                    placeholder=" "
+                    required
+                    class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
+                />
+                <label
+                    for={`${idPrefix}email`}
+                    class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
+                >
+                    Email
+                </label>
+            </div>
+
+            <!-- Phone Field -->
+            <div class="form-field">
+                <input
+                    type="tel"
+                    id={`${idPrefix}telefono`}
+                    name="telefono"
+                    placeholder=" "
+                    required
+                    class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
+                />
+                <label
+                    for={`${idPrefix}telefono`}
+                    class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
+                >
+                    Teléfono
+                </label>
+            </div>
+
+            <!-- Project Selection -->
+            <div class="form-field">
+                <select
+                    id={`${idPrefix}proyecto`}
+                    name="proyecto"
+                    required
+                    class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition appearance-none"
+                >
+                    <option value="" disabled selected></option>
+                    {
+                        options.map((option) => (
+                            <option value={option}>{option}</option>
+                        ))
+                    }
+                </select>
+                <label
+                    for={`${idPrefix}proyecto`}
+                    class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
+                >
+                    ¿Cuál es su proyecto?
+                </label>
+                <div
+                    class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none"
+                >
+                    <svg
+                        class="w-4 h-4 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Message Field -->
+            <div class="form-field">
+                <textarea
+                    id={`${idPrefix}mensaje`}
+                    name="mensaje"
+                    rows="4"
+                    placeholder=" "
+                    required
+                    class="peer h-32 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition resize-none"
+                ></textarea>
+                <label
+                    for={`${idPrefix}mensaje`}
+                    class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
+                >
+                    Mensaje
+                </label>
+            </div>
+
+            <!-- Submit Button -->
+            <button
+                type="submit"
+                class="bg-[#2ebeab] h-12 text-white font-medium rounded px-6 py-2 mt-2 transition-all duration-200 hover:bg-[#1a9e8c] hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-[#2ebeab] focus:ring-offset-2 w-full"
+            >
+                Enviar
+            </button>
+        </form>
+    </div>
+
+    <!-- Extra space and footer -->
+    <div class="h-10"></div>
+    {isDesktop ? <div class="h-0" /> : <div class="h-10" />}
+    <!-- <Footer /> -->
+</div>
+
+<script>
+    // Form submission handling
+    function setupFormSubmission(formId: string) {
+        const form = document.getElementById(formId);
+        if (form) {
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+                submitForm(this as HTMLFormElement);
+            });
+        }
+    }
+
+    // Shared form submit function
+    function submitForm(form: HTMLFormElement) {
+        const formData = new FormData(form);
+        const formObject = Object.fromEntries(formData);
+
+        // Here you would typically send the data to your server
+        alert("Formulario enviado con éxito! Gracias por contactarnos.");
+        form.reset();
+    }
+
+    // Setup forms
+    setupFormSubmission("contactForm");
+    setupFormSubmission("mobileContactForm");
+
+    // Handle select element label for both forms
+    document.querySelectorAll("select").forEach((select) => {
+        select.addEventListener("change", function () {
+            if (this.value) {
+                this.classList.add("has-value");
+            } else {
+                this.classList.remove("has-value");
+            }
+        });
+    });
+</script>
+
+<style>
+    /* Form field container styling */
+    .form-field {
+        @apply relative w-full;
+    }
+
+    /* Ensure labels maintain background color in all states */
+    .form-field label {
+        background-color: #f3f4f6; /* This matches Tailwind's bg-gray-100 */
+        padding: 0 4px; /* Horizontal padding to not cut off text */
+    }
+</style>

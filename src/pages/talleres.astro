@@ -110,6 +110,35 @@ const talleres = [
                         item.classList.add("visible");
                     }, index * 200); // Stagger the animations
                 });
+
+                // Función para ajustar la altura en navegadores móviles
+                function adjustHeight() {
+                    const navbarHeight =
+                        getComputedStyle(document.documentElement)
+                            .getPropertyValue("--navbar-height")
+                            .trim() || "80px";
+
+                    // Convertir a número
+                    const navbarHeightValue = parseInt(navbarHeight);
+
+                    // Usar innerHeight para obtener la altura real del viewport
+                    const availableHeight =
+                        window.innerHeight - navbarHeightValue;
+
+                    // Aplicar la altura al contenedor principal
+                    const mainElement =
+                        document.querySelector(".talleres-main");
+                    if (mainElement instanceof HTMLElement) {
+                        mainElement.style.height = `${availableHeight}px`;
+                    }
+                }
+
+                // Ajustar altura inicialmente
+                adjustHeight();
+
+                // Ajustar altura cuando cambia el tamaño o la orientación
+                window.addEventListener("resize", adjustHeight);
+                window.addEventListener("orientationchange", adjustHeight);
             });
         </script>
         <WhatsAppButton />
@@ -124,7 +153,7 @@ const talleres = [
         }
 
         .talleres-main {
-            height: calc(100vh - var(--navbar-height, 80px));
+            /* La altura ahora se configurará dinámicamente con JavaScript */
             width: 100%;
             margin-top: var(--navbar-height, 80px);
         }
@@ -231,8 +260,8 @@ const talleres = [
 
         @media (max-width: 768px) {
             .talleres-gallery {
-                flex-direction: column-reverse; /* Display from bottom to top on mobile */
-                height: calc(100vh - var(--navbar-height, 60px));
+                flex-direction: column;
+                /* La altura se ajustará mediante JavaScript */
             }
 
             .taller-item {

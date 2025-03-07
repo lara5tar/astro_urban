@@ -2,251 +2,184 @@
 
 ---
 
-<section class="py-16 px-4 bg-white">
-    <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-12 animate-fade-in">
-            <h2
-                class="text-4xl md:text-5xl font-bold text-[#2e8d80] mb-4 font-poppins drop-shadow-md"
-            >
-                Proceso de Construcción
-            </h2>
-            <div class="w-32 h-1 bg-[#2e8d80] mx-auto"></div>
-        </div>
-
-        <!-- Unified Decision Tree Component (with animations) -->
-        <div class="py-8">
-            <!-- Start Node -->
-            <div class="flex justify-center mb-6">
-                <div
-                    class="bg-[#2e8d80] text-white py-4 px-8 rounded-xl shadow-lg w-64 text-center animate-element"
-                    data-animation="fade-down"
-                >
-                    <h3 class="text-2xl font-bold font-poppins">
-                        Quiero Construir
-                    </h3>
-                </div>
-            </div>
-
-            <!-- First Decision -->
-            <div class="flex justify-center mb-15">
-                <div
-                    class="bg-white border-4 border-[#2e8d80] text-gray-800 py-3 px-6 rounded-xl shadow-lg w-64 text-center animate-element"
-                    data-animation="fade-up"
-                    data-delay="200"
-                >
-                    <h4 class="text-xl font-bold font-poppins">
-                        ¿Tengo terreno?
-                    </h4>
-                </div>
-            </div>
-
-            <!-- Yes/No First Level Branches (with animations) -->
-            <div
-                class="flex flex-col md:flex-row justify-center gap-10 md:gap-32 mb-10"
-            >
-                <!-- "Sí" Branch -->
-                <div class="flex flex-col items-center">
-                    <div
-                        class="bg-[#2e8d80] border-2 border-[#2e8d80] text-white py-2 px-4 rounded-lg shadow w-32 text-center mb-4 animate-element"
-                        data-animation="fade-right"
-                        data-delay="400"
-                    >
-                        <p class="font-bold">Sí</p>
-                    </div>
-                    <div
-                        class="bg-white border-2 border-[#2e8d80] text-gray-800 py-3 px-4 rounded-lg shadow w-48 text-center animate-element"
-                        data-animation="fade-right"
-                        data-delay="500"
-                    >
-                        <p class="font-bold">Diseño del proyecto</p>
-                    </div>
-                </div>
-
-                <!-- "No" Branch -->
-                <div class="flex flex-col items-center">
-                    <div
-                        class="bg-black border-2 border-black text-white py-2 px-4 rounded-lg shadow w-32 text-center mb-4 animate-element"
-                        data-animation="fade-left"
-                        data-delay="400"
-                    >
-                        <p class="font-bold">No</p>
-                    </div>
-                    <div
-                        class="bg-white border-2 border-[#2e8d80] text-gray-800 py-3 px-4 rounded-lg shadow w-48 text-center mb-4 animate-element"
-                        data-animation="fade-left"
-                        data-delay="500"
-                    >
-                        <p class="font-bold">Te lo conseguimos</p>
-                    </div>
-                    <div
-                        class="bg-white border-2 border-[#2e8d80] text-gray-800 py-3 px-4 rounded-lg shadow w-48 text-center animate-element"
-                        data-animation="fade-left"
-                        data-delay="600"
-                    >
-                        <p class="font-bold">Diseño del proyecto</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Second Decision (Capital) -->
-            <div class="flex justify-center mb-15">
-                <div
-                    class="bg-white border-4 border-[#2e8d80] text-gray-800 py-3 px-6 rounded-xl shadow-lg w-64 text-center animate-element"
-                    data-animation="fade-up"
-                    data-delay="700"
-                >
-                    <h4 class="text-xl font-bold font-poppins">
-                        ¿Cuento con capital para construir?
-                    </h4>
-                </div>
-            </div>
-
-            <!-- Yes/No Second Level Branches (with animations) -->
-            <div
-                class="flex flex-col md:flex-row justify-center gap-10 md:gap-32"
-            >
-                <!-- "Sí" Branch -->
-                <div class="flex flex-col items-center">
-                    <div
-                        class="bg-[#2e8d80] border-2 border-[#2e8d80] text-white py-2 px-4 rounded-lg shadow w-32 text-center mb-4 animate-element"
-                        data-animation="fade-right"
-                        data-delay="800"
-                    >
-                        <p class="font-bold">Sí</p>
-                    </div>
-                    <div
-                        class="bg-white border-2 border-[#2e8d80] text-gray-800 py-3 px-4 rounded-lg shadow w-48 text-center animate-element"
-                        data-animation="fade-right"
-                        data-delay="900"
-                    >
-                        <p class="font-bold">INICIO DE OBRA</p>
-                    </div>
-                </div>
-
-                <!-- "No" Branch -->
-                <div class="flex flex-col items-center">
-                    <div
-                        class="bg-black border-2 border-black text-white py-2 px-4 rounded-lg shadow w-32 text-center mb-4 animate-element"
-                        data-animation="fade-left"
-                        data-delay="800"
-                    >
-                        <p class="font-bold">No</p>
-                    </div>
-                    <div
-                        class="bg-white border-2 border-[#2e8d80] text-gray-800 py-3 px-4 rounded-lg shadow w-48 text-center mb-4 animate-element"
-                        data-animation="fade-left"
-                        data-delay="900"
-                    >
-                        <p class="font-bold">
-                            TRAMITAMOS TU CRÉDITO HIPOTECARIO
-                        </p>
-                    </div>
-                    <div
-                        class="bg-white border-2 border-[#2e8d80] text-gray-800 py-3 px-4 rounded-lg shadow w-48 text-center animate-element"
-                        data-animation="fade-left"
-                        data-delay="1000"
-                    >
-                        <p class="font-bold">INICIO DE OBRA</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Call to Action -->
-        <div
-            class="mt-12 text-center animate-element"
-            data-animation="fade-up"
-            data-delay="1100"
+<section class="bg-white columns-auto px-10">
+    <!-- <div class=""> -->
+    <div class="text-center">
+        <h2
+            class="text-4xl md:text-5xl font-bold text-[#2e8d80] font-poppins drop-shadow-md"
         >
-            <p class="text-xl text-gray-700 mb-6 font-lato">
-                Estamos preparados para acompañarte en cada etapa de tu proyecto
-                de construcción, sin importar tu punto de partida.
-            </p>
-            <a
-                href="/contact"
-                class="inline-block bg-[#2e8d80] hover:bg-[#247a6d] text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all transform hover:-translate-y-1 font-poppins"
-            >
-                Inicia Tu Proyecto
-            </a>
+            Proceso de Construcción
+        </h2>
+        <div class="h-10"></div>
+        <div class="w-32 h-1 bg-[#2e8d80] mx-auto"></div>
+    </div>
+    <div class="h-10"></div>
+
+    <div class="flex justify-around">
+        <div
+            class="bg-[#2e8d80] text-white rounded-xl shadow-lg text-center py-5 w-100"
+        >
+            <h3 class="text-2xl font-bold font-poppins">Quiero Construir</h3>
         </div>
     </div>
+
+    <!-- haz una linea hacia abajo -->
+    <div class="flex justify-around">
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+    </div>
+
+    <div class="flex justify-around">
+        <div
+            class="bg-white border-4 border-[#2e8d80] text-gray-800 rounded-xl shadow-lg text-center py-5 w-120"
+        >
+            <h4 class="text-2xl font-bold font-poppins">¿Tengo terreno?</h4>
+        </div>
+    </div>
+
+    <div class="flex justify-around">
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+    </div>
+    <div class="flex justify-around">
+        <div class="w-2/4 h-1 bg-[#2e8d80]"></div>
+    </div>
+    <div class="flex justify-around">
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+    </div>
+
+    <div class="flex justify-around">
+        <div
+            class="bg-[#2e8d80] border-[#2e8d80] text-white rounded-lg shadow w-32 py-5 text-center text-2xl"
+        >
+            <p class="font-bold">Sí</p>
+        </div>
+
+        <div
+            class="bg-black border-black text-white py-5 rounded-lg shadow w-32 text-center text-2xl"
+        >
+            <p class="font-bold">No</p>
+        </div>
+    </div>
+    <div class="flex justify-around">
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+    </div>
+
+    <div class="flex justify-around">
+        <div class="w-48 flex justify-center">
+            <div class="h-100% w-1 bg-[#2e8d80]"></div>
+        </div>
+        <div
+            class="bg-white border-2 border-[#2e8d80] text-gray-800 py-5 rounded-lg shadow w-48 text-center text-2xl"
+        >
+            <p class="font-bold">Te lo conseguimos</p>
+        </div>
+    </div>
+
+    <div class="flex justify-around">
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+    </div>
+    <div class="flex justify-around">
+        <div class="w-2/4 h-1 bg-[#2e8d80]"></div>
+    </div>
+    <div class="flex justify-around">
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+    </div>
+
+    <div class="flex justify-around">
+        <div
+            class="bg-white border-2 border-[#2e8d80] text-gray-800 py-5 rounded-lg shadow w-48 text-center text-2xl"
+        >
+            <p class="font-bold">Diseño del proyecto</p>
+        </div>
+    </div>
+
+    <div class="flex justify-around">
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+    </div>
+
+    <div class="flex justify-around">
+        <div
+            class="bg-white border-4 border-[#2e8d80] text-gray-800 rounded-xl shadow-lg text-center py-5 w-120"
+        >
+            <h4 class="text-2xl font-bold font-poppins">
+                ¿Cuento con capital para construir?
+            </h4>
+        </div>
+    </div>
+
+    <div class="flex justify-around">
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+    </div>
+    <div class="flex justify-around">
+        <div class="w-2/4 h-1 bg-[#2e8d80]"></div>
+    </div>
+    <div class="flex justify-around">
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+    </div>
+
+    <div class="flex justify-around">
+        <div
+            class="bg-[#2e8d80] border-2 border-[#2e8d80] text-white py-2 px-4 rounded-lg shadow w-32 text-center"
+        >
+            <p class="font-bold">Sí</p>
+        </div>
+
+        <div
+            class="bg-black border-2 border-black text-white py-2 px-4 rounded-lg shadow w-32 text-center"
+        >
+            <p class="font-bold">No</p>
+        </div>
+    </div>
+
+    <div class="flex justify-around">
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+    </div>
+
+    <div class="flex justify-around">
+        <div class="w-48 flex justify-center">
+            <div class="h-100% w-1 bg-[#2e8d80]"></div>
+        </div>
+        <div
+            class="bg-white border-2 border-[#2e8d80] text-gray-800 py-5 rounded-lg shadow w-48 text-center text-2xl"
+        >
+            <p class="font-bold">Tramitamos tu crédito hipotecario</p>
+        </div>
+    </div>
+
+    <div class="flex justify-around">
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+    </div>
+    <div class="flex justify-around">
+        <div class="w-2/4 h-1 bg-[#2e8d80]"></div>
+    </div>
+    <div class="flex justify-around">
+        <div class="h-10 w-1 bg-[#2e8d80]"></div>
+    </div>
+
+    <div class="flex justify-around">
+        <a
+            class="bg-[#2e8d80] text-white rounded-xl shadow-lg text-center py-5 w-100"
+            href="/contact"
+        >
+            <h3 class="text-2xl font-bold font-poppins">INICIA TU OBRA</h3>
+        </a>
+    </div>
+
+    <div class="h-10"></div>
+
+    <!-- Call to Action -->
+    <div class="text-center">
+        <p class="text-xl text-gray-700 mb-6 font-lato">
+            Estamos preparados para acompañarte en cada etapa de tu proyecto de
+            construcción, sin importar tu punto de partida.
+        </p>
+    </div>
+    <!-- </div> -->
+
+    <div class="h-10"></div>
 </section>
-
-<style>
-    /* Animation base styles */
-    .animate-element {
-        opacity: 0;
-        transform: translateY(20px);
-        transition:
-            opacity 0.3s ease-out,
-            transform 0.3s ease-out;
-    }
-
-    .animate-element.animate {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    /* Different animation types */
-    .animate-element[data-animation="fade-up"] {
-        transform: translateY(40px);
-    }
-
-    .animate-element[data-animation="fade-down"] {
-        transform: translateY(-40px);
-    }
-
-    .animate-element[data-animation="fade-right"] {
-        transform: translateX(-40px);
-    }
-
-    .animate-element[data-animation="fade-left"] {
-        transform: translateX(40px);
-    }
-
-    .animate-fade-in {
-        animation: fadeIn 1s ease-in-out forwards;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
-</style>
-
-<script>
-    // Animation observer
-    document.addEventListener("DOMContentLoaded", () => {
-        const animatedElements = document.querySelectorAll(".animate-element");
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        const element = entry.target;
-                        const delay = parseInt(
-                            element.getAttribute("data-delay") || "0",
-                            10,
-                        );
-
-                        setTimeout(() => {
-                            element.classList.add("animate");
-                        }, delay);
-
-                        // Once animated, no need to observe anymore
-                        observer.unobserve(element);
-                    }
-                });
-            },
-            { threshold: 0.2 },
-        );
-
-        animatedElements.forEach((element) => {
-            observer.observe(element);
-        });
-    });
-</script>

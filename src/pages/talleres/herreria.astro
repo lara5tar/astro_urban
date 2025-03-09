@@ -32,17 +32,16 @@ const options = [
 const titulo = "Herrería Artística";
 const description =
     "Nuestro equipo de arte diseña con profesionalismo <strong>piezas únicas y exclusivas</strong>, que después finos artesanos <strong>trabajarán a detalle</strong> con técnicas antiguas de forja combinadas con soldadura moderna creando bellas obras de arte en hierro, las cuales <strong>harán lucir cualquier espacio en su hogar.</strong>";
-
-// Navigation routes
-const prevTaller = "/talleres/carpinteria";
-const nextTaller = "/talleres/canceleria";
 ---
 
 <html>
     <head>
         <title>{titulo}</title>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
         <CriticalStyles />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -59,16 +58,33 @@ const nextTaller = "/talleres/canceleria";
             mainImage={mainImage}
             description={description}
             options={options}
-            prevTaller={prevTaller}
-            nextTaller={nextTaller}
         />
     </body>
 </html>
 
 <style>
+    :root {
+        --sat: env(safe-area-inset-top, 0px);
+        --sab: env(safe-area-inset-bottom, 0px);
+        --sal: env(safe-area-inset-left, 0px);
+        --sar: env(safe-area-inset-right, 0px);
+    }
+
     body {
         margin: 0;
         padding: 0;
+        padding-top: var(--sat);
+        padding-bottom: calc(
+            var(--sab) + 60px
+        ); /* Extra padding for bottom navigation bars */
         overflow-x: hidden;
+        min-height: calc(100vh - var(--sat) - var(--sab));
+    }
+
+    @supports (padding: max(0px)) {
+        body {
+            padding-left: max(0px, var(--sal));
+            padding-right: max(0px, var(--sar));
+        }
     }
 </style>

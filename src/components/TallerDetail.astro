@@ -56,139 +56,142 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         }
     </div>
 
-    <!-- Content layout -->
-    <div class="absolute top-0 left-0 w-full h-full flex z-20 pt-20 box-border">
-        <!-- Main description panel (left side) -->
-        <div
-            class="w-[40%] max-w-[500px] h-full bg-black/80 text-white p-8 flex flex-col overflow-y-auto content-panel"
-        >
-            <!-- Fixed mobile navigation layout for long titles -->
-            <div class="title-nav-container">
-                {
-                    prevTaller && (
-                        <a
-                            href={prevTaller}
-                            class="mobile-nav-button prev"
-                            aria-label="Taller anterior"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                class="w-5 h-5"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M15 19l-7-7 7-7"
-                                />
-                            </svg>
-                        </a>
-                    )
-                }
-
-                <h1
-                    class="font-poppins text-[clamp(1.7rem,3.5vw,2.8rem)] font-bold m-0 opacity-0 leading-tight break-words hyphens-auto"
-                >
-                    {title}
-                </h1>
-
-                {
-                    nextTaller && (
-                        <a
-                            href={nextTaller}
-                            class="mobile-nav-button next"
-                            aria-label="Taller siguiente"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                class="w-5 h-5"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M9 5l7 7-7 7"
-                                />
-                            </svg>
-                        </a>
-                    )
-                }
-            </div>
-
-            <div class="w-100% h-[3px] bg-[#2e8d80] my-4 divider opacity-0">
-            </div>
-
-            <div class="flex-grow">
-                <div
-                    id="main-description"
-                    class="block description text-justify opacity-0"
-                    set:html={description}
-                />
-            </div>
-
-            <div class="mt-auto opacity-0">
-                <h3 class="font-montserrat text-lg my-4">Servicios</h3>
-                <div class="flex flex-wrap gap-2.5 mb-8 options-list">
+    <!-- Content layout - wrap in container for desktop centering -->
+    <div class="layout-container">
+        <div class="content-layout flex z-20 pt-20 box-border">
+            <!-- Main description panel (left side) -->
+            <div
+                class="w-[40%] max-w-[500px] h-full bg-black/80 text-white p-8 flex flex-col overflow-y-auto content-panel"
+            >
+                <!-- Fixed mobile navigation layout for long titles -->
+                <div class="title-nav-container">
                     {
-                        options.map((option) => (
-                            <button
-                                class="relative w-full bg-[#2e8d80]/30 border border-[#2e8d80] text-white py-2 px-4 rounded cursor-pointer font-montserrat font-medium transition-all duration-300 hover:bg-[#2e8d80] option-button"
-                                data-option-id={option.id}
+                        prevTaller && (
+                            <a
+                                href={prevTaller}
+                                class="mobile-nav-button prev"
+                                aria-label="Taller anterior"
                             >
-                                {option.title}
-                            </button>
-                        ))
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    class="w-5 h-5"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M15 19l-7-7 7-7"
+                                    />
+                                </svg>
+                            </a>
+                        )
                     }
-                </div>
 
-                <!-- Option descriptions for mobile - Only visible on mobile via CSS -->
-                <!-- Moved below the buttons -->
-                <div class="mobile-descriptions">
-                    {
-                        options.map((option) => (
-                            <div
-                                id={`mobile-description-${option.id}`}
-                                class="mobile-option-description"
-                                data-option-id={option.id}
-                            >
-                                <h3 class="text-xl font-poppins mb-2 text-[#2e8d80]">
-                                    {option.title}
-                                </h3>
-                                <div
-                                    class="text-justify"
-                                    set:html={option.description}
-                                />
-                            </div>
-                        ))
-                    }
-                </div>
-            </div>
-        </div>
-
-        <!-- Option descriptions panel (right side) - Only visible on desktop via CSS -->
-        <div
-            class="w-[80%] h-full flex items-end justify-center relative pb-16 desktop-descriptions"
-        >
-            {
-                options.map((option) => (
-                    <div
-                        id={`description-${option.id}`}
-                        class="hidden w-full mx-auto bg-black/70 text-white p-8 option-description"
-                        data-option-id={option.id}
+                    <h1
+                        class="font-poppins text-[clamp(1.7rem,3.5vw,2.8rem)] font-bold m-0 opacity-0 leading-tight break-words hyphens-auto"
                     >
-                        <div
-                            class="text-justify"
-                            set:html={option.description}
-                        />
+                        {title}
+                    </h1>
+
+                    {
+                        nextTaller && (
+                            <a
+                                href={nextTaller}
+                                class="mobile-nav-button next"
+                                aria-label="Taller siguiente"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    class="w-5 h-5"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 5l7 7-7 7"
+                                    />
+                                </svg>
+                            </a>
+                        )
+                    }
+                </div>
+
+                <div class="w-100% h-[3px] bg-[#2e8d80] my-4 divider opacity-0">
+                </div>
+
+                <!-- Remove flex-grow to prevent expansion -->
+                <div class="description-container">
+                    <div
+                        id="main-description"
+                        class="block description text-justify opacity-0"
+                        set:html={description}
+                    />
+                </div>
+
+                <!-- Options container with minimal spacing -->
+                <div class="mt-4 opacity-0 options-container">
+                    <div class="h-5"></div>
+                    <div class="flex flex-wrap gap-2.5 mb-4 options-list">
+                        {
+                            options.map((option) => (
+                                <button
+                                    class="relative w-full bg-[#2e8d80]/30 border border-[#2e8d80] text-white py-2 px-4 rounded cursor-pointer font-montserrat font-medium transition-all duration-300 hover:bg-[#2e8d80] option-button"
+                                    data-option-id={option.id}
+                                >
+                                    {option.title}
+                                </button>
+                            ))
+                        }
                     </div>
-                ))
-            }
+
+                    <!-- Mobile descriptions container -->
+                    <div class="mobile-descriptions">
+                        {
+                            options.map((option) => (
+                                <div
+                                    id={`mobile-description-${option.id}`}
+                                    class="mobile-option-description"
+                                    data-option-id={option.id}
+                                >
+                                    <h3 class="text-xl font-poppins mb-2 text-[#2e8d80]">
+                                        {option.title}
+                                    </h3>
+                                    <div
+                                        class="text-justify"
+                                        set:html={option.description}
+                                    />
+                                </div>
+                            ))
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Option descriptions panel (right side) - Only visible on desktop via CSS -->
+            <div
+                class="w-[80%] h-full flex items-end justify-center relative pb-16 desktop-descriptions"
+            >
+                {
+                    options.map((option) => (
+                        <div
+                            id={`description-${option.id}`}
+                            class="hidden w-full mx-auto bg-black/70 text-white p-8 option-description"
+                            data-option-id={option.id}
+                        >
+                            <div
+                                class="text-justify"
+                                set:html={option.description}
+                            />
+                        </div>
+                    ))
+                }
+            </div>
         </div>
     </div>
 
@@ -255,7 +258,7 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         const title = document.querySelector(".content-panel h1");
         const divider = document.querySelector(".content-panel .divider");
         const optionsSection = document.querySelector(
-            ".content-panel .mt-auto",
+            ".content-panel .options-container", // Updated selector to match new class
         );
 
         // Ensure all animations start with a small delay after page load
@@ -332,10 +335,19 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
                         // Scroll to mobile description
                         if (window.innerWidth <= 768) {
                             setTimeout(() => {
-                                mobileDesc.scrollIntoView({
+                                // First scroll to the button to ensure context
+                                this.scrollIntoView({
                                     behavior: "smooth",
-                                    block: "start",
+                                    block: "center",
                                 });
+
+                                // Then after a short delay, scroll to show the description
+                                setTimeout(() => {
+                                    mobileDesc.scrollIntoView({
+                                        behavior: "smooth",
+                                        block: "nearest",
+                                    });
+                                }, 300);
                             }, 100);
                         }
                     }
@@ -543,6 +555,7 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
             height: 100%;
             display: flex;
             flex-direction: column;
+            overflow-y: auto; /* Ensure scrolling works properly */
         }
 
         /* Show mobile descriptions section */
@@ -556,7 +569,8 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
             display: none;
         }
 
-        .mt-auto {
+        /* Remove margin-top auto styles that were pushing options to the bottom */
+        .options-container {
             margin-top: 2rem; /* Add some space between main description and options */
         }
 
@@ -574,6 +588,58 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         .font-poppins {
             font-size: clamp(1.5rem, 6vw, 2.2rem) !important;
             line-height: 1.2;
+        }
+
+        /* Ensure proper layout structure on mobile */
+        .content-panel {
+            width: 100%;
+            max-width: none;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        /* Description container - no flex or expanding behavior */
+        .description-container {
+            width: 100%;
+            position: relative;
+        }
+
+        /* Options container styling */
+        .options-container {
+            width: 100%;
+            position: relative;
+            margin-top: 1.5rem;
+        }
+
+        /* Show mobile descriptions section */
+        .mobile-descriptions {
+            display: block;
+            margin-bottom: 1rem;
+            margin-top: 0.5rem;
+            width: 100%;
+        }
+
+        /* Mobile description animation */
+        .mobile-option-description.description-visible {
+            border-left: 6px solid #2e8d80;
+            background-color: rgba(46, 141, 128, 0.2);
+            animation: expandDown 0.3s ease-out forwards;
+        }
+
+        /* Animation for expanding downward */
+        @keyframes expandDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                max-height: 1000px;
+                transform: translateY(0);
+            }
         }
     }
 
@@ -625,7 +691,7 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
     }
 
     .desktop-nav-button {
-        position: absolute;
+        position: fixed; /* Change from absolute to fixed */
         top: 50%;
         display: flex;
         align-items: center;
@@ -649,11 +715,11 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
     }
 
     .desktop-nav-button.prev {
-        left: 20px;
+        left: max(20px, calc(50% - 900px)); /* Position relative to content */
     }
 
     .desktop-nav-button.next {
-        right: 20px;
+        right: max(20px, calc(50% - 900px)); /* Position relative to content */
     }
 
     /* Mobile Navigation */
@@ -743,5 +809,23 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         .title-nav-container {
             display: block;
         }
+    }
+
+    /* Content centering for desktop */
+    .layout-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .content-layout {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        max-width: 1800px; /* Limit width on very large screens */
     }
 </style>

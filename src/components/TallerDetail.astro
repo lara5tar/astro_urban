@@ -56,195 +56,140 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         }
     </div>
 
-    <!-- Content layout - wrap in container for desktop centering -->
-    <div class="layout-container">
-        <div class="content-layout flex z-20 pt-20 box-border">
-            <!-- Main description panel (left side) -->
-            <div
-                class="w-[40%] max-w-[500px] h-full bg-black/80 text-white p-8 flex flex-col overflow-y-auto content-panel"
-            >
-                <!-- Fixed mobile navigation layout for long titles -->
-                <div class="title-nav-container">
-                    {
-                        prevTaller && (
-                            <a
-                                href={prevTaller}
-                                class="mobile-nav-button prev"
-                                aria-label="Taller anterior"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    class="w-5 h-5"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M15 19l-7-7 7-7"
-                                    />
-                                </svg>
-                            </a>
-                        )
-                    }
-
-                    <h1
-                        class="font-poppins text-[clamp(1.7rem,3.5vw,2.8rem)] font-bold m-0 opacity-0 leading-tight break-words hyphens-auto"
-                    >
-                        {title}
-                    </h1>
-
-                    {
-                        nextTaller && (
-                            <a
-                                href={nextTaller}
-                                class="mobile-nav-button next"
-                                aria-label="Taller siguiente"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    class="w-5 h-5"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M9 5l7 7-7 7"
-                                    />
-                                </svg>
-                            </a>
-                        )
-                    }
-                </div>
-
-                <div class="w-100% h-[3px] bg-[#2e8d80] my-4 divider opacity-0">
-                </div>
-
-                <!-- Remove flex-grow to prevent expansion -->
-                <div class="description-container">
-                    <div
-                        id="main-description"
-                        class="block description text-justify opacity-0"
-                        set:html={description}
-                    />
-                </div>
-
-                <!-- Options container with minimal spacing -->
-                <div class="mt-4 opacity-0 options-container">
-                    <div class="h-5"></div>
-                    <div class="flex flex-wrap gap-2.5 mb-4 options-list">
-                        {
-                            options.map((option) => (
-                                <button
-                                    class="relative w-full bg-[#2e8d80]/30 border border-[#2e8d80] text-white py-2 px-4 rounded cursor-pointer font-montserrat font-medium transition-all duration-300 hover:bg-[#2e8d80] option-button"
-                                    data-option-id={option.id}
-                                >
-                                    {option.title}
-                                </button>
-                            ))
-                        }
-                    </div>
-
-                    <!-- Mobile descriptions container -->
-                    <div class="mobile-descriptions">
-                        {
-                            options.map((option) => (
-                                <div
-                                    id={`mobile-description-${option.id}`}
-                                    class="mobile-option-description"
-                                    data-option-id={option.id}
-                                >
-                                    <h3 class="text-xl font-poppins mb-2 text-[#2e8d80]">
-                                        {option.title}
-                                    </h3>
-                                    <div
-                                        class="text-justify"
-                                        set:html={option.description}
-                                    />
-                                </div>
-                            ))
-                        }
-                    </div>
-                </div>
-            </div>
-
-            <!-- Option descriptions panel (right side) - Only visible on desktop via CSS -->
-            <div
-                class="w-[80%] h-full flex items-end justify-center relative pb-16 desktop-descriptions"
-            >
+    <!-- Content layout -->
+    <div class="absolute top-0 left-0 w-full h-full flex z-20 pt-20 box-border">
+        <!-- Main description panel (left side) -->
+        <div
+            class="w-[40%] max-w-[500px] h-full bg-black/80 text-white p-8 flex flex-col overflow-y-auto content-panel"
+        >
+            <!-- Fixed mobile navigation layout for long titles -->
+            <div class="title-nav-container">
                 {
-                    options.map((option) => (
-                        <div
-                            id={`description-${option.id}`}
-                            class="hidden w-full mx-auto bg-black/70 text-white p-8 option-description"
-                            data-option-id={option.id}
+                    prevTaller && (
+                        <a
+                            href={prevTaller}
+                            class="mobile-nav-button prev"
+                            aria-label="Taller anterior"
                         >
-                            <div
-                                class="text-justify"
-                                set:html={option.description}
-                            />
-                        </div>
-                    ))
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                class="w-5 h-5"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M15 19l-7-7 7-7"
+                                />
+                            </svg>
+                        </a>
+                    )
+                }
+
+                <h1
+                    class="font-poppins text-[clamp(1.7rem,3.5vw,2.8rem)] font-bold leading-tight break-words hyphens-auto"
+                >
+                    {title}
+                </h1>
+
+                {
+                    nextTaller && (
+                        <a
+                            href={nextTaller}
+                            class="mobile-nav-button next"
+                            aria-label="Taller siguiente"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                class="w-5 h-5"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 5l7 7-7 7"
+                                />
+                            </svg>
+                        </a>
+                    )
                 }
             </div>
-        </div>
-    </div>
 
-    <!-- Desktop navigation buttons - absolutely positioned to the sides of the viewport -->
-    <div class="desktop-navigation">
-        {
-            prevTaller && (
-                <a
-                    href={prevTaller}
-                    class="desktop-nav-button prev"
-                    aria-label="Taller anterior"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        class="w-8 h-8"
+            <div class="w-100% h-[3px] bg-[#2e8d80] my-4 divider opacity-0">
+            </div>
+
+            <!-- Remove flex-grow to prevent expansion -->
+            <div class="description-container">
+                <div
+                    id="main-description"
+                    class="block description text-justify opacity-0"
+                    set:html={description}
+                />
+            </div>
+
+            <!-- Options container with minimal spacing -->
+            <div class="mt-4 opacity-0 options-container">
+                <div class="flex flex-wrap gap-2.5 mb-4 options-list">
+                    {
+                        options.map((option) => (
+                            <button
+                                class="relative w-full bg-[#2e8d80]/30 border border-[#2e8d80] text-white py-2 px-4 rounded cursor-pointer font-montserrat font-medium transition-all duration-300 hover:bg-[#2e8d80] option-button"
+                                data-option-id={option.id}
+                            >
+                                {option.title}
+                            </button>
+                        ))
+                    }
+                </div>
+
+                <!-- Mobile descriptions container -->
+                <div class="mobile-descriptions">
+                    {
+                        options.map((option) => (
+                            <div
+                                id={`mobile-description-${option.id}`}
+                                class="mobile-option-description"
+                                data-option-id={option.id}
+                            >
+                                <h3 class="text-xl font-poppins mb-2 text-[#2e8d80]">
+                                    {option.title}
+                                </h3>
+                                <div
+                                    class="text-justify"
+                                    set:html={option.description}
+                                />
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Option descriptions panel (right side) - Only visible on desktop via CSS -->
+        <div
+            class="w-[80%] h-full flex items-end justify-center relative pb-16 desktop-descriptions"
+        >
+            {
+                options.map((option) => (
+                    <div
+                        id={`description-${option.id}`}
+                        class="hidden w-full mx-auto bg-black/70 text-white p-8 option-description"
+                        data-option-id={option.id}
                     >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M15 19l-7-7 7-7"
+                        <div
+                            class="text-justify"
+                            set:html={option.description}
                         />
-                    </svg>
-                </a>
-            )
-        }
-        {
-            nextTaller && (
-                <a
-                    href={nextTaller}
-                    class="desktop-nav-button next"
-                    aria-label="Taller siguiente"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        class="w-8 h-8"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 5l7 7-7 7"
-                        />
-                    </svg>
-                </a>
-            )
-        }
+                    </div>
+                ))
+            }
+        </div>
     </div>
 </div>
 
@@ -286,6 +231,16 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
                 optionsSection.classList.add("content-entrance-animation");
                 (optionsSection as HTMLElement).style.animationDelay = "0.4s";
             }
+
+            // Add animations to navigation buttons
+            document
+                .querySelectorAll(".mobile-nav-button")
+                .forEach((button, index) => {
+                    // Add animation with staggered delay
+                    (button as HTMLElement).style.animationDelay =
+                        `${0.7 + index * 0.2}s`;
+                    button.classList.add("nav-button-animation");
+                });
         }, 50); // Small delay to ensure CSS has applied
 
         // Rest of the event handlers
@@ -679,49 +634,6 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         display: none;
     }
 
-    /* Desktop Navigation */
-    .desktop-navigation {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 40;
-        pointer-events: none; /* Allow clicks to pass through */
-    }
-
-    .desktop-nav-button {
-        position: fixed; /* Change from absolute to fixed */
-        top: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background-color: rgba(0, 0, 0, 0.5);
-        color: white;
-        transform: translateY(-50%);
-        pointer-events: auto; /* Make buttons clickable */
-        transition: all 0.3s ease;
-        opacity: 0.7;
-        animation: fadeIn 0.5s ease-in-out 1s forwards;
-    }
-
-    .desktop-nav-button:hover {
-        background-color: rgba(46, 141, 128, 0.8);
-        transform: translateY(-50%) scale(1.1);
-        opacity: 1;
-    }
-
-    .desktop-nav-button.prev {
-        left: max(20px, calc(50% - 900px)); /* Position relative to content */
-    }
-
-    .desktop-nav-button.next {
-        right: max(20px, calc(50% - 900px)); /* Position relative to content */
-    }
-
     /* Mobile Navigation */
     .mobile-nav-wrapper {
         display: none;
@@ -762,11 +674,6 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
 
     /* Media queries */
     @media (max-width: 768px) {
-        /* Hide desktop navigation on mobile */
-        .desktop-navigation {
-            display: none;
-        }
-
         /* Show mobile navigation */
         .mobile-nav-button {
             display: flex;
@@ -783,11 +690,11 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
 
         /* Mobile buttons positioning */
         .title-nav-container {
-            display: grid;
-            grid-template-columns: auto 1fr auto;
+            display: flex;
             align-items: center;
+            justify-content: space-between;
             width: 100%;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 10px;
         }
 
@@ -795,7 +702,15 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         .title-nav-container h1 {
             hyphens: auto;
             word-wrap: break-word;
+            word-break: break-word;
             font-size: clamp(1.5rem, 5vw, 2rem) !important;
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Prevent nav buttons from being displaced */
+        .mobile-nav-button {
+            flex-shrink: 0;
         }
     }
 
@@ -807,25 +722,235 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
 
         /* Adjust title container for desktop */
         .title-nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Make the title match mobile layout but centered */
+        .title-nav-container h1 {
+            text-align: center;
+            padding: 0;
+            max-width: 90%; /* Prevent the title from extending to full width */
+            margin: 0 auto;
+        }
+
+        /* Ensure font-poppins behaves consistently */
+        .font-poppins {
             display: block;
+            text-align: center;
+            max-width: 100%;
+            word-wrap: break-word;
         }
     }
 
-    /* Content centering for desktop */
-    .layout-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+    /* Improved title container layout to prevent button displacement */
+    .title-nav-container {
         display: flex;
-        justify-content: center;
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+        margin-bottom: 10px;
+        justify-content: center; /* Center the title in all views */
     }
 
-    .content-layout {
+    .title-nav-container h1 {
+        flex: 1; /* Allow title to take available space */
+        min-width: 0; /* Required for text truncation */
+        text-align: center;
+        hyphens: auto;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        max-width: 100%;
+    }
+
+    .mobile-nav-button {
+        flex-shrink: 0; /* Prevent buttons from shrinking */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: rgba(46, 141, 128, 0.3);
+        color: white;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
-        width: 100%;
-        height: 100%;
-        max-width: 1800px; /* Limit width on very large screens */
+        overflow: hidden;
+        transform: translateZ(0); /* Force hardware acceleration */
+    }
+
+    /* Nav button entrance animation */
+    .nav-button-animation {
+        animation: navButtonEnter 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+            both;
+        transform-origin: center center;
+        opacity: 0; /* Start hidden and let animation reveal it */
+    }
+
+    /* Enhanced navigation button entrance animation */
+    @keyframes navButtonEnter {
+        0% {
+            opacity: 0;
+            transform: scale(0.3) rotate(-25deg);
+        }
+        50% {
+            transform: scale(1.3) rotate(15deg);
+        }
+        75% {
+            transform: scale(0.9) rotate(0deg);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+    }
+
+    /* Add a subtle bounce after entrance */
+    @keyframes navButtonAfterEnter {
+        0% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-5px);
+        }
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+    /* Apply the bounce animation after entrance completes */
+    .mobile-nav-button.nav-button-animation:hover {
+        animation: navButtonAfterEnter 1s ease-in-out;
+    }
+
+    /* Direction-specific entrance animations */
+    .mobile-nav-button.prev.nav-button-animation {
+        transform-origin: right center;
+    }
+
+    .mobile-nav-button.next.nav-button-animation {
+        transform-origin: left center;
+    }
+
+    .mobile-nav-button:hover {
+        background-color: rgba(46, 141, 128, 0.9);
+        transform: scale(1.15);
+        box-shadow: 0 0 15px rgba(46, 141, 128, 0.5);
+        animation: navButtonPulse 2s infinite;
+    }
+
+    .mobile-nav-button:active {
+        transform: scale(0.9);
+        transition: transform 0.1s;
+    }
+
+    /* Direction-specific hover animations */
+    .mobile-nav-button.prev:hover svg {
+        animation: arrowBounce 0.8s ease-in-out infinite;
+    }
+
+    .mobile-nav-button.next:hover svg {
+        animation: arrowBounceRight 0.8s ease-in-out infinite;
+    }
+
+    /* Create ripple effect */
+    .mobile-nav-button::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100px;
+        height: 100px;
+        background-color: rgba(255, 255, 255, 0.4);
+        opacity: 0;
+        border-radius: 50%;
+        transform: scale(0) translate(-50%, -50%);
+        transform-origin: top left;
+    }
+
+    .mobile-nav-button:focus::after {
+        animation: rippleNav 0.8s ease-out;
+    }
+
+    @keyframes rippleNav {
+        0% {
+            transform: scale(0) translate(-50%, -50%);
+            opacity: 0.5;
+        }
+        100% {
+            transform: scale(1) translate(-50%, -50%);
+            opacity: 0;
+        }
+    }
+
+    .mobile-nav-button.prev {
+        margin-right: 10px;
+    }
+
+    .mobile-nav-button.next {
+        margin-left: 10px;
+    }
+
+    /* Navigation button animations */
+    @keyframes navButtonEnter {
+        0% {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        70% {
+            transform: scale(1.1);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes navButtonPulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(46, 141, 128, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 8px rgba(46, 141, 128, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(46, 141, 128, 0);
+        }
+    }
+
+    @keyframes wiggle {
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+        25% {
+            transform: translateX(-3px);
+        }
+        75% {
+            transform: translateX(3px);
+        }
+    }
+
+    @keyframes arrowBounce {
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+        50% {
+            transform: translateX(-3px);
+        }
+    }
+
+    @keyframes arrowBounceRight {
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+        50% {
+            transform: translateX(3px);
+        }
     }
 </style>

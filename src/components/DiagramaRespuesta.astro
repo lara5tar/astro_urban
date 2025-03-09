@@ -1,0 +1,18 @@
+---
+interface Props {
+    respuesta: string;
+    accion?: () => void | Promise<void>;
+}
+
+const { respuesta, accion } = Astro.props;
+---
+
+<div
+    class="bg-[#616161] text-gray-100 py-3 sm:py-4 md:py-6 px-3 sm:px-4 md:px-5 rounded-lg w-[48%] text-center max-w-[30%]"
+>
+    <p
+        class="text-base sm:text-lg md:text-xl lg:text-2x1 font-bold break-words"
+    >
+        {respuesta}
+    </p>
+</div>

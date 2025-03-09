@@ -1,0 +1,39 @@
+---
+interface Props {
+    titulo: string;
+    accion?: () => void | Promise<void>;
+}
+
+const { titulo, accion } = Astro.props;
+---
+
+<div class="flex justify-around">
+    <div
+        class="bg-[#2e8d80] text-gray-800 rounded-xl shadow-lg text-center py-3 sm:py-4 md:py-5 px-3 sm:px-4 md:px-5 transition-colors hover:bg-[#2e8d80] hover:text-white"
+    >
+        <button
+            id="diagrama-btn"
+            class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold font-poppins"
+            data-has-action={!!accion}
+        >
+            {titulo}
+        </button>
+    </div>
+</div>
+
+{/* @ts-ignore - Astro specific syntax */}
+<script define:vars={{ accionProp: accion }}>
+    // Store the action in the window object for global access if needed
+    if (accionProp) {
+        // @ts-ignore - Adding custom property to window
+        window.accionDiagrama = accionProp;
+    }
+
+    // Add click event listener to the button
+    const button = document.getElementById("diagrama-btn");
+    if (button && accionProp) {
+        button.addEventListener("click", () => {
+            accionProp();
+        });
+    }
+</script>

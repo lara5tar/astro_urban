@@ -1,0 +1,15 @@
+---
+interface Props {
+    invertido?: boolean;
+}
+
+const { invertido = false } = Astro.props;
+---
+
+<div class="flex justify-around">
+    <div
+        class={`border-${invertido ? "t" : "b"}-4 border-l-4 border-r-4 border-[#2e8d80] rounded-${invertido ? "t" : "b"}-xl py-5 w-[calc(50%+4px)]`}
+    >
+        <slot />
+    </div>
+</div>

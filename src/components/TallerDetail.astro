@@ -15,9 +15,12 @@ interface Props {
     mainImage: ImageMetadata;
     description: string;
     options: Option[];
+    prevTaller?: string; // Optional path to previous workshop
+    nextTaller?: string; // Optional path to next workshop
 }
 
-const { title, mainImage, description, options } = Astro.props;
+const { title, mainImage, description, options, prevTaller, nextTaller } =
+    Astro.props;
 ---
 
 <div class="relative w-full h-screen overflow-hidden bg-gray-950">
@@ -59,11 +62,65 @@ const { title, mainImage, description, options } = Astro.props;
         <div
             class="w-[40%] max-w-[500px] h-full bg-black/80 text-white p-8 flex flex-col overflow-y-auto content-panel"
         >
-            <h1
-                class="font-poppins text-[clamp(1.7rem,3.5vw,2.8rem)] font-bold m-0 opacity-0 leading-tight break-words hyphens-auto"
-            >
-                {title}
-            </h1>
+            <!-- Fixed mobile navigation layout for long titles -->
+            <div class="title-nav-container">
+                {
+                    prevTaller && (
+                        <a
+                            href={prevTaller}
+                            class="mobile-nav-button prev"
+                            aria-label="Taller anterior"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                class="w-5 h-5"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M15 19l-7-7 7-7"
+                                />
+                            </svg>
+                        </a>
+                    )
+                }
+
+                <h1
+                    class="font-poppins text-[clamp(1.7rem,3.5vw,2.8rem)] font-bold m-0 opacity-0 leading-tight break-words hyphens-auto"
+                >
+                    {title}
+                </h1>
+
+                {
+                    nextTaller && (
+                        <a
+                            href={nextTaller}
+                            class="mobile-nav-button next"
+                            aria-label="Taller siguiente"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                class="w-5 h-5"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 5l7 7-7 7"
+                                />
+                            </svg>
+                        </a>
+                    )
+                }
+            </div>
+
             <div class="w-100% h-[3px] bg-[#2e8d80] my-4 divider opacity-0">
             </div>
 
@@ -133,6 +190,58 @@ const { title, mainImage, description, options } = Astro.props;
                 ))
             }
         </div>
+    </div>
+
+    <!-- Desktop navigation buttons - absolutely positioned to the sides of the viewport -->
+    <div class="desktop-navigation">
+        {
+            prevTaller && (
+                <a
+                    href={prevTaller}
+                    class="desktop-nav-button prev"
+                    aria-label="Taller anterior"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        class="w-8 h-8"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M15 19l-7-7 7-7"
+                        />
+                    </svg>
+                </a>
+            )
+        }
+        {
+            nextTaller && (
+                <a
+                    href={nextTaller}
+                    class="desktop-nav-button next"
+                    aria-label="Taller siguiente"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        class="w-8 h-8"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 5l7 7-7 7"
+                        />
+                    </svg>
+                </a>
+            )
+        }
     </div>
 </div>
 
@@ -496,5 +605,143 @@ const { title, mainImage, description, options } = Astro.props;
         display: block;
         content: "";
         margin-top: 0.5em;
+    }
+
+    /* Improved Navigation button styles to prevent interference */
+    .fixed-navigation-container,
+    .nav-button {
+        display: none;
+    }
+
+    /* Desktop Navigation */
+    .desktop-navigation {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 40;
+        pointer-events: none; /* Allow clicks to pass through */
+    }
+
+    .desktop-nav-button {
+        position: absolute;
+        top: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        transform: translateY(-50%);
+        pointer-events: auto; /* Make buttons clickable */
+        transition: all 0.3s ease;
+        opacity: 0.7;
+        animation: fadeIn 0.5s ease-in-out 1s forwards;
+    }
+
+    .desktop-nav-button:hover {
+        background-color: rgba(46, 141, 128, 0.8);
+        transform: translateY(-50%) scale(1.1);
+        opacity: 1;
+    }
+
+    .desktop-nav-button.prev {
+        left: 20px;
+    }
+
+    .desktop-nav-button.next {
+        right: 20px;
+    }
+
+    /* Mobile Navigation */
+    .mobile-nav-wrapper {
+        display: none;
+    }
+
+    .mobile-nav-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: rgba(46, 141, 128, 0.3);
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .mobile-nav-button:hover {
+        background-color: rgba(46, 141, 128, 0.9);
+    }
+
+    .mobile-nav-button.prev {
+        margin-right: 10px;
+    }
+
+    .mobile-nav-button.next {
+        margin-left: 10px;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 0.7;
+        }
+    }
+
+    /* Media queries */
+    @media (max-width: 768px) {
+        /* Hide desktop navigation on mobile */
+        .desktop-navigation {
+            display: none;
+        }
+
+        /* Show mobile navigation */
+        .mobile-nav-button {
+            display: flex;
+        }
+
+        /* Adjust title container */
+        .font-poppins {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 5px;
+        }
+
+        /* Mobile buttons positioning */
+        .title-nav-container {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Ensure title wraps properly on mobile */
+        .title-nav-container h1 {
+            hyphens: auto;
+            word-wrap: break-word;
+            font-size: clamp(1.5rem, 5vw, 2rem) !important;
+        }
+    }
+
+    @media (min-width: 769px) {
+        /* Hide mobile navigation buttons on desktop */
+        .mobile-nav-button {
+            display: none;
+        }
+
+        /* Adjust title container for desktop */
+        .title-nav-container {
+            display: block;
+        }
     }
 </style>

@@ -32,6 +32,10 @@ const options = [
 const titulo = "Herrería Artística";
 const description =
     "Nuestro equipo de arte diseña con profesionalismo <strong>piezas únicas y exclusivas</strong>, que después finos artesanos <strong>trabajarán a detalle</strong> con técnicas antiguas de forja combinadas con soldadura moderna creando bellas obras de arte en hierro, las cuales <strong>harán lucir cualquier espacio en su hogar.</strong>";
+
+// Navigation routes
+const prevTaller = "/talleres/carpinteria";
+const nextTaller = "/talleres/canceleria";
 ---
 
 <html>
@@ -55,6 +59,8 @@ const description =
             mainImage={mainImage}
             description={description}
             options={options}
+            prevTaller={prevTaller}
+            nextTaller={nextTaller}
         />
     </body>
 </html>

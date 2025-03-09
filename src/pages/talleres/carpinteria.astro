@@ -30,6 +30,10 @@ const options = [
 // Main description with HTML formatting
 const description =
     "<strong>Expertos carpinteros y ebanistas materializarán diseños exclusivos</strong> que nuestros arquitectos especializados en mobiliario realicen en base a sus gustos y necesidades, superando ampliamente sus expectativas.";
+
+// Navigation routes
+const prevTaller = "/talleres/acabados";
+const nextTaller = "/talleres/herreria";
 ---
 
 <html>
@@ -53,6 +57,8 @@ const description =
             mainImage={mainImage}
             description={description}
             options={options}
+            prevTaller={prevTaller}
+            nextTaller={nextTaller}
         />
     </body>
 </html>

@@ -52,7 +52,7 @@ const options = [
     <Navbar />
     <body class="font-['Lato'] overflow-hidden">
         <!-- Main content container with padding to account for navbar -->
-        <div class="pt-20 w-full h-screen">
+        <div class="pt-20 w-full h-screen bg-gray-800">
             <!-- Desktop Layout (hidden on mobile) -->
             <div class="hidden md:flex h-[calc(100vh-80px)] w-screen">
                 <!-- Fixed image section - takes 40% of screen width -->
@@ -71,7 +71,7 @@ const options = [
 
                 <!-- Scrollable content section - takes 60% of screen width -->
                 <div class="w-3/5 h-full overflow-y-auto">
-                    <div class="pt-10 pl-10 pr-10">
+                    <div class="pt-10 pl-10 pr-10 bg-white">
                         <!-- Contact form section component (desktop) -->
                         <ContactFormSection
                             options={options}
@@ -98,7 +98,7 @@ const options = [
                     </div>
 
                     <!-- Content follows the image and scrolls together -->
-                    <div class="px-6 pt-8">
+                    <div class="px-6 pt-8 bg-white">
                         <!-- Contact form section component (mobile) -->
                         <ContactFormSection
                             options={options}

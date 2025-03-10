@@ -25,13 +25,13 @@ const {
 } = Astro.props;
 ---
 
-<div class="carousel-wrapper fade-in-animation" id="carousel-wrapper">
+<div class="carousel-wrapper fade-in-animation" id="carousel-wrapper ">
   <div class="carousel-container" id="carousel">
     <div class="carousel-track">
       {
         slides.map((slide, index) => (
-          <div class="carousel-slide" data-index={index}>
-            <div class="slide-image">
+          <div class="carousel-slide bg-white" data-index={index}>
+            <div class="slide-image bg-white">
               {/* Desktop image - hidden on mobile */}
               <Image
                 src={slide.image}

@@ -17,11 +17,6 @@ const {
 } = Astro.props;
 ---
 
-<head>
-    <!-- Preload the mobile logo -->
-    <link rel="preload" as="image" href={logoMovil.src} />
-</head>
-
 <nav
     class="fixed top-0 left-0 right-0 flex justify-between items-center px-4 md:px-8 bg-black z-50 pt-safe"
     style="height: calc(5rem + env(safe-area-inset-top));"

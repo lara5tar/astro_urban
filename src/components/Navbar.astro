@@ -98,7 +98,7 @@ const {
     <!-- Mobile Navigation Menu -->
     <div
         id="mobile-menu"
-        class="fixed inset-0 bg z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden flex flex-col justify-center items-center"
+        class="fixed inset-0 bg z-50 transform translate-x-full opacity-10 transition-all duration-300 ease-in-out md:hidden flex flex-col justify-center items-center"
     >
         <button
             id="close-mobile-menu"
@@ -139,11 +139,15 @@ const {
         if (mobileMenuButton && mobileMenu && closeMenuButton) {
             mobileMenuButton.addEventListener("click", () => {
                 mobileMenu.classList.remove("translate-x-full");
+                mobileMenu.classList.remove("opacity-10");
+                mobileMenu.classList.add("opacity-100");
                 document.body.style.overflow = "hidden";
             });
 
             closeMenuButton.addEventListener("click", () => {
                 mobileMenu.classList.add("translate-x-full");
+                mobileMenu.classList.remove("opacity-100");
+                mobileMenu.classList.add("opacity-10");
                 document.body.style.overflow = "";
             });
 
@@ -152,6 +156,8 @@ const {
             mobileLinks.forEach((link) => {
                 link.addEventListener("click", () => {
                     mobileMenu.classList.add("translate-x-full");
+                    mobileMenu.classList.remove("opacity-100");
+                    mobileMenu.classList.add("opacity-10");
                     document.body.style.overflow = "";
                 });
             });
@@ -175,23 +181,6 @@ const {
         padding-top: env(safe-area-inset-top, 0);
     }
 
-    /* Asegura que los SVG se rendericen correctamente */
-    svg {
-        display: block;
-        shape-rendering: geometricPrecision;
-        text-rendering: optimizeLegibility;
-        width: auto;
-        height: 100%;
-        max-height: 45px;
-        overflow: visible;
-    }
-
-    /* Estilo específico para el logo móvil */
-    .block.md\:hidden svg {
-        transform-origin: left center;
-        margin-left: 0.5rem; /* Añade un pequeño margen izquierdo */
-    }
-
     /* Mobile menu button styles */
     #mobile-menu-button {
         height: 24px;
@@ -210,6 +199,13 @@ const {
         height: 24px;
         width: 24px;
         position: relative;
+    }
+
+    /* Transitions for mobile menu */
+    #mobile-menu {
+        transition:
+            transform 0.3s ease-in-out,
+            opacity 0.3s ease-in-out;
     }
 
     /* Prevent scrolling when menu is open */

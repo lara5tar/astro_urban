@@ -1,0 +1,18 @@
+---
+interface TituloSeccionProps {
+    titulo: string;
+}
+
+const { titulo } = Astro.props;
+---
+
+<div class="text-center">
+    <h2
+        class="text-4xl md:text-5xl font-bold text-[#2e8d80] font-poppins drop-shadow-md"
+    >
+        {titulo}
+    </h2>
+    <div class="h-5"></div>
+    <div class="w-32 h-1 bg-[#2e8d80] mx-auto"></div>
+</div>
+<div class="h-10"></div>

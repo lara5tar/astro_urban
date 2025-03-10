@@ -33,6 +33,9 @@ import arquitecturaImage from "/public/inicio/arquitectura.webp";
 import construccionImage from "/public/inicio/construccion.webp";
 import DiagramSection from "../components/DiagramSection.astro";
 
+import logoMovil from "/public/icons/logo_movil.webp";
+import logoWeb from "/public/icons/logo_web.svg";
+
 const slides = [
   {
     image: imagen1,
@@ -190,6 +193,23 @@ const projectTimeline = [
       media="(max-width: 512px)"
     />
 
+    <!-- logo -->
+    <link
+      rel="preload"
+      href={logoMovil.src}
+      as="image"
+      type="image/webp"
+      fetchpriority="high"
+      media="(max-width: 512px)"
+    />
+    <link
+      rel="preload"
+      href={logoWeb.src}
+      as="image"
+      type="image/svg+xml"
+      fetchpriority="high"
+      media="(min-width: 513px)"
+    />
     <!-- Optimized font loading strategy -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

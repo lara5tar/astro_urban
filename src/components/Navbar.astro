@@ -43,7 +43,7 @@ const {
 >
     <div class="flex items-center">
         <a href="/" class="flex items-center">
-            <div class="block md:hidden">
+            <!-- <div class="block md:hidden">
                 <Image
                     src={logoMovil}
                     widths={[64, 96, 120]}
@@ -55,8 +55,17 @@ const {
                     fetchpriority="high"
                 />
             </div>
-            <!-- Logo Desktop - SVG Inline para carga instantánea -->
+
             <div class="hidden md:block">
+                <Image
+                    src={logoWeb}
+                    widths={[64, 96, 120]}
+                    sizes="(max-width: 640px) 64px, (max-width: 1024px) 96px, 120px"
+                    alt="Logo Urban Arquitectura Construcción"
+                    class="h-auto w-16 md:w-24 max-w-none"
+                />
+            </div> -->
+            <div>
                 <Image
                     src={logoWeb}
                     widths={[64, 96, 120]}
@@ -84,7 +93,7 @@ const {
     </div> -->
 
     <!-- Mobile Hamburger Menu Button -->
-    <button
+    <!-- <button
         id="mobile-menu-button"
         class="md:hidden text-white flex flex-col justify-center items-center gap-1.5"
         aria-label="Menu"
@@ -92,10 +101,10 @@ const {
         <span class="w-6 h-0.5 bg-white transition-all duration-300"></span>
         <span class="w-6 h-0.5 bg-white transition-all duration-300"></span>
         <span class="w-6 h-0.5 bg-white transition-all duration-300"></span>
-    </button>
+    </button> -->
 
     <!-- Mobile Navigation Menu -->
-    <div
+    <!-- <div
         id="mobile-menu"
         class="fixed inset-0 bg z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden flex flex-col justify-center items-center"
     >
@@ -125,7 +134,7 @@ const {
                 ))
             }
         </div>
-    </div>
+    </div> -->
 </nav>
 
 <script>

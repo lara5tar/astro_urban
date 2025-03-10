@@ -1,0 +1,27 @@
+---
+import CriticalStyles from "../components/CriticalStyles.astro";
+import Navbar from "../components/Navbar.astro";
+import "../tailwind.css";
+---
+
+<html>
+  <head>
+    <title>Inicio</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Critical CSS for performance -->
+    <CriticalStyles />
+
+    <!-- Font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  <nav>
+    <!-- <Navbar /> -->
+  </nav>
+  <body>
+    <div class="h-20"></div>
+    <div class="columns-auto bg-amber-200 min-h-[calc(100vh-5rem)]">test</div>
+  </body>
+</html>

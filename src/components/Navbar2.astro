@@ -43,7 +43,7 @@ const {
 >
     <div class="flex items-center">
         <a href="/" class="flex items-center">
-            <div class="block md:hidden">
+            <div>
                 <Image
                     src={logoMovil}
                     widths={[64, 96, 120]}
@@ -55,38 +55,13 @@ const {
                     fetchpriority="high"
                 />
             </div>
-            <!-- Logo Desktop - SVG Inline para carga instantánea -->
-            <div class="hidden md:block">
-                <Image
-                    src={logoWeb}
-                    widths={[64, 96, 120]}
-                    sizes="(max-width: 640px) 64px, (max-width: 1024px) 96px, 120px"
-                    alt="Logo Urban Arquitectura Construcción"
-                    class="h-auto w-16 md:w-24 max-w-none"
-                />
-            </div>
         </a>
-    </div>
-
-    <!-- Desktop Navigation Links -->
-    <div class="hidden md:flex md:gap-8">
-        {
-            links.map((link) => (
-                <a
-                    href={link.url}
-                    class="text-white font-montserrat md:text-[0.9rem] text-xs font-normal tracking-wider hover:text-gray-200 transition-colors duration-300 relative group"
-                >
-                    {link.text}
-                    <span class="absolute bottom-[-5px] left-0 w-0 h-0.5 bg-white shadow-glow transition-all duration-300 ease-in-out group-hover:w-full" />
-                </a>
-            ))
-        }
     </div>
 
     <!-- Mobile Hamburger Menu Button -->
     <button
         id="mobile-menu-button"
-        class="md:hidden text-white flex flex-col justify-center items-center gap-1.5"
+        class="text-white flex flex-col justify-center items-center gap-1.5"
         aria-label="Menu"
     >
         <span class="w-6 h-0.5 bg-white transition-all duration-300"></span>
@@ -97,7 +72,7 @@ const {
     <!-- Mobile Navigation Menu -->
     <div
         id="mobile-menu"
-        class="fixed inset-0 bg z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden flex flex-col justify-center items-center"
+        class="fixed inset-0 bg z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-center items-center"
     >
         <button
             id="close-mobile-menu"
@@ -159,16 +134,6 @@ const {
 </script>
 
 <style>
-    .bg {
-        background-color: #000000;
-        opacity: 0.8;
-    }
-
-    /* Only minimal custom styling for the shadow glow effect */
-    .shadow-glow {
-        box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
-    }
-
     /* For iOS safe area */
     .pt-safe {
         padding-top: env(safe-area-inset-top, 0);
@@ -192,10 +157,5 @@ const {
         height: 24px;
         width: 24px;
         position: relative;
-    }
-
-    /* Prevent scrolling when menu is open */
-    body.menu-open {
-        overflow: hidden;
     }
 </style>

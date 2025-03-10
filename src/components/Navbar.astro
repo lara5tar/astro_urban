@@ -63,9 +63,6 @@ const {
                     sizes="(max-width: 640px) 64px, (max-width: 1024px) 96px, 120px"
                     alt="Logo Urban Arquitectura Construcción"
                     class="h-auto w-16 md:w-24 max-w-none"
-                    decoding="async"
-                    loading="eager"
-                    fetchpriority="high"
                 />
             </div>
         </a>
@@ -175,23 +172,6 @@ const {
     /* For iOS safe area */
     .pt-safe {
         padding-top: env(safe-area-inset-top, 0);
-    }
-
-    /* Asegura que los SVG se rendericen correctamente */
-    svg {
-        display: block;
-        shape-rendering: geometricPrecision;
-        text-rendering: optimizeLegibility;
-        width: auto;
-        height: 100%;
-        max-height: 45px;
-        overflow: visible;
-    }
-
-    /* Estilo específico para el logo móvil */
-    .block.md\:hidden svg {
-        transform-origin: left center;
-        margin-left: 0.5rem; /* Añade un pequeño margen izquierdo */
     }
 
     /* Mobile menu button styles */

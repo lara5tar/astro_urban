@@ -3,38 +3,49 @@ import "../tailwind.css";
 interface Props {
     titulo: string;
     accion?: () => void | Promise<void>;
+    actionUrl?: string; // Adding an alternative way to handle actions
 }
 
-const { titulo, accion } = Astro.props;
+const { titulo, accion, actionUrl } = Astro.props;
+const buttonId = `diagrama-btn-${Math.random().toString(36).substring(2, 11)}`; // Generate unique ID
 ---
 
 <div class="flex justify-around">
     <div
-        class="bg-[#2e8d80] text-gray-800 rounded-xl shadow-lg text-center py-3 sm:py-4 md:py-5 px-3 sm:px-4 md:px-5 transition-colors hover:bg-[#2e8d80] hover:text-white"
+        class="bg-[#2e8d80] text-white rounded-xl shadow-lg text-center py-3 sm:py-4 md:py-5 px-3 sm:px-4 md:px-5 transition-colors hover:bg-[#2e8d80] hover:text-white cursor-pointer"
+        id={buttonId}
+        data-has-action={!!accion || !!actionUrl}
+        data-action-url={actionUrl}
     >
-        <button
-            id="diagrama-btn"
+        <div
             class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold font-poppins"
-            data-has-action={!!accion}
         >
             {titulo}
-        </button>
+        </div>
     </div>
 </div>
 
-{/* @ts-ignore - Astro specific syntax */}
-<script define:vars={{ accionProp: accion }}>
-    // Store the action in the window object for global access if needed
-    if (accionProp) {
-        // @ts-ignore - Adding custom property to window
-        window.accionDiagrama = accionProp;
-    }
+<script>
+    // Get all diagrama buttons
+    document.addEventListener("DOMContentLoaded", () => {
+        const diagramaBtns = document.querySelectorAll('[id^="diagrama-btn-"]');
 
-    // Add click event listener to the button
-    const button = document.getElementById("diagrama-btn");
-    if (button && accionProp) {
-        button.addEventListener("click", () => {
-            accionProp();
+        diagramaBtns.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const actionUrl = btn.getAttribute("data-action-url");
+
+                // If we have a URL specified, navigate to it
+                if (actionUrl) {
+                    window.location.href = actionUrl;
+                }
+                // Otherwise check if this is the "INICIA TU OBRA" button
+                else if (
+                    btn.querySelector("div")?.textContent?.trim() ===
+                    "INICIA TU OBRA"
+                ) {
+                    window.location.href = "/contact";
+                }
+            });
         });
-    }
+    });
 </script>

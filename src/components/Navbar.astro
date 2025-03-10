@@ -1,7 +1,7 @@
 ---
 import "../tailwind.css";
 import { Image } from "astro:assets";
-import logoMovil from "/public/icons/logo_movil.webp";
+import logoMovil from "/public/icons/logo_movil3.webp";
 import logoWeb from "/public/icons/logo_web.svg";
 
 interface Props {
@@ -24,7 +24,7 @@ const {
     <div class="flex items-center">
         <a href="/" class="flex items-center">
             <div class="block md:hidden">
-                <Image src={logoMovil} alt="Logo" class="" width={60} />
+                <Image src={logoMovil} alt="Logo" class="" />
             </div>
             <!-- Logo Desktop - SVG Inline para carga instantánea -->
             <div class="hidden md:block">

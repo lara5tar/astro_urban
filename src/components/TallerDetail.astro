@@ -68,7 +68,7 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
                     prevTaller && (
                         <a
                             href={prevTaller}
-                            class="mobile-nav-button prev"
+                            class="mobile-nav-button prev initially-hidden"
                             aria-label="Taller anterior"
                         >
                             <svg
@@ -99,7 +99,7 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
                     nextTaller && (
                         <a
                             href={nextTaller}
-                            class="mobile-nav-button next"
+                            class="mobile-nav-button next initially-hidden"
                             aria-label="Taller siguiente"
                         >
                             <svg
@@ -232,13 +232,16 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
                 (optionsSection as HTMLElement).style.animationDelay = "0.4s";
             }
 
-            // Add animations to navigation buttons
+            // Add animations to navigation buttons - UPDATED for better handling
             document
                 .querySelectorAll(".mobile-nav-button")
                 .forEach((button, index) => {
+                    // Remove initially-hidden class first to prevent conflicts
+                    button.classList.remove("initially-hidden");
+
                     // Add animation with staggered delay
                     (button as HTMLElement).style.animationDelay =
-                        `${0.7 + index * 0.2}s`;
+                        `${0.3 + index * 0.1}s`;
                     button.classList.add("nav-button-animation");
                 });
         }, 50); // Small delay to ensure CSS has applied
@@ -347,6 +350,12 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
 </script>
 
 <style>
+    /* Add this at the top to ensure it applies immediately */
+    .initially-hidden {
+        opacity: 0 !important; /* Using !important to override any inherited styles */
+        visibility: hidden; /* Hide buttons completely */
+    }
+
     /* ANIMATION STYLES - PREVENT FLASH OF CONTENT */
 
     /* Base styles for option descriptions and images */
@@ -782,29 +791,93 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         transform: translateZ(0); /* Force hardware acceleration */
     }
 
-    /* Nav button entrance animation */
+    /* Nav button entrance animation - UPDATED to handle visibility */
     .nav-button-animation {
-        animation: navButtonEnter 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+        animation: navButtonEnter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)
             both;
         transform-origin: center center;
-        opacity: 0; /* Start hidden and let animation reveal it */
+        visibility: visible !important; /* Make visible during animation */
     }
 
-    /* Enhanced navigation button entrance animation */
+    /* Enhanced navigation button entrance animation - UPDATED: faster timing */
     @keyframes navButtonEnter {
         0% {
             opacity: 0;
-            transform: scale(0.3) rotate(-25deg);
+            transform: scale(0.3) rotate(-15deg);
         }
         50% {
-            transform: scale(1.3) rotate(15deg);
+            transform: scale(1.2) rotate(10deg);
         }
         75% {
-            transform: scale(0.9) rotate(0deg);
+            transform: scale(0.95) rotate(0deg);
         }
         100% {
             opacity: 1;
             transform: scale(1) rotate(0deg);
+        }
+    }
+
+    /* FIXED: Apply the bounce animation after entrance completes without affecting opacity */
+    .mobile-nav-button.nav-button-animation:hover {
+        animation: navButtonAfterEnter 1s ease-in-out;
+        opacity: 1 !important; /* Ensure button stays visible on hover */
+    }
+
+    /* FIXED: Maintain button visibility on hover */
+    .mobile-nav-button:hover {
+        background-color: rgba(46, 141, 128, 0.9);
+        transform: scale(1.15);
+        box-shadow: 0 0 15px rgba(46, 141, 128, 0.5);
+        opacity: 1 !important; /* Ensure button stays visible */
+    }
+
+    /* FIXED: Keep button visible when active/pressed */
+    .mobile-nav-button:active {
+        transform: scale(0.9);
+        transition: transform 0.1s;
+        opacity: 1 !important; /* Ensure button stays visible when clicked */
+    }
+
+    /* Direction-specific entrance animations */
+    .mobile-nav-button.prev.nav-button-animation {
+        transform-origin: right center;
+        opacity: 1; /* Ensure visibility */
+    }
+
+    .mobile-nav-button.next.nav-button-animation {
+        transform-origin: left center;
+        opacity: 1; /* Ensure visibility */
+    }
+
+    /* Updated animation to ensure visibility throughout */
+    @keyframes navButtonAfterEnter {
+        0% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        50% {
+            transform: translateY(-5px);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    /* Update pulse animation to maintain opacity */
+    @keyframes navButtonPulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(46, 141, 128, 0.7);
+            opacity: 1;
+        }
+        70% {
+            box-shadow: 0 0 0 8px rgba(46, 141, 128, 0);
+            opacity: 1;
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(46, 141, 128, 0);
+            opacity: 1;
         }
     }
 

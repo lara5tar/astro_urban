@@ -1,24 +1,27 @@
 ---
 import "../tailwind.css";
 
-import imagen1 from "/src/public/carousel/web/Imagen1.webp";
-import imagen2 from "/src/public/carousel/web/Imagen2.webp";
-import imagen3 from "/src/public/carousel/web/Imagen3.webp";
-import imagen4 from "/src/public/carousel/web/Imagen4.webp";
-import imagen5 from "/src/public/carousel/web/Imagen5.webp";
-import imagen6 from "/src/public/carousel/web/Imagen6.webp";
+import imagen1 from "../public/carousel/web/Imagen1.webp";
+import imagen2 from "../public/carousel/web/Imagen2.webp";
+import imagen3 from "../public/carousel/web/Imagen3.webp";
+import imagen4 from "../public/carousel/web/Imagen4.webp";
+import imagen5 from "../public/carousel/web/Imagen5.webp";
+import imagen6 from "../public/carousel/web/Imagen6.webp";
 
-import imagen1Mobile from "/src/public/carousel/movil/1.webp";
-import imagen2Mobile from "/src/public/carousel/movil/2.webp";
-import imagen3Mobile from "/src/public/carousel/movil/3.webp";
-import imagen4Mobile from "/src/public/carousel/movil/4.webp";
-import imagen5Mobile from "/src/public/carousel/movil/5.webp";
-import imagen6Mobile from "/src/public/carousel/movil/6.webp";
+import imagen1Mobile from "../public/carousel/movil/1.webp";
+import imagen2Mobile from "../public/carousel/movil/2.webp";
+import imagen3Mobile from "../public/carousel/movil/3.webp";
+import imagen4Mobile from "../public/carousel/movil/4.webp";
+import imagen5Mobile from "../public/carousel/movil/5.webp";
+import imagen6Mobile from "../public/carousel/movil/6.webp";
 
-import iconUrban from "/src/public/icons/icon_urban.svg";
-import arquitecturaImage from "/src/public/inicio/arquitectura.webp";
-import construccionImage from "/src/public/inicio/construccion.webp";
+import iconUrban from "../public/icons/icon_urban.svg";
+import arquitecturaImage from "../public/inicio/arquitectura.webp";
+import construccionImage from "../public/inicio/construccion.webp";
 import DiagramSection from "../components/DiagramSection.astro";
+
+import logoMovil from "../public/icons/logo_movil3.webp";
+import logoWeb from "../public/icons/logo_web.svg";
 
 import Carousel from "../components/Carousel.astro";
 import Navbar from "../components/Navbar.astro";
@@ -69,25 +72,6 @@ const slides = [
     mobileImage: imagen6Mobile,
     description:
       "Soluciones arquitectónicas y de construcción adaptadas a su presupuesto",
-  },
-];
-
-const talleresItems = [
-  {
-    title: "Carpintería",
-    imageSrc: "/src/public/talleres/carpinteria.webp",
-  },
-  {
-    title: "Cancelería",
-    imageSrc: "/src/public/talleres/canceleria.webp",
-  },
-  {
-    title: "Herrería",
-    imageSrc: "/src/public/talleres/herreria.webp",
-  },
-  {
-    title: "Acabados",
-    imageSrc: "/src/public/talleres/acabados.webp",
   },
 ];
 
@@ -153,16 +137,6 @@ const projectTimeline = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Enhanced Favicon Support -->
-    <link rel="icon" href="/src/public/icons/icono.png" type="image/png" />
-    <link rel="icon" href="/src/public/icons/favicon.ico" sizes="any" />
-    <link
-      rel="apple-touch-icon"
-      href="/src/public/icons/apple-touch-icon.png"
-    />
-    <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#2ebeab" />
-
     <!-- SEO Meta Tags -->
     <meta
       name="description"
@@ -172,7 +146,6 @@ const projectTimeline = [
       name="keywords"
       content="Construcción de casas en Querétaro, empresas constructoras en Querétaro, arquitectos en Querétaro, constructoras en Querétaro, construcción de casas residenciales en Querétaro, empresas de construcción en Querétaro, diseño y construcción de casas en Querétaro, presupuesto para construir una casa en Querétaro, casas ecológicas en Querétaro, ¿cuánto cuesta construir una casa en Querétaro?, construcción de casas llave en mano en Querétaro, mejor constructora para casas en Querétaro, arquitecto y constructor para casa en Querétaro, empresas de construcción de viviendas en Querétaro, construcción de casas en fraccionamientos en Querétaro, construcción de casas en Juriquilla Querétaro, constructoras en El Refugio Querétaro, empresas de construcción en Zibatá Querétaro, arquitectos en Corregidora Querétaro, proyectos arquitectónicos en Querétaro, materiales de construcción en Querétaro, construcción sustentable en Querétaro, ingenieros civiles en Querétaro, diseños de casas modernas en Querétaro"
     />
-    <link rel="icon" href="/src/public/icons/icono.png" type="image/png" />
 
     <!-- Critical CSS for performance -->
     <CriticalStyles />

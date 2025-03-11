@@ -313,6 +313,9 @@ const {
     updateCarousel();
     startAutoplay();
 
+    // Run immediately to ensure correct sizing on page load
+    setCarouselHeight();
+
     // Event listeners
     if (prevBtn) {
       prevBtn.addEventListener("click", () => {
@@ -438,15 +441,32 @@ const {
       const wrapper = document.querySelector(".carousel-wrapper");
       if (!wrapper) return;
 
-      const vh = window.innerHeight;
-      const navbarHeight = 80;
-      wrapper.style.height = `${vh - navbarHeight}px`;
+      const viewportHeight = window.innerHeight;
+      const navbarHeight = 80; // Your site's navbar height
+
+      // Use clientHeight or a more reliable method to get actual visible area
+      wrapper.style.height = `${viewportHeight - navbarHeight}px`;
+
+      // Force browser to recalculate layout
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 50);
     }
 
-    setCarouselHeight();
+    // Listen for various events that might change the visible area
     window.addEventListener("resize", setCarouselHeight);
     window.addEventListener("orientationchange", () => {
       setTimeout(setCarouselHeight, 300);
+    });
+
+    // Also check height when page is fully loaded (after images)
+    window.addEventListener("load", setCarouselHeight);
+
+    // Handle mobile browser address bar showing/hiding
+    window.addEventListener("scroll", () => {
+      // Debounce to prevent excessive calls
+      clearTimeout(window.resizedFinished);
+      window.resizedFinished = setTimeout(setCarouselHeight, 250);
     });
 
     // Additional animation for slides

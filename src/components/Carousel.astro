@@ -433,7 +433,7 @@ const {
       }
     }
 
-    // Set correct height for mobile
+    // Set correct height for mobile - only once when page loads
     function setCarouselHeight() {
       const wrapper = document.querySelector(".carousel-wrapper");
       if (!wrapper) return;
@@ -443,11 +443,14 @@ const {
       wrapper.style.height = `${vh - navbarHeight}px`;
     }
 
+    // Only set height once on initial load
     setCarouselHeight();
-    window.addEventListener("resize", setCarouselHeight);
-    window.addEventListener("orientationchange", () => {
-      setTimeout(setCarouselHeight, 300);
-    });
+
+    // Removed resize and orientation change listeners to prevent refreshing
+    // window.addEventListener("resize", setCarouselHeight);
+    // window.addEventListener("orientationchange", () => {
+    //   setTimeout(setCarouselHeight, 300);
+    // });
 
     // Additional animation for slides
     function animateActiveSlide() {

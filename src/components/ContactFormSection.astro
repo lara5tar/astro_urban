@@ -9,6 +9,11 @@ interface Props {
 const { options, isDesktop } = Astro.props;
 const formId = isDesktop ? "contactForm" : "mobileContactForm";
 const idPrefix = isDesktop ? "" : "mobile-";
+
+const ubicacion =
+    "https://www.google.com/maps/place/URBAN+%7C+Arquitectura/@20.6752015,-100.4450208,17z/data=!3m1!4b1!4m6!3m5!1s0x85d344bca762dab3:0x86ec34c193d2f77c!8m2!3d20.6751965!4d-100.4401499!16s%2Fg%2F12q4rljfl?entry=ttu&g_ep=EgoyMDI1MDMwNC4wIKXMDSoASAFQAw%3D%3D";
+const telefono = "(442) 708 6211";
+const correo = "info@urbanarquitectura.mx";
 ---
 
 <div class="w-full">
@@ -17,36 +22,41 @@ const idPrefix = isDesktop ? "" : "mobile-";
         isDesktop ? (
             <div class="flex flex-wrap items-star">
                 <div class="mb-6 pr-4 md:w-1/2">
-                    <p class="font-medium text-gray-800">Ubicación</p>
+                    <p class="font-bold text-gray-700 ">UBICACIÓN</p>
                     <p class="mt-1 text-gray-600">
                         <a
-                            href="https://www.google.com/maps/place/URBAN+%7C+Arquitectura/@20.6752015,-100.4450208,17z/data=!3m1!4b1!4m6!3m5!1s0x85d344bca762dab3:0x86ec34c193d2f77c!8m2!3d20.6751965!4d-100.4401499!16s%2Fg%2F12q4rljfl?entry=ttu&g_ep=EgoyMDI1MDMwNC4wIKXMDSoASAFQAw%3D%3D"
+                            href={ubicacion}
                             target="_blank"
                             class="text-blue-500 underline"
                         >
-                            Edificio Querétaro Business Park, Av. Antea #1088,
-                            Piso 3, Querétaro, México, 7600.
+                            Edificio Querétaro Business Park
+                            <br />
+                            Av. Antea #1088 Piso 3
+                            <br />
+                            C.P. 76001
+                            <br />
+                            Santiago de Querétaro, Qro., México
                         </a>
                     </p>
                 </div>
                 <div class="mb-6 pr-4 md:w-1/2 text-left md:text-right">
-                    <p class="font-medium text-gray-800">Teléfono</p>
+                    <p class="font-bold text-gray-700 ">TELÉFONO</p>
                     <p class="mt-1 text-gray-600">
                         <a
                             href="tel:4427086211"
                             class="text-blue-500 underline"
                         >
-                            442 708 6211
+                            {telefono}
                         </a>
                     </p>
                     <div class="mb-6 mt-0" />
-                    <p class="font-medium text-gray-800">Correo</p>
+                    <p class="font-bold text-gray-700 ">CORREO</p>
                     <p class="mt-1 text-gray-600">
                         <a
                             href="mailto:info@urbanarquitectura.mx"
                             class="text-blue-500 underline"
                         >
-                            info@urbanarquitectura.mx
+                            {correo}
                         </a>
                     </p>
                 </div>
@@ -54,37 +64,42 @@ const idPrefix = isDesktop ? "" : "mobile-";
         ) : (
             <div class="flex flex-wrap mb-8">
                 <div class="w-full mb-4">
-                    <p class="font-medium text-gray-800">Ubicación</p>
+                    <p class="font-bold text-gray-700 ">UBICACIÓN</p>
 
-                    <p class="text-gray-600">
+                    <p class="text-gray-600 mb-5">
                         <a
-                            href="https://www.google.com/maps/place/URBAN+%7C+Arquitectura/@20.6752015,-100.4450208,17z/data=!3m1!4b1!4m6!3m5!1s0x85d344bca762dab3:0x86ec34c193d2f77c!8m2!3d20.6751965!4d-100.4401499!16s%2Fg%2F12q4rljfl?entry=ttu&g_ep=EgoyMDI1MDMwNC4wIKXMDSoASAFQAw%3D%3D"
+                            href={ubicacion}
                             target="_blank"
                             class="text-blue-500 underline"
                         >
-                            Edificio Querétaro Business Park, Av. Antea #1088,
-                            Piso 3, Querétaro, México, 7600.
+                            Edificio Querétaro Business Park
+                            <br />
+                            Av. Antea #1088 Piso 3
+                            <br />
+                            C.P. 76001
+                            <br />
+                            Santiago de Querétaro, Qro., México, 7600.
                         </a>
                     </p>
                 </div>
-                <div class="w-1/2 mb-4">
-                    <p class="font-medium text-gray-800">Teléfono</p>
-                    <p class="text-gray-600">
+                <div class="w-1/2">
+                    <p class="font-bold text-gray-700 ">TELÉFONO</p>
+                    <p class="text-gray-600 mb-5">
                         <a
                             href="tel:4427086211"
                             class="text-blue-500 underline"
                         >
-                            442 708 6211
+                            {telefono}
                         </a>
                     </p>
                     <div class="h-5" />
-                    <p class="font-medium text-gray-800">Correo</p>
+                    <p class="font-bold text-gray-700 ">CORREO</p>
                     <p class="text-gray-600">
                         <a
-                            href="mailto:info@urbanarquitectura.mx"
+                            href={`mailto:${correo}`}
                             class="text-blue-500 underline"
                         >
-                            info@urbanarquitectura.mx
+                            {correo}
                         </a>
                     </p>
                 </div>

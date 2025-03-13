@@ -101,13 +101,12 @@ const idPrefix = isDesktop ? "" : "mobile-";
                     type="text"
                     id={`${idPrefix}nombre`}
                     name="nombre"
-                    placeholder=" "
                     required
-                    class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
+                    class="input-field peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
                 />
                 <label
                     for={`${idPrefix}nombre`}
-                    class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
+                    class="field-label absolute text-sm text-gray-500 duration-200 transform z-10 origin-[0] left-4 top-1/2 -translate-y-1/2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:top-4 bg-gray-100 px-1"
                 >
                     Nombre
                 </label>
@@ -119,13 +118,12 @@ const idPrefix = isDesktop ? "" : "mobile-";
                     type="email"
                     id={`${idPrefix}email`}
                     name="email"
-                    placeholder=" "
                     required
-                    class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
+                    class="input-field peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
                 />
                 <label
                     for={`${idPrefix}email`}
-                    class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
+                    class="field-label absolute text-sm text-gray-500 duration-200 transform z-10 origin-[0] left-4 top-1/2 -translate-y-1/2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:top-4 bg-gray-100 px-1"
                 >
                     Email
                 </label>
@@ -137,13 +135,12 @@ const idPrefix = isDesktop ? "" : "mobile-";
                     type="tel"
                     id={`${idPrefix}telefono`}
                     name="telefono"
-                    placeholder=" "
                     required
-                    class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
+                    class="input-field peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition"
                 />
                 <label
                     for={`${idPrefix}telefono`}
-                    class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
+                    class="field-label absolute text-sm text-gray-500 duration-200 transform z-10 origin-[0] left-4 top-1/2 -translate-y-1/2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:top-4 bg-gray-100 px-1"
                 >
                     Teléfono
                 </label>
@@ -155,7 +152,7 @@ const idPrefix = isDesktop ? "" : "mobile-";
                     id={`${idPrefix}proyecto`}
                     name="proyecto"
                     required
-                    class="peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition appearance-none"
+                    class="input-field peer h-14 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition appearance-none"
                 >
                     <option value="" disabled selected></option>
                     {
@@ -166,7 +163,7 @@ const idPrefix = isDesktop ? "" : "mobile-";
                 </select>
                 <label
                     for={`${idPrefix}proyecto`}
-                    class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
+                    class="field-label absolute text-sm text-gray-500 duration-200 transform z-10 origin-[0] left-4 top-1/2 -translate-y-1/2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:top-4 bg-gray-100 px-1"
                 >
                     Proyecto
                 </label>
@@ -194,13 +191,12 @@ const idPrefix = isDesktop ? "" : "mobile-";
                     id={`${idPrefix}mensaje`}
                     name="mensaje"
                     rows="4"
-                    placeholder=" "
                     required
-                    class="peer h-32 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition resize-none"
+                    class="input-field peer h-32 w-full rounded bg-gray-100 px-4 pt-5 pb-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2ebeab]/50 transition resize-none"
                 ></textarea>
                 <label
                     for={`${idPrefix}mensaje`}
-                    class="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 bg-gray-100 px-1"
+                    class="field-label absolute text-sm text-gray-500 duration-200 transform z-10 origin-[0] left-4 top-6 -translate-y-1/2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:top-4 bg-gray-100 px-1"
                 >
                     Mensaje
                 </label>
@@ -242,19 +238,114 @@ const idPrefix = isDesktop ? "" : "mobile-";
         // Here you would typically send the data to your server
         alert("Formulario enviado con éxito! Gracias por contactarnos.");
         form.reset();
+
+        // Reset all labels after form submission
+        form.querySelectorAll(".input-field").forEach((input) => {
+            const label = document.querySelector(`label[for="${input.id}"]`);
+            if (label) {
+                label.classList.remove("has-value");
+            }
+            input.classList.remove("has-value");
+        });
     }
 
     // Setup forms
     setupFormSubmission("contactForm");
     setupFormSubmission("mobileContactForm");
 
-    // Handle select element label for both forms
+    // Handle field labels for all input types
+    document.querySelectorAll(".input-field").forEach((input) => {
+        // Check initial state
+        if (
+            (
+                input as
+                    | HTMLInputElement
+                    | HTMLTextAreaElement
+                    | HTMLSelectElement
+            ).value
+        ) {
+            input.classList.add("has-value");
+            const label = document.querySelector(`label[for="${input.id}"]`);
+            if (label) {
+                label.classList.add("has-value");
+            }
+        }
+
+        // Add input event listeners
+        input.addEventListener(
+            "input",
+            function (
+                this:
+                    | HTMLInputElement
+                    | HTMLTextAreaElement
+                    | HTMLSelectElement,
+            ) {
+                const value = this.value;
+                const label = document.querySelector(`label[for="${this.id}"]`);
+
+                if (value) {
+                    this.classList.add("has-value");
+                    if (label) {
+                        label.classList.add("has-value");
+                    }
+                } else {
+                    this.classList.remove("has-value");
+                    if (label) {
+                        label.classList.remove("has-value");
+                    }
+                }
+            },
+        );
+
+        // Add focus event listeners for better UX
+        input.addEventListener("focus", function (this: HTMLElement) {
+            const label = document.querySelector(`label[for="${this.id}"]`);
+            if (label) {
+                label.classList.add("is-focused");
+            }
+        });
+
+        input.addEventListener(
+            "blur",
+            function (
+                this:
+                    | HTMLInputElement
+                    | HTMLTextAreaElement
+                    | HTMLSelectElement,
+            ) {
+                const label = document.querySelector(`label[for="${this.id}"]`);
+                if (label) {
+                    label.classList.remove("is-focused");
+                }
+
+                // Recheck value state on blur
+                const value = this.value;
+                if (!value) {
+                    this.classList.remove("has-value");
+                    if (label) {
+                        label.classList.remove("has-value");
+                    }
+                }
+            },
+        );
+    });
+
+    // Special handling for select elements
     document.querySelectorAll("select").forEach((select) => {
-        select.addEventListener("change", function () {
-            if (this.value) {
+        select.addEventListener("change", function (this: HTMLSelectElement) {
+            const value = this.value;
+            const label = document.querySelector(`label[for="${this.id}"]`);
+
+            if (value) {
                 this.classList.add("has-value");
+                if (label) {
+                    label.classList.add("has-value");
+                }
             } else {
                 this.classList.remove("has-value");
+                if (label) {
+                    label.classList.remove("has-value");
+                }
             }
         });
     });
@@ -266,9 +357,25 @@ const idPrefix = isDesktop ? "" : "mobile-";
         @apply relative w-full;
     }
 
-    /* Ensure labels maintain background color in all states */
-    .form-field label {
+    /* Label styling */
+    .field-label {
         background-color: #f3f4f6; /* This matches Tailwind's bg-gray-100 */
         padding: 0 4px; /* Horizontal padding to not cut off text */
+    }
+
+    /* Label positioning when field has value or is focused */
+    .field-label.has-value,
+    .field-label.is-focused,
+    .input-field.has-value + .field-label,
+    .input-field:focus + .field-label {
+        top: 16px !important;
+        /* transform: translateY(-4px) scale(0.75) !important; */
+    }
+
+    /* Ensure input padding works well with floating labels */
+    .input-field.has-value,
+    .input-field:focus {
+        padding-top: 20px;
+        padding-bottom: 4px;
     }
 </style>

@@ -58,9 +58,9 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
 
     <!-- Content layout -->
     <div class="absolute top-0 left-0 w-full h-full flex z-20 pt-20 box-border">
-        <!-- Main description panel (left side) -->
+        <!-- Main description panel (left side) - INCREASED WIDTH -->
         <div
-            class="w-[40%] max-w-[500px] h-full bg-black/80 text-white p-8 flex flex-col overflow-y-auto content-panel"
+            class="w-[50%] max-w-[700px] h-full bg-black/80 text-white p-8 flex flex-col overflow-y-auto content-panel"
         >
             <!-- Fixed mobile navigation layout for long titles -->
             <div class="title-nav-container">
@@ -89,9 +89,7 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
                     )
                 }
 
-                <h1
-                    class="font-poppins text-[clamp(1.7rem,3.5vw,2.8rem)] font-bold leading-tight break-words hyphens-auto"
-                >
+                <h1 class="font-poppins font-bold bg-amber-700">
                     {title}
                 </h1>
 
@@ -173,7 +171,7 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
 
         <!-- Option descriptions panel (right side) - Only visible on desktop via CSS -->
         <div
-            class="w-[80%] h-full flex items-end justify-center relative pb-16 desktop-descriptions"
+            class="w-[50%] h-full flex items-end justify-center relative pb-16 desktop-descriptions"
         >
             {
                 options.map((option) => (
@@ -350,27 +348,23 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
 </script>
 
 <style>
-    /* Add this at the top to ensure it applies immediately */
+    /* Base styles */
     .initially-hidden {
-        opacity: 0 !important; /* Using !important to override any inherited styles */
-        visibility: hidden; /* Hide buttons completely */
+        opacity: 0 !important;
+        visibility: hidden;
     }
 
-    /* ANIMATION STYLES - PREVENT FLASH OF CONTENT */
-
-    /* Base styles for option descriptions and images */
+    /* Animation base styles */
     .option-description,
     .mobile-option-description {
         display: none;
     }
 
-    /* Hide all images initially */
     [id^="image-"],
     #main-image {
         opacity: 0;
     }
 
-    /* Hide content initially - now redundant with inline styles but keeping as a fallback */
     .content-panel h1,
     .content-panel .divider,
     #main-description,
@@ -378,7 +372,7 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         opacity: 0;
     }
 
-    /* Revised animation keyframes */
+    /* Animation keyframes */
     @keyframes floatUp {
         0% {
             opacity: 0;
@@ -390,7 +384,6 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         }
     }
 
-    /* Enhanced entrance animation for main image with slower progressive fade-in */
     @keyframes slideRightWithFade {
         0% {
             opacity: 0;
@@ -414,14 +407,6 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         }
     }
 
-    /* Increase animation duration for slower opacity transition */
-    #main-image.entrance-animation {
-        opacity: 1 !important;
-        animation: slideRightWithFade 2.5s cubic-bezier(0.23, 1, 0.32, 1)
-            forwards;
-    }
-
-    /* New entrance animations - keep for other elements */
     @keyframes slideRight {
         0% {
             opacity: 0;
@@ -444,25 +429,27 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         }
     }
 
-    /* Image animation */
-    .image-visible {
+    /* Animation classes */
+    #main-image.entrance-animation {
         opacity: 1 !important;
-        transition: opacity 0.1s ease;
+        animation: slideRightWithFade 1.2s ease-out forwards;
     }
 
-    /* Add animation to inner elements with reduced initial opacity flash */
     .content-entrance-animation {
         animation: slideDown 0.8s ease-out forwards;
         animation-fill-mode: forwards;
     }
 
-    /* Text section animation - fix for description visibility */
+    .image-visible {
+        opacity: 1 !important;
+        transition: opacity 0.1s ease;
+    }
+
     .description-visible {
         display: block !important;
         animation: floatUp 0.6s ease-out forwards;
     }
 
-    /* Also support the old class name for backward compatibility */
     .!block {
         display: block !important;
     }
@@ -471,401 +458,7 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         animation: floatUp 0.6s ease-out forwards;
     }
 
-    /* Entrance animations - apply to inner content only */
-    #main-image.entrance-animation {
-        opacity: 1 !important;
-        animation: slideRightWithFade 1.2s ease-out forwards;
-    }
-
-    /* Rest of the existing styles */
-    /* Hide mobile descriptions by default */
-    .mobile-descriptions {
-        display: none;
-    }
-
-    .mobile-option-description {
-        width: 100%;
-        margin: 0.5rem 0 2rem;
-        padding: 1rem;
-        background-color: rgba(0, 0, 0, 0.5);
-        border-left: 4px solid #2e8d80;
-    }
-
-    /* Active button styling */
-    .active-button {
-        box-shadow:
-            0 0 0 2px white,
-            0 0 0 4px #2e8d80;
-        transform: translateY(-2px);
-    }
-
-    /* Media query for mobile */
-    @media (max-width: 768px) {
-        .options-list {
-            flex-direction: column;
-            margin-bottom: 1rem; /* Reduce bottom margin of options list */
-        }
-
-        .option-button {
-            width: 100%;
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
-        }
-
-        /* Full height main panel on mobile */
-        .content-panel {
-            width: 100%;
-            max-width: none;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto; /* Ensure scrolling works properly */
-        }
-
-        /* Show mobile descriptions section */
-        .mobile-descriptions {
-            display: block;
-            margin-bottom: 2rem;
-        }
-
-        /* Hide desktop descriptions panel */
-        .desktop-descriptions {
-            display: none;
-        }
-
-        /* Remove margin-top auto styles that were pushing options to the bottom */
-        .options-container {
-            margin-top: 2rem; /* Add some space between main description and options */
-        }
-
-        .active-button {
-            border-width: 2px;
-        }
-
-        /* Add highlighting to the selected option description */
-        .mobile-option-description.description-visible {
-            border-left: 6px solid #2e8d80;
-            background-color: rgba(46, 141, 128, 0.2);
-        }
-
-        /* Adjust title size on mobile */
-        .font-poppins {
-            font-size: clamp(1.5rem, 6vw, 2.2rem) !important;
-            line-height: 1.2;
-        }
-
-        /* Ensure proper layout structure on mobile */
-        .content-panel {
-            width: 100%;
-            max-width: none;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-
-        /* Description container - no flex or expanding behavior */
-        .description-container {
-            width: 100%;
-            position: relative;
-        }
-
-        /* Options container styling */
-        .options-container {
-            width: 100%;
-            position: relative;
-            margin-top: 1.5rem;
-        }
-
-        /* Show mobile descriptions section */
-        .mobile-descriptions {
-            display: block;
-            margin-bottom: 1rem;
-            margin-top: 0.5rem;
-            width: 100%;
-        }
-
-        /* Mobile description animation */
-        .mobile-option-description.description-visible {
-            border-left: 6px solid #2e8d80;
-            background-color: rgba(46, 141, 128, 0.2);
-            animation: expandDown 0.3s ease-out forwards;
-        }
-
-        /* Animation for expanding downward */
-        @keyframes expandDown {
-            from {
-                opacity: 0;
-                max-height: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                max-height: 1000px;
-                transform: translateY(0);
-            }
-        }
-    }
-
-    /* Add specific styling for long titles */
-    .font-poppins {
-        max-width: 100%;
-        padding-right: 0.5rem;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-    }
-
-    /* Add justify text styling for all paragraphs */
-    p {
-        font-family: "Lato", sans-serif;
-        font-size: 1.1rem;
-        line-height: 1.7;
-        margin-bottom: 1.5rem;
-        text-align: justify;
-    }
-
-    /* Make sure strong tags are properly rendered */
-    :global(strong) {
-        font-weight: 700;
-        color: #2e8d80;
-    }
-
-    /* Add some spacing after break tags if needed */
-    :global(br + br) {
-        display: block;
-        content: "";
-        margin-top: 0.5em;
-    }
-
-    /* Improved Navigation button styles to prevent interference */
-    .fixed-navigation-container,
-    .nav-button {
-        display: none;
-    }
-
-    /* Mobile Navigation */
-    .mobile-nav-wrapper {
-        display: none;
-    }
-
-    .mobile-nav-button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background-color: rgba(46, 141, 128, 0.3);
-        color: white;
-        transition: all 0.3s ease;
-    }
-
-    .mobile-nav-button:hover {
-        background-color: rgba(46, 141, 128, 0.9);
-    }
-
-    .mobile-nav-button.prev {
-        margin-right: 10px;
-    }
-
-    .mobile-nav-button.next {
-        margin-left: 10px;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 0.7;
-        }
-    }
-
-    /* Media queries */
-    @media (max-width: 768px) {
-        /* Show mobile navigation */
-        .mobile-nav-button {
-            display: flex;
-        }
-
-        /* Adjust title container */
-        .font-poppins {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 0 5px;
-        }
-
-        /* Mobile buttons positioning */
-        .title-nav-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        /* Ensure title wraps properly on mobile */
-        .title-nav-container h1 {
-            hyphens: auto;
-            word-wrap: break-word;
-            word-break: break-word;
-            font-size: clamp(1.5rem, 5vw, 2rem) !important;
-            flex: 1;
-            min-width: 0;
-        }
-
-        /* Prevent nav buttons from being displaced */
-        .mobile-nav-button {
-            flex-shrink: 0;
-        }
-    }
-
-    @media (min-width: 769px) {
-        /* Hide mobile navigation buttons on desktop */
-        .mobile-nav-button {
-            display: none;
-        }
-
-        /* Adjust title container for desktop */
-        .title-nav-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            width: 100%;
-        }
-
-        /* Make the title match mobile layout but centered */
-        .title-nav-container h1 {
-            text-align: center;
-            padding: 0;
-            max-width: 90%; /* Prevent the title from extending to full width */
-            margin: 0 auto;
-        }
-
-        /* Ensure font-poppins behaves consistently */
-        .font-poppins {
-            display: block;
-            text-align: center;
-            max-width: 100%;
-            word-wrap: break-word;
-        }
-    }
-
-    /* Improved title container layout to prevent button displacement */
-    .title-nav-container {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        gap: 10px;
-        margin-bottom: 10px;
-        justify-content: center; /* Center the title in all views */
-    }
-
-    .title-nav-container h1 {
-        flex: 1; /* Allow title to take available space */
-        min-width: 0; /* Required for text truncation */
-        text-align: center;
-        hyphens: auto;
-        overflow-wrap: break-word;
-        word-break: break-word;
-        max-width: 100%;
-    }
-
-    .mobile-nav-button {
-        flex-shrink: 0; /* Prevent buttons from shrinking */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background-color: rgba(46, 141, 128, 0.3);
-        color: white;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        position: relative;
-        overflow: hidden;
-        transform: translateZ(0); /* Force hardware acceleration */
-    }
-
-    /* Nav button entrance animation - UPDATED to handle visibility */
-    .nav-button-animation {
-        animation: navButtonEnter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)
-            both;
-        transform-origin: center center;
-        visibility: visible !important; /* Make visible during animation */
-    }
-
-    /* Enhanced navigation button entrance animation - UPDATED: faster timing */
-    @keyframes navButtonEnter {
-        0% {
-            opacity: 0;
-            transform: scale(0.3) rotate(-15deg);
-        }
-        50% {
-            transform: scale(1.2) rotate(10deg);
-        }
-        75% {
-            transform: scale(0.95) rotate(0deg);
-        }
-        100% {
-            opacity: 1;
-            transform: scale(1) rotate(0deg);
-        }
-    }
-
-    /* FIXED: Apply the bounce animation after entrance completes without affecting opacity */
-    .mobile-nav-button.nav-button-animation:hover {
-        animation: navButtonAfterEnter 1s ease-in-out;
-        opacity: 1 !important; /* Ensure button stays visible on hover */
-    }
-
-    /* FIXED: Maintain button visibility on hover */
-    .mobile-nav-button:hover {
-        background-color: rgba(46, 141, 128, 0.9);
-        transform: scale(1.15);
-        box-shadow: 0 0 15px rgba(46, 141, 128, 0.5);
-        opacity: 1 !important; /* Ensure button stays visible */
-    }
-
-    /* FIXED: Keep button visible when active/pressed */
-    .mobile-nav-button:active {
-        transform: scale(0.9);
-        transition: transform 0.1s;
-        opacity: 1 !important; /* Ensure button stays visible when clicked */
-    }
-
-    /* Direction-specific entrance animations */
-    .mobile-nav-button.prev.nav-button-animation {
-        transform-origin: right center;
-        opacity: 1; /* Ensure visibility */
-    }
-
-    .mobile-nav-button.next.nav-button-animation {
-        transform-origin: left center;
-        opacity: 1; /* Ensure visibility */
-    }
-
-    /* Updated animation to ensure visibility throughout */
-    @keyframes navButtonAfterEnter {
-        0% {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        50% {
-            transform: translateY(-5px);
-            opacity: 1;
-        }
-        100% {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    /* Update pulse animation to maintain opacity */
+    /* Navigation animations */
     @keyframes navButtonPulse {
         0% {
             box-shadow: 0 0 0 0 rgba(46, 141, 128, 0.7);
@@ -881,7 +474,6 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         }
     }
 
-    /* Add a subtle bounce after entrance */
     @keyframes navButtonAfterEnter {
         0% {
             transform: translateY(0);
@@ -894,58 +486,13 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         }
     }
 
-    /* Apply the bounce animation after entrance completes */
-    .mobile-nav-button.nav-button-animation:hover {
-        animation: navButtonAfterEnter 1s ease-in-out;
-    }
-
-    /* Direction-specific entrance animations */
-    .mobile-nav-button.prev.nav-button-animation {
-        transform-origin: right center;
-    }
-
-    .mobile-nav-button.next.nav-button-animation {
-        transform-origin: left center;
-    }
-
-    .mobile-nav-button:hover {
-        background-color: rgba(46, 141, 128, 0.9);
-        transform: scale(1.15);
-        box-shadow: 0 0 15px rgba(46, 141, 128, 0.5);
-        animation: navButtonPulse 2s infinite;
-    }
-
-    .mobile-nav-button:active {
-        transform: scale(0.9);
-        transition: transform 0.1s;
-    }
-
-    /* Direction-specific hover animations */
-    .mobile-nav-button.prev:hover svg {
-        animation: arrowBounce 0.8s ease-in-out infinite;
-    }
-
-    .mobile-nav-button.next:hover svg {
-        animation: arrowBounceRight 0.8s ease-in-out infinite;
-    }
-
-    /* Create ripple effect */
-    .mobile-nav-button::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 100px;
-        height: 100px;
-        background-color: rgba(255, 255, 255, 0.4);
-        opacity: 0;
-        border-radius: 50%;
-        transform: scale(0) translate(-50%, -50%);
-        transform-origin: top left;
-    }
-
-    .mobile-nav-button:focus::after {
-        animation: rippleNav 0.8s ease-out;
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 0.7;
+        }
     }
 
     @keyframes rippleNav {
@@ -959,15 +506,6 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         }
     }
 
-    .mobile-nav-button.prev {
-        margin-right: 10px;
-    }
-
-    .mobile-nav-button.next {
-        margin-left: 10px;
-    }
-
-    /* Navigation button animations */
     @keyframes navButtonEnter {
         0% {
             opacity: 0;
@@ -979,18 +517,6 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         100% {
             opacity: 1;
             transform: scale(1);
-        }
-    }
-
-    @keyframes navButtonPulse {
-        0% {
-            box-shadow: 0 0 0 0 rgba(46, 141, 128, 0.7);
-        }
-        70% {
-            box-shadow: 0 0 0 8px rgba(46, 141, 128, 0);
-        }
-        100% {
-            box-shadow: 0 0 0 0 rgba(46, 141, 128, 0);
         }
     }
 
@@ -1024,6 +550,219 @@ const { title, mainImage, description, options, prevTaller, nextTaller } =
         }
         50% {
             transform: translateX(3px);
+        }
+    }
+
+    /* Content structure styles */
+    .mobile-descriptions {
+        display: none;
+    }
+
+    .mobile-option-description {
+        width: 100%;
+        margin: 0.5rem 0 2rem;
+        padding: 1rem;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-left: 4px solid #2e8d80;
+    }
+
+    /* Active button styling */
+    .active-button {
+        box-shadow:
+            0 0 0 2px white,
+            0 0 0 4px #2e8d80;
+        transform: translateY(-2px);
+    }
+
+    /* Global tag styles */
+    :global(strong) {
+        font-weight: 700;
+        color: #2e8d80;
+    }
+
+    :global(br + br) {
+        display: block;
+        content: "";
+        margin-top: 0.5em;
+    }
+
+    /* CLEAN CONSOLIDATED TITLE AND NAVIGATION STYLES */
+    .title-nav-container {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+        margin-bottom: 10px;
+        justify-content: space-between;
+        position: relative;
+    }
+
+    .title-nav-container h1 {
+        flex: 1;
+        min-width: 0;
+        text-align: center;
+        word-break: normal !important;
+        white-space: normal;
+        hyphens: manual !important;
+        font-size: clamp(0.5rem, 2.5vw, 3rem) !important;
+        line-height: 1.2;
+        padding: 0 5px;
+        max-width: 100%;
+        z-index: 4;
+    }
+
+    .mobile-nav-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: rgba(46, 141, 128, 0.3);
+        color: white;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+        z-index: 5;
+    }
+
+    .mobile-nav-button:hover {
+        background-color: rgba(46, 141, 128, 0.9);
+        transform: scale(1.15);
+        box-shadow: 0 0 15px rgba(46, 141, 128, 0.5);
+        animation: navButtonPulse 2s infinite;
+    }
+
+    .mobile-nav-button:active {
+        transform: scale(0.9);
+        transition: transform 0.1s;
+    }
+
+    .mobile-nav-button.prev {
+        margin-right: 10px;
+    }
+
+    .mobile-nav-button.next {
+        margin-left: 10px;
+    }
+
+    .mobile-nav-button.nav-button-animation:hover {
+        animation: navButtonAfterEnter 1s ease-in-out;
+    }
+
+    .mobile-nav-button.prev:hover svg {
+        animation: arrowBounce 0.8s ease-in-out infinite;
+    }
+
+    .mobile-nav-button.next:hover svg {
+        animation: arrowBounceRight 0.8s ease-in-out infinite;
+    }
+
+    .mobile-nav-button::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100px;
+        height: 100px;
+        background-color: rgba(255, 255, 255, 0.4);
+        opacity: 0;
+        border-radius: 50%;
+        transform: scale(0) translate(-50%, -50%);
+        transform-origin: top left;
+    }
+
+    .mobile-nav-button:focus::after {
+        animation: rippleNav 0.8s ease-out;
+    }
+
+    /* Unused navigation classes - hidden */
+    .fixed-navigation-container,
+    .nav-button,
+    .mobile-nav-wrapper {
+        display: none;
+    }
+
+    /* RESPONSIVE STYLES */
+    @media (max-width: 768px) {
+        .options-list {
+            flex-direction: column;
+            margin-bottom: 1rem;
+        }
+
+        .option-button {
+            width: 100%;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .content-panel {
+            width: 100%;
+            max-width: none;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .description-container {
+            width: 100%;
+            position: relative;
+        }
+
+        .options-container {
+            width: 100%;
+            position: relative;
+            margin-top: 1.5rem;
+        }
+
+        .mobile-descriptions {
+            display: block;
+            margin-bottom: 1rem;
+            margin-top: 0.5rem;
+            width: 100%;
+        }
+
+        .desktop-descriptions {
+            display: none;
+        }
+
+        .active-button {
+            border-width: 2px;
+        }
+
+        .title-nav-container h1 {
+            font-size: clamp(1.1rem, 4vw, 2rem) !important;
+        }
+
+        .mobile-option-description.description-visible {
+            border-left: 6px solid #2e8d80;
+            background-color: rgba(46, 141, 128, 0.2);
+            animation: expandDown 0.3s ease-out forwards;
+        }
+
+        @keyframes expandDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                max-height: 1000px;
+                transform: translateY(0);
+            }
+        }
+    }
+
+    /* Extra small screens */
+    @media (max-width: 400px) {
+        .title-nav-container h1 {
+            font-size: clamp(0.9rem, 4vw, 1.5rem) !important;
+        }
+
+        .mobile-nav-button {
+            min-width: 32px;
+            height: 32px;
         }
     }
 </style>

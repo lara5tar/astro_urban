@@ -11,12 +11,12 @@ interface Props {
 }
 
 const {
-    email = "info@urbanarquitectura.com.mx",
+    email = "info@urbanarquitectura.mx",
     phone = "4427086211",
-    whatsapp = "4427086211",
-    facebook = "UrbanArquitecturaConstruccion",
-    instagram = "urbanarquitectura",
-    tiktok = "urbanarquitectura",
+    whatsapp = "`https://wa.link/ktvkib?text=Hola,%20me%20gustaría%20obtener%20más%20información`",
+    facebook = "https://www.facebook.com/profile.php?id=100093131723831&mibextid=LQQJ4d",
+    instagram = "https://www.instagram.com/urbanarquitectura.mx?igshid=MmIzYWVlNDQ5Yg%3D%3D",
+    tiktok = "https://www.tiktok.com/@urbanarquitectura",
     iconColor = "#FFFFFF", // Default white if not provided
 } = Astro.props;
 ---
@@ -47,11 +47,7 @@ const {
                 ></path>
             </svg>
         </a>
-        <a
-            href={`https://wa.link/ktvkib?text=Hola,%20me%20gustaría%20obtener%20más%20información`}
-            class="icon-link"
-            aria-label="WhatsApp"
-        >
+        <a href={whatsapp} class="icon-link" aria-label="WhatsApp">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 448 512"
@@ -63,11 +59,7 @@ const {
                 ></path>
             </svg>
         </a>
-        <a
-            href={`https://facebook.com/${facebook}`}
-            class="icon-link"
-            aria-label="Facebook"
-        >
+        <a href={facebook} class="icon-link" aria-label="Facebook">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 320 512"
@@ -79,11 +71,7 @@ const {
                 ></path>
             </svg>
         </a>
-        <a
-            href={`https://instagram.com/${instagram}`}
-            class="icon-link"
-            aria-label="Instagram"
-        >
+        <a href={instagram} class="icon-link" aria-label="Instagram">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 448 512"
@@ -95,11 +83,7 @@ const {
                 ></path>
             </svg>
         </a>
-        <a
-            href={`https://tiktok.com/@${tiktok}`}
-            class="icon-link"
-            aria-label="TikTok"
-        >
+        <a href={tiktok} class="icon-link" aria-label="TikTok">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 448 512"

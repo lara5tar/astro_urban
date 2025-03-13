@@ -311,7 +311,16 @@ const {
 
     // Set initial state
     updateCarousel();
+
+    // Start autoplay
     startAutoplay();
+
+    // Add immediate first transition
+    if (slides.length > 1) {
+      setTimeout(() => {
+        navigate("next");
+      }, interval); // Trigger first slide change after 1 second
+    }
 
     // Event listeners
     if (prevBtn) {

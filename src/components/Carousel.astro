@@ -319,11 +319,12 @@ const {
     // This section was causing the carousel to skip the second image on mobile
     // by triggering two transitions in sequence
 
-    // if (slides.length > 1) {
-    //   setTimeout(() => {
-    //     navigate("next");
-    //   }, interval); // Trigger first slide change after 1 second
-    // }
+    // Only run initial slide change on desktop devices
+    if (window.matchMedia("(min-width: 769px)").matches && slides.length > 1) {
+      setTimeout(() => {
+        navigate("next");
+      }, interval); // Trigger first slide change after interval
+    }
 
     // Event listeners
     if (prevBtn) {

@@ -6,6 +6,7 @@ interface Props {
     imageSrc: ImageMetadata;
     imagePosition?: "left" | "center" | "right";
     height?: string;
+    alt?: string;
 }
 
 const {
@@ -13,6 +14,7 @@ const {
     imageSrc,
     imagePosition = "center",
     height = "400px",
+    alt = "",
 } = Astro.props as Props;
 ---
 
@@ -33,7 +35,7 @@ const {
     <div class={`image-container image-position-${imagePosition}`}>
         <Image
             src={imageSrc}
-            alt="Background decoration"
+            alt={alt}
             class="background-image"
             aria-hidden="true"
         />
@@ -45,9 +47,6 @@ const {
     :root {
         --font-title: "Poppins", sans-serif;
         --font-body: "Lato", sans-serif;
-        /* --color-primary: #2e8d80;
-        --color-text: #000000;
-        --color-background: #ffffff; */
         --spacing-base: 1rem;
         --title-shadow: 4px 4px 4px rgba(114, 114, 114, 0.95);
     }

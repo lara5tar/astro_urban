@@ -21,9 +21,6 @@ import arquitecturaImage from "../public/inicio/arquitectura.webp";
 import construccionImage from "../public/inicio/construccion.webp";
 import DiagramSection from "../components/DiagramSection.astro";
 
-import logoMovil from "../public/icons/logo_movil3.webp";
-import logoWeb from "../public/icons/logo_web.svg";
-
 import Carousel from "../components/Carousel.astro";
 import HeroWithImage from "../components/HeroWithImage.astro";
 import HeroWithImageFull from "../components/HeroWithFullImage.astro";
@@ -31,8 +28,6 @@ import CriticalStyles from "../components/CriticalStyles.astro";
 import Footer from "../components/Footer.astro";
 import WhatsAppButton from "../components/WhatsAppButton.astro";
 
-// Import the new section components
-import DecisionFlowchartSection from "../components/DecisionFlowchartSection.astro";
 import WorkProcessSection from "../components/WorkProcessSection.astro";
 import ContractSection from "../components/ContractSection.astro";
 import TimelineSection from "../components/TimelineSection.astro";
@@ -79,8 +74,8 @@ const slides = [
 <html lang="es">
   <head>
     <title>
-      Construcción y Arquitectura en Querétaro | Constructora de Casas
-      Residenciales
+      Urban Arquitectura | Construcción y Arquitectura en Querétaro |
+      Constructora de Casas Residenciales
     </title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -88,11 +83,45 @@ const slides = [
     <!-- SEO Meta Tags -->
     <meta
       name="description"
-      content="Empresa constructora y despacho de arquitectos en Querétaro especializada en construcción de casas residenciales, diseño arquitectónico y proyectos sustentables. Presupuestos personalizados y servicio de calidad."
+      content="Urban Arquitectura - Empresa constructora y despacho de arquitectos en Querétaro especializada en construcción de casas residenciales, diseño arquitectónico y proyectos sustentables. Presupuestos personalizados y servicio de calidad."
     />
     <meta
       name="keywords"
-      content="Construcción de casas en Querétaro, empresas constructoras en Querétaro, arquitectos en Querétaro, constructoras en Querétaro, construcción de casas residenciales en Querétaro, empresas de construcción en Querétaro, diseño y construcción de casas en Querétaro, presupuesto para construir una casa en Querétaro, casas ecológicas en Querétaro, ¿cuánto cuesta construir una casa en Querétaro?, construcción de casas llave en mano en Querétaro, mejor constructora para casas en Querétaro, arquitecto y constructor para casa en Querétaro, empresas de construcción de viviendas en Querétaro, construcción de casas en fraccionamientos en Querétaro, construcción de casas en Juriquilla Querétaro, constructoras en El Refugio Querétaro, empresas de construcción en Zibatá Querétaro, arquitectos en Corregidora Querétaro, proyectos arquitectónicos en Querétaro, materiales de construcción en Querétaro, construcción sustentable en Querétaro, ingenieros civiles en Querétaro, diseños de casas modernas en Querétaro"
+      content="Urban Arquitectura, Urban Arquitectura Querétaro, Construcción de casas en Querétaro, empresas constructoras en Querétaro, arquitectos en Querétaro, constructoras en Querétaro, construcción de casas residenciales en Querétaro, empresas de construcción en Querétaro, diseño y construcción de casas en Querétaro, presupuesto para construir una casa en Querétaro, casas ecológicas en Querétaro, ¿cuánto cuesta construir una casa en Querétaro?, construcción de casas llave en mano en Querétaro, mejor constructora para casas en Querétaro, arquitecto y constructor para casa en Querétaro, empresas de construcción de viviendas en Querétaro, construcción de casas en fraccionamientos en Querétaro, construcción de casas en Juriquilla Querétaro, constructoras en El Refugio Querétaro, empresas de construcción en Zibatá Querétaro, arquitectos en Corregidora Querétaro, proyectos arquitectónicos en Querétaro, materiales de construcción en Querétaro, construcción sustentable en Querétaro, ingenieros civiles en Querétaro, diseños de casas modernas en Querétaro"
+    />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://www.urbanarquitectura.com/" />
+
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta
+      property="og:title"
+      content="Urban Arquitectura | Construcción y Diseño en Querétaro"
+    />
+    <meta
+      property="og:description"
+      content="Urban Arquitectura - Empresa constructora y despacho de arquitectos en Querétaro especializada en construcción de casas residenciales y diseño arquitectónico."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.urbanarquitectura.com/" />
+    <meta
+      property="og:image"
+      content="https://www.urbanarquitectura.com/og-image.jpg"
+    />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Urban Arquitectura | Construcción y Diseño en Querétaro"
+    />
+    <meta
+      name="twitter:description"
+      content="Especialistas en construcción de casas residenciales y diseño arquitectónico en Querétaro."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.urbanarquitectura.com/twitter-image.jpg"
     />
 
     <!-- Critical CSS for performance -->
@@ -161,11 +190,12 @@ const slides = [
       imageSrc={iconUrban}
       imagePosition="right"
       height="600px"
+      alt="Logo Urban Arquitectura"
     >
       <p>
-        <strong>Transformamos sueños en espacios únicos.</strong>
+        <strong>Transformamos sueños en espacios únicos.<br /> </strong>
         Con más de 25 años de experiencia, en nuestro despacho de Arquitectura y
-        Construcción Residencial combinamos <strong
+        Construcción Residencial <strong>Urban Arquitectura</strong> combinamos <strong
           >innovación tecnológica e inteligencia artificial</strong
         >
         para diseñar y construir hogares personalizados de la más alta calidad. Con
@@ -180,9 +210,10 @@ const slides = [
       imageSrc={arquitecturaImage}
       textPosition="right"
       height="600px"
+      alt="Arquitectura y Diseño"
     >
       <p>
-        <strong> Diseños que reflejan tu estilo de vida.</strong>
+        <strong> Diseños que reflejan tu estilo de vida.<br /> </strong>
         Fusionamos estética, funcionalidad y sostenibilidad para <strong
           >maximizar el potencial</strong
         >
@@ -196,9 +227,10 @@ const slides = [
       imageSrc={construccionImage}
       textPosition="left"
       height="600px"
+      alt="Construcción de Casas"
     >
       <p>
-        <strong>Excelencia en cada detalle.</strong>
+        <strong>Excelencia en cada detalle.</strong><br />
         Nuestro equipo de ingeniería civil utiliza tecnología de vanguardia y materiales
         de alto rendimiento para ofrecer <strong
           >construcciones que superan expectativas</strong

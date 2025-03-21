@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Block access to admin areas (if they exist)
+Disallow: /admin/
+Disallow: /cgi-bin/
+
+# Link to sitemap (uncomment if you have one)
+# Sitemap: https://yourdomain.com/sitemap.xml

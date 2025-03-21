@@ -73,12 +73,24 @@ const slides = [
 
 <html lang="es">
   <head>
-    <title>
-      Urban Arquitectura | Construcción y Arquitectura en Querétaro |
-      Constructora de Casas Residenciales
-    </title>
+    <title>Urban Arquitectura</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- iOS meta tags & icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="urbanweb" />
+    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
+
+    <!-- Para dispositivos iOS -->
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon.png" />
+
+    <!-- Para dispositivos Android -->
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icono.png" />
 
     <!-- SEO Meta Tags -->
     <meta
@@ -171,6 +183,43 @@ const slides = [
         rel="stylesheet"
       />
     </noscript>
+
+    <!-- Meta Pixel Code -->
+    <script is:inline>
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod
+            ? n.callMethod.apply(n, arguments)
+            : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(
+        window,
+        document,
+        "script",
+        "https://connect.facebook.net/en_US/fbevents.js",
+      );
+      fbq("init", "796356472073341");
+      fbq("track", "PageView");
+    </script>
+    <noscript
+      ><img
+        height="1"
+        width="1"
+        style="display:none"
+        src="https://www.facebook.com/tr?id=796356472073341&ev=PageView&noscript=1"
+      /></noscript
+    >
   </head>
 
   <body>
@@ -210,7 +259,7 @@ const slides = [
       imageSrc={arquitecturaImage}
       textPosition="right"
       height="600px"
-      alt="Arquitectura y Diseño"
+      alt="Arquitectura y Diseño Urban Arquitectura"
     >
       <p>
         <strong> Diseños que reflejan tu estilo de vida.<br /> </strong>
@@ -227,7 +276,7 @@ const slides = [
       imageSrc={construccionImage}
       textPosition="left"
       height="600px"
-      alt="Construcción de Casas"
+      alt="Construcción de Casas Urban Arquitectura"
     >
       <p>
         <strong>Excelencia en cada detalle.</strong><br />

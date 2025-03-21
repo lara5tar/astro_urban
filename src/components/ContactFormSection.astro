@@ -1,6 +1,4 @@
 ---
-import Footer from "./Footer.astro";
-
 interface Props {
     options: string[];
     isDesktop: boolean;
@@ -109,7 +107,12 @@ const correo = "info@urbanarquitectura.mx";
 
     <!-- Contact Form -->
     <div class="w-full mt-0">
-        <form id={formId} class="flex flex-col gap-4">
+        <form
+            id={formId}
+            class="flex flex-col gap-4"
+            action="send-email.php"
+            method="POST"
+        >
             <!-- Name Field -->
             <div class="form-field">
                 <input
@@ -246,22 +249,69 @@ const correo = "info@urbanarquitectura.mx";
     }
 
     // Shared form submit function
-    function submitForm(form: HTMLFormElement) {
+    async function submitForm(form: HTMLFormElement) {
         const formData = new FormData(form);
         const formObject = Object.fromEntries(formData);
 
-        // Here you would typically send the data to your server
-        alert("Formulario enviado con éxito! Gracias por contactarnos.");
-        form.reset();
-
-        // Reset all labels after form submission
-        form.querySelectorAll(".input-field").forEach((input) => {
-            const label = document.querySelector(`label[for="${input.id}"]`);
-            if (label) {
-                label.classList.remove("has-value");
+        try {
+            // Display loading state
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.textContent = "Enviando...";
+                submitButton.setAttribute("disabled", "true");
             }
-            input.classList.remove("has-value");
-        });
+
+            // Validate form data
+            if (
+                !formObject.nombre ||
+                !formObject.email ||
+                !formObject.telefono ||
+                !formObject.proyecto ||
+                !formObject.mensaje
+            ) {
+                throw new Error("Todos los campos son requeridos");
+            }
+
+            // Send data to PHP script
+            const response = await fetch("/send-email.php", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+
+            const result = await response.text();
+            console.log("Server response:", result);
+
+            // Show success message
+            alert("Mensaje enviado con éxito! Gracias por contactarnos.");
+            form.reset();
+        } catch (error) {
+            console.error("Error submitting form:", error);
+            let errorMessage =
+                error instanceof Error ? error.message : String(error);
+            alert("Error al enviar el formulario: " + errorMessage);
+        } finally {
+            // Reset button state
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.textContent = "Enviar";
+                submitButton.removeAttribute("disabled");
+            }
+
+            // Reset all labels after form submission
+            form.querySelectorAll(".input-field").forEach((input) => {
+                const label = document.querySelector(
+                    `label[for="${input.id}"]`,
+                );
+                if (label) {
+                    label.classList.remove("has-value");
+                }
+                input.classList.remove("has-value");
+            });
+        }
     }
 
     // Setup forms

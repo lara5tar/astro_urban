@@ -1,6 +1,7 @@
 ---
 import GeneralLayout from "../../../layouts/GeneralLayout.astro";
-import WhatsAppButton from "../../../components/WhatsAppButton.astro";
+import logo from "../../../assets/logo.svg";
+import { Image } from "astro:assets";
 
 // Definición de interfaces TypeScript
 interface Location {
@@ -93,10 +94,12 @@ const validImages =
                 class="flex flex-col sm:flex-row justify-between items-center mb-5 sm:mb-0 gap-4"
             >
                 <div class="flex items-center h-full ml-0 sm:ml-5">
-                    <img
-                        src="/src/assets/logo.svg"
-                        alt="Logo Urban"
-                        class="h-auto max-h-[100px] md:max-h-[150px] object-contain"
+                    <Image
+                        src={logo}
+                        alt="Urban Inmobiliaria"
+                        class="h-16 sm:h-60 md:h-28 object-contain"
+                        width={200}
+                        height={200}
                     />
                 </div>
                 <div
@@ -281,6 +284,7 @@ const validImages =
         <div
             class="relative w-full h-full flex flex-col justify-center items-center p-4"
         >
+            lara5tar
             <!-- Botón de cerrar -->
             <button
                 id="closeModal"

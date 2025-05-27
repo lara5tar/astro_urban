@@ -86,18 +86,16 @@ const validImages =
     description={`${property.type} en ${formatLocation(property.location)} - ${property.investment_formatted}`}
 >
     <div class="bg-white">
-        <div
-            class="max-w-7xl mx-auto py-3 md:py-5 px-5 font-montserrat text-gray-800"
-        >
+        <div class="max-w-7xl mx-auto py-5 px-5 font-montserrat text-gray-800">
             <!-- Header responsivo con logo y estado de propiedad -->
             <div
-                class="flex flex-col sm:flex-row justify-between items-center mb-5 sm:mb-0 gap-4"
+                class="flex flex-col sm:flex-row justify-between items-end mb-5 sm:mb-0 gap-4"
             >
-                <div class="flex items-center h-full ml-0 sm:ml-5">
+                <div class="hidden sm:flex items-center h-full ml-0 sm:ml-5">
                     <Image
                         src={logo}
                         alt="Urban Inmobiliaria"
-                        class="h-16 sm:h-60 md:h-28 object-contain"
+                        class="h-20 sm:h-25 md:h-35 object-contain"
                         width={200}
                         height={200}
                     />
@@ -106,7 +104,7 @@ const validImages =
                     class="bg-[#2e8d80] w-full sm:w-auto pr-0 pb-2 sm:pb-0 sm:pr-5 flex items-center"
                 >
                     <h1
-                        class="text-2xl sm:text-3xl md:text-5xl font-bold uppercase tracking-wider text-white px-5 sm:px-10 md:px-20 bg-gray-800 h-full w-full sm:w-auto py-3 sm:py-5 flex items-center justify-center"
+                        class="text-2xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wider text-white px-5 sm:px-10 md:px-20 bg-gray-800 h-full w-full sm:w-auto py-3 sm:py-8 flex items-center justify-center"
                     >
                         {property.is_for_sale ? "VENTA" : "RENTA"}
                     </h1>
@@ -257,21 +255,28 @@ const validImages =
             </div>
 
             <!-- Botones de contacto -->
-            <div class="mt-10">
-                <div class="flex flex-col gap-4">
-                    <a
-                        href={`https://wa.me/5215500000000?text=Hola, estoy interesado en la propiedad con ID: ${property.id} ubicada en ${property.location?.line1 || "su propiedad"}`}
-                        class="block py-3 px-4 rounded bg-[#25d366] text-white text-center font-semibold uppercase tracking-wide no-underline transition-all duration-300 hover:opacity-90 hover:-translate-y-0.5"
-                    >
-                        Contactar por WhatsApp
-                    </a>
-                    <a
-                        href="tel:+5215500000000"
-                        class="block py-3 px-4 rounded bg-[#007bff] text-white text-center font-semibold uppercase tracking-wide no-underline transition-all duration-300 hover:opacity-90 hover:-translate-y-0.5"
-                    >
-                        Llamar
-                    </a>
-                </div>
+            <div class="mt-0">
+                <!-- Usando el componente WhatsAppButton que ya está en GeneralLayout -->
+                {
+                    /* El componente WhatsAppButton ya está incluido en GeneralLayout */
+                }
+                <script
+                    define:vars={{
+                        propertyId: property.id,
+                        propertyLocation:
+                            property.location?.line1 || "su propiedad",
+                    }}
+                >
+                    // Personalizar el mensaje del botón de WhatsApp para esta propiedad específica
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const whatsappButton =
+                            document.querySelector(".whatsapp-button");
+                        if (whatsappButton) {
+                            const newMessage = `Hola, estoy interesado en la propiedad con ID: ${propertyId} ubicada en ${propertyLocation}`;
+                            whatsappButton.href = `https://wa.link/ktvkib?text=${encodeURIComponent(newMessage)}`;
+                        }
+                    });
+                </script>
             </div>
         </div>
     </div>

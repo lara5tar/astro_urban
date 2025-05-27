@@ -74,6 +74,10 @@ const getFeatureValue = (features?: string[], name?: string): string | null => {
 
     return null;
 };
+
+// Filtrar imágenes válidas
+const validImages =
+    property.images?.filter((img) => img && img.trim() !== "") || [];
 ---
 
 <GeneralLayout
@@ -107,44 +111,56 @@ const getFeatureValue = (features?: string[], name?: string): string | null => {
             </div>
 
             <!-- Galería de imágenes responsiva -->
-            <div class="mb-8">
+            <div class="mb-10">
                 <div
                     class="grid grid-cols-1 sm:grid-cols-2 grid-rows-1 sm:grid-rows-2 h-auto sm:h-[500px] md:h-[700px]"
                 >
-                    <div class="w-full h-[250px] sm:h-full overflow-hidden">
+                    <div
+                        class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
+                        data-index="0"
+                    >
                         <img
-                            src={property.images && property.images.length > 0
-                                ? property.images[0]
+                            src={validImages.length > 0
+                                ? validImages[0]
                                 : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
                             alt={`${property.type} - Vista principal`}
-                            class="w-full h-full object-cover"
+                            class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                         />
                     </div>
-                    <div class="w-full h-[250px] sm:h-full overflow-hidden">
+                    <div
+                        class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
+                        data-index="1"
+                    >
                         <img
-                            src={property.images && property.images.length > 1
-                                ? property.images[1]
+                            src={validImages.length > 1
+                                ? validImages[1]
                                 : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
                             alt={`${property.type} - Interior`}
-                            class="w-full h-full object-cover"
+                            class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                         />
                     </div>
-                    <div class="w-full h-[250px] sm:h-full overflow-hidden">
+                    <div
+                        class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
+                        data-index="2"
+                    >
                         <img
-                            src={property.images && property.images.length > 2
-                                ? property.images[2]
+                            src={validImages.length > 2
+                                ? validImages[2]
                                 : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
                             alt={`${property.type} - Interior`}
-                            class="w-full h-full object-cover"
+                            class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                         />
                     </div>
-                    <div class="w-full h-[250px] sm:h-full overflow-hidden">
+                    <div
+                        class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
+                        data-index="3"
+                    >
                         <img
-                            src={property.images && property.images.length > 3
-                                ? property.images[3]
+                            src={validImages.length > 3
+                                ? validImages[3]
                                 : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
                             alt={`${property.type} - Interior`}
-                            class="w-full h-full object-cover"
+                            class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                         />
                     </div>
                 </div>
@@ -189,9 +205,7 @@ const getFeatureValue = (features?: string[], name?: string): string | null => {
                     </div>
                 </div>
 
-                <div
-                    class="bg-[#2e8d80] pr-0 pb-3 sm:pb-0 sm:pr-5 mt-5 md:mt-0"
-                >
+                <div class="bg-[#2e8d80] pr-0 pb-3 sm:pb-0 sm:pr-5">
                     <div
                         class="h-full w-full bg-gray-800 text-white p-5 flex flex-col justify-start"
                     >
@@ -204,9 +218,9 @@ const getFeatureValue = (features?: string[], name?: string): string | null => {
                         {
                             property.features &&
                             property.features.length > 0 ? (
-                                <div class="grid grid-cols-1 gap-2 md:gap-4">
+                                <div class="grid grid-cols-1  md:gap-4">
                                     {property.features.map((feature) => (
-                                        <div class="flex items-center p-2">
+                                        <div class="flex items-center p-2 md:p-0">
                                             <div class="mr-3 text-[#2e8d80] bg-white rounded-full p-1 flex-shrink-0">
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -240,7 +254,7 @@ const getFeatureValue = (features?: string[], name?: string): string | null => {
             </div>
 
             <!-- Botones de contacto -->
-            <div class="mt-6">
+            <div class="mt-10">
                 <div class="flex flex-col gap-4">
                     <a
                         href={`https://wa.me/5215500000000?text=Hola, estoy interesado en la propiedad con ID: ${property.id} ubicada en ${property.location?.line1 || "su propiedad"}`}
@@ -258,4 +272,168 @@ const getFeatureValue = (features?: string[], name?: string): string | null => {
             </div>
         </div>
     </div>
+
+    <!-- Modal para carrusel de imágenes -->
+    <div
+        id="imageModal"
+        class="fixed inset-0 bg-black/80 z-50 items-center justify-center hidden"
+    >
+        <div
+            class="relative w-full h-full flex flex-col justify-center items-center p-4"
+        >
+            <!-- Botón de cerrar -->
+            <button
+                id="closeModal"
+                class="absolute top-4 right-4 text-white text-4xl z-10 hover:text-gray-300"
+            >
+                &times;
+            </button>
+
+            <!-- Controles del carrusel -->
+            <button
+                id="prevImage"
+                class="absolute left-4 text-white text-6xl z-10 opacity-70 hover:opacity-100 focus:outline-none"
+            >
+                &#10094;
+            </button>
+            <button
+                id="nextImage"
+                class="absolute right-4 text-white text-6xl z-10 opacity-70 hover:opacity-100 focus:outline-none"
+            >
+                &#10095;
+            </button>
+
+            <!-- Contenedor de imágenes -->
+            <div
+                id="carouselImages"
+                class="w-full max-w-4xl h-full max-h-[80vh] flex items-center justify-center"
+            >
+                <!-- Las imágenes se cargarán dinámicamente aquí -->
+            </div>
+
+            <!-- Indicador de imagen actual -->
+            <div class="absolute bottom-4 w-full text-center">
+                <span
+                    id="currentImageIndicator"
+                    class="bg-white bg-opacity-70 text-black px-3 py-1 rounded-full text-sm"
+                >
+                    1 / {validImages.length || 1}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <script define:vars={{ images: validImages }}>
+        // Almacenar todas las imágenes válidas
+        const galleryImages =
+            images.length > 0
+                ? images
+                : [
+                      "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible",
+                  ];
+
+        let currentImageIndex = 0;
+
+        // Elementos del DOM
+        const imageModal = document.getElementById("imageModal");
+        const closeModal = document.getElementById("closeModal");
+        const prevImage = document.getElementById("prevImage");
+        const nextImage = document.getElementById("nextImage");
+        const carouselImages = document.getElementById("carouselImages");
+        const currentImageIndicator = document.getElementById(
+            "currentImageIndicator",
+        );
+        const galleryElements = document.querySelectorAll(".gallery-image");
+
+        // Función para abrir el modal con una imagen específica
+        function openModal(index) {
+            if (index >= 0 && index < galleryImages.length) {
+                currentImageIndex = index;
+                updateCarouselImage();
+                imageModal.classList.remove("hidden");
+                imageModal.classList.add("flex");
+                // Deshabilitar el scroll del body
+                document.body.style.overflow = "hidden";
+            }
+        }
+
+        // Función para cerrar el modal
+        function closeModalHandler() {
+            imageModal.classList.add("hidden");
+            imageModal.classList.remove("flex");
+            // Habilitar el scroll del body
+            document.body.style.overflow = "";
+        }
+
+        // Función para actualizar la imagen del carrusel
+        function updateCarouselImage() {
+            // Limpiar contenedor
+            carouselImages.innerHTML = "";
+
+            // Crear nueva imagen
+            const img = document.createElement("img");
+            img.src = galleryImages[currentImageIndex];
+            img.alt = `Imagen ${currentImageIndex + 1}`;
+            img.className = "max-w-full max-h-full object-contain";
+
+            // Agregar imagen al contenedor
+            carouselImages.appendChild(img);
+
+            // Actualizar indicador
+            currentImageIndicator.textContent = `${currentImageIndex + 1} / ${galleryImages.length}`;
+        }
+
+        // Función para ir a la imagen anterior
+        function goToPrevImage() {
+            currentImageIndex =
+                (currentImageIndex - 1 + galleryImages.length) %
+                galleryImages.length;
+            updateCarouselImage();
+        }
+
+        // Función para ir a la siguiente imagen
+        function goToNextImage() {
+            currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+            updateCarouselImage();
+        }
+
+        // Añadir event listeners
+        galleryElements.forEach((element) => {
+            element.addEventListener("click", () => {
+                const index = parseInt(element.getAttribute("data-index")) || 0;
+                openModal(index);
+            });
+        });
+
+        closeModal.addEventListener("click", closeModalHandler);
+        prevImage.addEventListener("click", goToPrevImage);
+        nextImage.addEventListener("click", goToNextImage);
+
+        // Cerrar modal con tecla Escape
+        document.addEventListener("keydown", (e) => {
+            if (
+                e.key === "Escape" &&
+                !imageModal.classList.contains("hidden")
+            ) {
+                closeModalHandler();
+            } else if (
+                e.key === "ArrowLeft" &&
+                !imageModal.classList.contains("hidden")
+            ) {
+                goToPrevImage();
+            } else if (
+                e.key === "ArrowRight" &&
+                !imageModal.classList.contains("hidden")
+            ) {
+                goToNextImage();
+            }
+        });
+
+        // Cerrar modal haciendo clic en el fondo
+        imageModal.addEventListener("click", (e) => {
+            if (e.target === imageModal) {
+                closeModalHandler();
+            }
+        });
+    </script>
 </GeneralLayout>

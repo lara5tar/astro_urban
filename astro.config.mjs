@@ -10,5 +10,8 @@ export default defineConfig({
         plugins: [tailwindcss()],
 
     },
+    image: {
+        domains: ["https://urbancms.up.railway.app"],
+    },
 });
 

@@ -1,0 +1,162 @@
+---
+import { Image } from "astro:assets";
+
+export interface PropiedadProps {
+    id: string;
+    nombre: string;
+    imagen: any;
+    precio: string;
+    descripcion: string;
+    detalles: {
+        metrosCuadrados: number;
+        habitaciones: number;
+        banosCompletos: number;
+        banosMedios: number;
+        cocina: string;
+        sala: string;
+        jardin: string;
+        terraza: string;
+        cochera: number;
+        acabados: string;
+        equipamiento: string;
+    };
+}
+
+interface Props {
+    propiedad: PropiedadProps;
+}
+
+const { propiedad } = Astro.props;
+---
+
+<div
+    class="bg-gray-800 rounded-lg overflow-hidden shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-[1.02] relative model-card"
+>
+    <div class="relative h-56 md:h-64 overflow-hidden">
+        <Image
+            src={propiedad.imagen}
+            alt={`Modelo ${propiedad.nombre}`}
+            class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+            width={600}
+            height={400}
+            loading="eager"
+        />
+        <div
+            class="absolute top-0 right-0 m-4 bg-primary px-3 py-1 rounded-full text-white font-bold"
+        >
+            {propiedad.precio} MXN/m²
+        </div>
+    </div>
+
+    <div class="p-6">
+        <h3 class="text-xl md:text-2xl font-montserrat font-bold mb-2">
+            {propiedad.nombre}
+        </h3>
+        <p class="text-gray-300 mb-4">{propiedad.descripcion}</p>
+
+        <div class="flex flex-wrap gap-4 mb-6">
+            <div class="flex items-center text-gray-300">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5"
+                    ></path>
+                </svg>
+                <span>{propiedad.detalles.metrosCuadrados} m²</span>
+            </div>
+
+            <div class="flex items-center text-gray-300">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                    ></path>
+                </svg>
+                <span>{propiedad.detalles.habitaciones} Hab.</span>
+            </div>
+
+            <div class="flex items-center text-gray-300">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    ></path>
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <span
+                    >{
+                        propiedad.detalles.banosCompletos +
+                            propiedad.detalles.banosMedios
+                    } Baños</span
+                >
+            </div>
+
+            <div class="flex items-center text-gray-300">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    ></path>
+                </svg>
+                <span>{propiedad.detalles.cochera} Autos</span>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button
+                class="modelo-detalles bg-primary hover:bg-primary/90 text-white font-bold py-2 px-6 rounded-full shadow-md transition-all duration-300"
+                data-modelo={propiedad.id}
+            >
+                Ver detalles
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .model-card {
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+    }
+
+    .model-card:hover {
+        transform: translateY(-5px);
+    }
+</style>

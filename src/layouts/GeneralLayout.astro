@@ -1,0 +1,262 @@
+---
+import "../tailwind.css";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import WhatsAppButton from "../components/WhatsAppButton.astro";
+import CriticalStyles from "../components/CriticalStyles.astro";
+
+interface Props {
+    title?: string;
+    description?: string;
+    image?: string;
+    frontSlideImage?: ImageMetadata;
+    frontSlideMobileImage?: ImageMetadata;
+}
+
+const {
+    title = "Urban Arquitectura | Construcción y Diseño en Querétaro",
+    description = "Urban Arquitectura - Empresa constructora y despacho de arquitectos en Querétaro especializada en construcción de casas residenciales, diseño arquitectónico y proyectos sustentables. Presupuestos personalizados y servicio de calidad.",
+    image,
+    frontSlideImage,
+    frontSlideMobileImage,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+    <head>
+        <title>{title}</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content={description} />
+
+        <!-- iOS meta tags & icons -->
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="apple-mobile-web-app-title" content="urbanweb" />
+        <link rel="apple-touch-icon" href="icons/Icon-192.png" />
+
+        <!-- Para dispositivos iOS -->
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon02.png" />
+
+        <!-- Para dispositivos Android -->
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="192x192"
+            href="/favicon02.png"
+        />
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" sizes="32x32" href="/icono.png" />
+
+        <!-- SEO Meta Tags -->
+        <meta
+            name="keywords"
+            content="Urban Arquitectura, Urban Arquitectura Querétaro, Construcción de casas en Querétaro, empresas constructoras en Querétaro, arquitectos en Querétaro, constructoras en Querétaro, construcción de casas residenciales en Querétaro, empresas de construcción en Querétaro, diseño y construcción de casas en Querétaro, presupuesto para construir una casa en Querétaro, casas ecológicas en Querétaro, ¿cuánto cuesta construir una casa en Querétaro?, construcción de casas llave en mano en Querétaro, mejor constructora para casas en Querétaro, arquitecto y constructor para casa en Querétaro, empresas de construcción de viviendas en Querétaro, construcción de casas en fraccionamientos en Querétaro, construcción de casas en Juriquilla Querétaro, constructoras en El Refugio Querétaro, empresas de construcción en Zibatá Querétaro, arquitectos en Corregidora Querétaro, proyectos arquitectónicos en Querétaro, materiales de construcción en Querétaro, construcción sustentable en Querétaro, ingenieros civiles en Querétaro, diseños de casas modernas en Querétaro"
+        />
+
+        <!-- Canonical URL -->
+        <link rel="canonical" href="https://www.urbanarquitectura.com/" />
+
+        <!-- Open Graph Meta Tags for Social Media -->
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.urbanarquitectura.com/" />
+        {image && <meta property="og:image" content={image} />}
+        {
+            !image && (
+                <meta
+                    property="og:image"
+                    content="https://www.urbanarquitectura.com/og-image.jpg"
+                />
+            )
+        }
+
+        <!-- Twitter Card Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        {image && <meta name="twitter:image" content={image} />}
+        {
+            !image && (
+                <meta
+                    name="twitter:image"
+                    content="https://www.urbanarquitectura.com/twitter-image.jpg"
+                />
+            )
+        }
+
+        <!-- Critical CSS for performance -->
+        <CriticalStyles />
+
+        <!-- Add preload for the first carousel image if available -->
+        {
+            frontSlideImage && (
+                <link
+                    rel="preload"
+                    href={frontSlideImage.src}
+                    as="image"
+                    type="image/webp"
+                    fetchpriority="high"
+                    media="(min-width: 513px)"
+                />
+            )
+        }
+
+        {
+            frontSlideMobileImage && (
+                <link
+                    rel="preload"
+                    href={frontSlideMobileImage.src}
+                    as="image"
+                    type="image/webp"
+                    fetchpriority="high"
+                    media="(max-width: 512px)"
+                />
+            )
+        }
+
+        <!-- Optimized font loading strategy -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+        <!-- Preload critical fonts -->
+        <link
+            rel="preload"
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap"
+            as="style"
+            onload="this.onload=null;this.rel='stylesheet'"
+        />
+
+        <!-- Non-blocking font loading -->
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@500;700&display=swap"
+            rel="stylesheet"
+            media="print"
+            onload="this.media='all'"
+        />
+
+        <!-- Fallback for browsers that don't support JS -->
+        <noscript>
+            <link
+                href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@500;700&display=swap"
+                rel="stylesheet"
+            />
+        </noscript>
+
+        <!-- Meta Pixel Code -->
+        <script is:inline>
+            !(function (f, b, e, v, n, t, s) {
+                if (f.fbq) return;
+                n = f.fbq = function () {
+                    n.callMethod
+                        ? n.callMethod.apply(n, arguments)
+                        : n.queue.push(arguments);
+                };
+                if (!f._fbq) f._fbq = n;
+                n.push = n;
+                n.loaded = !0;
+                n.version = "2.0";
+                n.queue = [];
+                t = b.createElement(e);
+                t.async = !0;
+                t.src = v;
+                s = b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t, s);
+            })(
+                window,
+                document,
+                "script",
+                "https://connect.facebook.net/en_US/fbevents.js",
+            );
+            fbq("init", "796356472073341");
+            fbq("track", "PageView");
+        </script>
+        <noscript>
+            <img
+                height="1"
+                width="1"
+                style="display:none"
+                src="https://www.facebook.com/tr?id=796356472073341&ev=PageView&noscript=1"
+            />
+        </noscript>
+
+        <!-- JSON-LD para información de la empresa -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "LocalBusiness",
+                "name": "Urban Arquitectura",
+                "description": "Empresa constructora y despacho de arquitectos especializada en construcción de casas residenciales, diseño arquitectónico y proyectos sustentables.",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Santiago de Querétaro",
+                    "addressLocality": "Querétaro",
+                    "addressRegion": "Querétaro",
+                    "postalCode": "76000",
+                    "addressCountry": "MX"
+                },
+                "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": "20.5881",
+                    "longitude": "-100.3899"
+                },
+                "url": "https://www.urbanarquitectura.mx",
+                "telephone": "+52 (442) 708 6211",
+                "email": "info@urbanarquitectura.mx",
+                "image": "https://www.urbanarquitectura.mx/favicon02.png",
+                "priceRange": "$$-$$$",
+                "openingHours": "Mo-Fr 09:00-18:00",
+                "sameAs": [
+                    "https://www.facebook.com/urbanarquitectura",
+                    "https://www.instagram.com/urbanarquitectura"
+                ]
+            }
+        </script>
+
+        <!-- For browsers that support early hints -->
+        <meta http-equiv="x-dns-prefetch-control" content="on" />
+
+        <script>
+            // Force LCP image preload
+            const preloadLCP = () => {
+                if (!window.matchMedia) return;
+
+                const ua = navigator.userAgent;
+                const isMobile = ua.match(
+                    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i,
+                );
+
+                // Use the appropriate image based on device
+                const selector = isMobile ? ".mobile-image" : ".desktop-image";
+
+                // Set a timeout to ensure this runs after the browser has painted
+                setTimeout(() => {
+                    const firstImage = document.querySelector(
+                        `.carousel-slide[data-index="0"] ${selector}`,
+                    );
+                    if (firstImage && firstImage instanceof HTMLImageElement) {
+                        firstImage.loading = "eager";
+                        firstImage.fetchPriority = "high";
+                        firstImage.decoding = "sync";
+                    }
+                }, 0);
+            };
+
+            // Execute immediately
+            preloadLCP();
+        </script>
+    </head>
+    <body class="bg-black mt-20">
+        <WhatsAppButton />
+        <Navbar />
+
+        <main>
+            <slot />
+        </main>
+
+        <Footer />
+    </body>
+</html>

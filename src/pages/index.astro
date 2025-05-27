@@ -1,6 +1,5 @@
 ---
-import "../tailwind.css";
-import Navbar from "../components/Navbar.astro";
+import GeneralLayout from "../layouts/GeneralLayout.astro";
 
 import imagen1 from "../public/carousel/web/Imagen1.webp";
 import imagen2 from "../public/carousel/web/Imagen2.webp";
@@ -24,10 +23,6 @@ import DiagramSection from "../components/DiagramSection.astro";
 import Carousel from "../components/Carousel.astro";
 import HeroWithImage from "../components/HeroWithImage.astro";
 import HeroWithImageFull from "../components/HeroWithFullImage.astro";
-import CriticalStyles from "../components/CriticalStyles.astro";
-import Footer from "../components/Footer.astro";
-import WhatsAppButton from "../components/WhatsAppButton.astro";
-
 import WorkProcessSection from "../components/WorkProcessSection.astro";
 import ContractSection from "../components/ContractSection.astro";
 import TimelineSection from "../components/TimelineSection.astro";
@@ -71,247 +66,89 @@ const slides = [
 ];
 ---
 
-<html lang="es">
-  <head>
-    <title>Urban Arquitectura</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<GeneralLayout
+  frontSlideImage={slides[0].image}
+  frontSlideMobileImage={slides[0].mobileImage}
+>
+  <Carousel slides={slides} interval={4000} showArrows={true} showDots={true} />
 
-    <!-- iOS meta tags & icons -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="apple-mobile-web-app-title" content="urbanweb" />
-    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
+  <div class="h-5 w-[100%] bg-black"></div>
 
-    <!-- Para dispositivos iOS -->
-    <link rel="apple-touch-icon" sizes="180x180" href="favicon.png" />
+  <HeroWithImage
+    title="NOSOTROS"
+    imageSrc={iconUrban}
+    imagePosition="right"
+    height="600px"
+    alt="Logo Urban Arquitectura"
+  >
+    <p>
+      <strong>Transformamos sueños en espacios únicos.<br /> </strong>
+      Con más de 25 años de experiencia, en nuestro despacho de Arquitectura y Construcción
+      Residencial <strong>Urban Arquitectura</strong> combinamos <strong
+        >innovación tecnológica e inteligencia artificial</strong
+      >
+      para diseñar y construir hogares personalizados de la más alta calidad. Con
+      sede en Santiago de Querétaro y <strong>cobertura nacional</strong>,
+      creamos espacios que inspiran.
+    </p>
+  </HeroWithImage>
 
-    <!-- Para dispositivos Android -->
-    <link rel="icon" type="image/png" sizes="192x192" href="favicon.png" />
+  <div class="h-5 w-[100%] bg-black"></div>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="icono.png" />
+  <HeroWithImageFull
+    title="ARQUITECTURA"
+    imageSrc={arquitecturaImage}
+    textPosition="right"
+    height="600px"
+    alt="Arquitectura y Diseño Urban Arquitectura"
+  >
+    <p>
+      <strong> Diseños que reflejan tu estilo de vida.<br /> </strong>
+      Fusionamos estética, funcionalidad y sostenibilidad para <strong
+        >maximizar el potencial</strong
+      >
+      de cada espacio, integrando características naturales del entorno con propuestas
+      innovadoras.
+    </p>
+  </HeroWithImageFull>
 
-    <!-- SEO Meta Tags -->
-    <meta
-      name="description"
-      content="Urban Arquitectura - Empresa constructora y despacho de arquitectos en Querétaro especializada en construcción de casas residenciales, diseño arquitectónico y proyectos sustentables. Presupuestos personalizados y servicio de calidad."
-    />
-    <meta
-      name="keywords"
-      content="Urban Arquitectura, Urban Arquitectura Querétaro, Construcción de casas en Querétaro, empresas constructoras en Querétaro, arquitectos en Querétaro, constructoras en Querétaro, construcción de casas residenciales en Querétaro, empresas de construcción en Querétaro, diseño y construcción de casas en Querétaro, presupuesto para construir una casa en Querétaro, casas ecológicas en Querétaro, ¿cuánto cuesta construir una casa en Querétaro?, construcción de casas llave en mano en Querétaro, mejor constructora para casas en Querétaro, arquitecto y constructor para casa en Querétaro, empresas de construcción de viviendas en Querétaro, construcción de casas en fraccionamientos en Querétaro, construcción de casas en Juriquilla Querétaro, constructoras en El Refugio Querétaro, empresas de construcción en Zibatá Querétaro, arquitectos en Corregidora Querétaro, proyectos arquitectónicos en Querétaro, materiales de construcción en Querétaro, construcción sustentable en Querétaro, ingenieros civiles en Querétaro, diseños de casas modernas en Querétaro"
-    />
+  <div class="h-5 w-[100%] bg-black"></div>
 
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://www.urbanarquitectura.com/" />
+  <HeroWithImageFull
+    title="CONSTRUCCIÓN"
+    imageSrc={construccionImage}
+    textPosition="left"
+    height="600px"
+    alt="Construcción de Casas Urban Arquitectura"
+  >
+    <p>
+      <strong>Excelencia en cada detalle.</strong><br />
+      Nuestro equipo de ingeniería civil utiliza tecnología de vanguardia y materiales
+      de alto rendimiento para ofrecer <strong
+        >construcciones que superan expectativas</strong
+      >, garantizando calidad y eficiencia en cada proyecto.
+    </p>
+  </HeroWithImageFull>
 
-    <!-- Open Graph Meta Tags for Social Media -->
-    <meta
-      property="og:title"
-      content="Urban Arquitectura | Construcción y Diseño en Querétaro"
-    />
-    <meta
-      property="og:description"
-      content="Urban Arquitectura - Empresa constructora y despacho de arquitectos en Querétaro especializada en construcción de casas residenciales y diseño arquitectónico."
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.urbanarquitectura.com/" />
-    <meta
-      property="og:image"
-      content="https://www.urbanarquitectura.com/og-image.jpg"
-    />
+  <div class="h-5 w-[100%] bg-black"></div>
 
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Urban Arquitectura | Construcción y Diseño en Querétaro"
-    />
-    <meta
-      name="twitter:description"
-      content="Especialistas en construcción de casas residenciales y diseño arquitectónico en Querétaro."
-    />
-    <meta
-      name="twitter:image"
-      content="https://www.urbanarquitectura.com/twitter-image.jpg"
-    />
+  <!-- Replaced diagram code with the new component -->
+  <DiagramSection />
 
-    <!-- Critical CSS for performance -->
-    <CriticalStyles />
+  <div class="h-5 w-[100%] bg-black"></div>
 
-    <!-- Preload critical carousel images -->
-    <link
-      rel="preload"
-      href={slides[0].image.src}
-      as="image"
-      type="image/webp"
-      fetchpriority="high"
-    />
-    <link
-      rel="preload"
-      href={slides[0].mobileImage.src}
-      as="image"
-      type="image/webp"
-      fetchpriority="high"
-      media="(max-width: 512px)"
-    />
+  <!-- Work Process Section -->
+  <WorkProcessSection />
 
-    <!-- Optimized font loading strategy -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <div class="h-5 w-[100%] bg-black"></div>
 
-    <!-- Preload critical fonts -->
-    <link
-      rel="preload"
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap"
-      as="style"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
+  <!-- Contract Section -->
+  <ContractSection />
 
-    <!-- Non-blocking font loading -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@500;700&display=swap"
-      rel="stylesheet"
-      media="print"
-      onload="this.media='all'"
-    />
+  <div class="h-5 w-[100%] bg-black"></div>
 
-    <!-- Fallback for browsers that don't support JS -->
-    <noscript>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Lato:wght@300;400;700&family=Poppins:wght@500;700&display=swap"
-        rel="stylesheet"
-      />
-    </noscript>
+  <!-- Timeline Section -->
+  <TimelineSection />
 
-    <!-- Meta Pixel Code -->
-    <script is:inline>
-      !(function (f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function () {
-          n.callMethod
-            ? n.callMethod.apply(n, arguments)
-            : n.queue.push(arguments);
-        };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = "2.0";
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s);
-      })(
-        window,
-        document,
-        "script",
-        "https://connect.facebook.net/en_US/fbevents.js",
-      );
-      fbq("init", "796356472073341");
-      fbq("track", "PageView");
-    </script>
-    <noscript
-      ><img
-        height="1"
-        width="1"
-        style="display:none"
-        src="https://www.facebook.com/tr?id=796356472073341&ev=PageView&noscript=1"
-      /></noscript
-    >
-  </head>
-
-  <body>
-    <WhatsAppButton />
-    <Navbar />
-    <!-- <div style="will-change: transform;"> -->
-    <Carousel
-      slides={slides}
-      interval={4000}
-      showArrows={true}
-      showDots={true}
-    />
-    <!-- </div> -->
-    <div class="h-5 w-[100%] bg-black"></div>
-    <HeroWithImage
-      title="NOSOTROS"
-      imageSrc={iconUrban}
-      imagePosition="right"
-      height="600px"
-      alt="Logo Urban Arquitectura"
-    >
-      <p>
-        <strong>Transformamos sueños en espacios únicos.<br /> </strong>
-        Con más de 25 años de experiencia, en nuestro despacho de Arquitectura y
-        Construcción Residencial <strong>Urban Arquitectura</strong> combinamos <strong
-          >innovación tecnológica e inteligencia artificial</strong
-        >
-        para diseñar y construir hogares personalizados de la más alta calidad. Con
-        sede en Santiago de Querétaro y <strong>cobertura nacional</strong>,
-        creamos espacios que inspiran.
-      </p>
-    </HeroWithImage>
-    <div class="h-5 w-[100%] bg-black"></div>
-
-    <HeroWithImageFull
-      title="ARQUITECTURA"
-      imageSrc={arquitecturaImage}
-      textPosition="right"
-      height="600px"
-      alt="Arquitectura y Diseño Urban Arquitectura"
-    >
-      <p>
-        <strong> Diseños que reflejan tu estilo de vida.<br /> </strong>
-        Fusionamos estética, funcionalidad y sostenibilidad para <strong
-          >maximizar el potencial</strong
-        >
-        de cada espacio, integrando características naturales del entorno con propuestas
-        innovadoras.
-      </p>
-    </HeroWithImageFull>
-    <div class="h-5 w-[100%] bg-black"></div>
-    <HeroWithImageFull
-      title="CONSTRUCCIÓN"
-      imageSrc={construccionImage}
-      textPosition="left"
-      height="600px"
-      alt="Construcción de Casas Urban Arquitectura"
-    >
-      <p>
-        <strong>Excelencia en cada detalle.</strong><br />
-        Nuestro equipo de ingeniería civil utiliza tecnología de vanguardia y materiales
-        de alto rendimiento para ofrecer <strong
-          >construcciones que superan expectativas</strong
-        >, garantizando calidad y eficiencia en cada proyecto.
-      </p>
-    </HeroWithImageFull>
-    <div class="h-5 w-[100%] bg-black"></div>
-
-    <!-- Replaced diagram code with the new component -->
-    <DiagramSection />
-
-    <div class="h-5 w-[100%] bg-black"></div>
-
-    <!-- Decision Flowchart Section -->
-    <!-- <DecisionFlowchartSection />
-
-    <div class="h-5 w-[100%] bg-black"></div> -->
-
-    <!-- Work Process Section -->
-    <WorkProcessSection />
-
-    <div class="h-5 w-[100%] bg-black"></div>
-
-    <!-- Contract Section -->
-    <ContractSection />
-
-    <div class="h-5 w-[100%] bg-black"></div>
-
-    <!-- Timeline Section -->
-    <TimelineSection />
-
-    <div class="h-5 w-[100%] bg-black"></div>
-    <Footer />
-  </body>
-</html>
+  <div class="h-5 w-[100%] bg-black"></div>
+</GeneralLayout>

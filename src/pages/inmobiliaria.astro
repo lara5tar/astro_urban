@@ -1,0 +1,132 @@
+---
+import GeneralLayout from "../layouts/GeneralLayout.astro";
+import { Image } from "astro:assets";
+
+// Función para obtener propiedades desde la API
+const fetchProperties = async () => {
+    try {
+        const response = await fetch(
+            "https://urbancms.up.railway.app/api/properties",
+        );
+        const data = await response.json();
+
+        // Verificar si hay datos y transformarlos al formato necesario
+        if (data && data.data && Array.isArray(data.data)) {
+            return data.data.map((property: any) => ({
+                id: property.id,
+                imageUrl:
+                    property.images && property.images.length > 0
+                        ? property.images[0]
+                        : "https://placehold.co/800x800/222/fff?text=Imagen+no+disponible",
+                text: `${property.type.toUpperCase()} - ${property.investment_formatted}`,
+                location: property.location
+                    ? `${property.location.line2}`
+                    : "Ubicación no disponible",
+                features: property.features || [],
+                type: property.type,
+                // Guardar el resto de datos que podrían ser útiles para la página de detalle
+                fullData: property,
+            }));
+        }
+        return [];
+    } catch (error) {
+        console.error("Error al obtener propiedades:", error);
+        return [];
+    }
+};
+
+// Obtener propiedades desde la API
+const properties = await fetchProperties();
+---
+
+<GeneralLayout title="Inmobiliaria - Urban Real Estate">
+    <!-- Grid de propiedades -->
+    <div class="block">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
+            {
+                properties.map((property: any, index: number) => (
+                    <div class="relative grid-item" data-index={index}>
+                        <a
+                            href={`/inmobiliaria/propiedad/${property.id}`}
+                            class="block"
+                        >
+                            <Image
+                                src={property.imageUrl}
+                                alt={`${property.type} - ${property.location}`}
+                                class="w-full aspect-square object-cover transition-transform duration-300 ease-in-out hover:scale-105"
+                                loading={index < 6 ? "eager" : "lazy"}
+                                width={800}
+                                height={800}
+                            />
+                            <div class="absolute inset-0 flex flex-col justify-center items-center bg-black/30 hover:bg-black/50 transition-colors duration-300">
+                                <div class="font-montserrat font-bold text-lg md:text-xl lg:text-2xl tracking-widest py-2 px-4 bg-black/40 uppercase text-center inline-block min-w-[150px] max-w-[90%] mx-auto border border-white/50 text-white">
+                                    {property.location}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+
+    <script>
+        // Improved domino animation effect
+        document.addEventListener("DOMContentLoaded", () => {
+            const items = document.querySelectorAll(".grid-item");
+
+            // Check if element is approaching viewport (much earlier than before)
+            const isApproachingViewport = (element: Element) => {
+                const rect = element.getBoundingClientRect();
+                const windowHeight =
+                    window.innerHeight || document.documentElement.clientHeight;
+                // Element is considered "approaching" if it's within 1.5 screen heights
+                return rect.top <= windowHeight * 1.5;
+            };
+
+            // Animate items that are approaching the viewport
+            const animateItems = () => {
+                items.forEach((item) => {
+                    if (
+                        isApproachingViewport(item) &&
+                        !item.classList.contains("animated")
+                    ) {
+                        const index = parseInt(
+                            (item as HTMLElement).dataset.index ?? "0",
+                        );
+                        const delay = index * 70; // Faster delay (70ms instead of 100ms)
+                        setTimeout(() => {
+                            item.classList.add("animated");
+                        }, delay);
+                    }
+                });
+            };
+
+            // Run animation on load and scroll
+            animateItems();
+            window.addEventListener("scroll", animateItems);
+
+            // Additional trigger for any images that might be missed
+            setTimeout(animateItems, 300);
+        });
+    </script>
+
+    <style>
+        .grid-item {
+            overflow: hidden;
+            position: relative;
+            opacity: 0;
+            transform: translateY(
+                30px
+            ); /* Reduced from 50px for subtler animation */
+            transition:
+                opacity 0.4s ease,
+                transform 0.4s ease; /* Faster transition */
+        }
+
+        .grid-item.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</GeneralLayout>

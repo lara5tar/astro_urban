@@ -1,0 +1,118 @@
+---
+interface UbicacionProps {
+    nombre: string;
+    direccion: string;
+    coordenadas: {
+        lat: number;
+        lng: number;
+    };
+}
+
+interface Props {
+    ubicaciones: UbicacionProps[];
+}
+
+const { ubicaciones } = Astro.props;
+---
+
+<section id="ubicacion" class="w-full px-4 py-12 md:py-16 bg-black">
+    <div class="container mx-auto">
+        <h2
+            class="text-2xl md:text-4xl font-poppins font-bold text-center mb-8"
+        >
+            Ubicaciones Disponibles
+        </h2>
+        <p class="text-center text-gray-300 max-w-3xl mx-auto mb-10">
+            Nuestras propiedades se encuentran en las zonas de mayor plusvalía y
+            desarrollo en Querétaro, ofreciendo seguridad, accesibilidad y todas
+            las comodidades urbanas.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {
+                ubicaciones.map((ubicacion) => (
+                    <div class="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition-all duration-300">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">
+                                {ubicacion.nombre}
+                            </h3>
+                            <p class="text-gray-300 mb-4">
+                                {ubicacion.direccion}
+                            </p>
+                            <button
+                                class="ver-mapa text-primary hover:underline flex items-center"
+                                data-lat={ubicacion.coordenadas.lat}
+                                data-lng={ubicacion.coordenadas.lng}
+                                data-nombre={ubicacion.nombre}
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5 mr-1"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                                    />
+                                </svg>
+                                Ver en mapa
+                            </button>
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
+
+        <!-- Google Maps iframe -->
+        <div class="rounded-xl overflow-hidden shadow-xl h-80 md:h-96">
+            <div id="map-container" class="w-full h-full">
+                <iframe
+                    id="google-map"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d59736.91382456652!2d-100.43881545!3d20.63011225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d35b8fdc5d3b59%3A0x8c26fbdf22d21946!2sSantiago%20de%20Quer%C3%A9taro%2C%20Qro.!5e0!3m2!1ses-419!2smx!4v1651158996414!5m2!1ses-419!2smx"
+                    width="100%"
+                    height="100%"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                >
+                </iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Funcionalidad del mapa
+    document.addEventListener("DOMContentLoaded", function () {
+        const mapButtons = document.querySelectorAll(".ver-mapa");
+        const mapIframe = document.getElementById(
+            "google-map",
+        ) as HTMLIFrameElement | null;
+
+        mapButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                const lat = button.getAttribute("data-lat");
+                const lng = button.getAttribute("data-lng");
+                const nombre = button.getAttribute("data-nombre");
+
+                // Actualizar el iframe del mapa con las nuevas coordenadas
+                if (mapIframe) {
+                    mapIframe.src = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3735!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjDCsDM3JzUyLjMiTiAxMDDCsDIxJzQyLjAiVw!5e0!3m2!1ses-419!2smx!4v1651158996414!5m2!1ses-419!2smx`;
+                }
+
+                // Scroll suave hasta el mapa
+                const mapContainer = document.getElementById("map-container");
+                if (mapContainer) {
+                    mapContainer.scrollIntoView({
+                        behavior: "smooth",
+                    });
+                }
+            });
+        });
+    });
+</script>

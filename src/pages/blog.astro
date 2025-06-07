@@ -1,11 +1,10 @@
 ---
 import GeneralLayout from "../layouts/GeneralLayout.astro";
-import { Image } from "astro:assets";
 import HeroSeccion from "../components/HeroSeccion.astro";
 import { API_CONFIG } from "../config/api.js";
 
-// Configuración de prerenderizado
-export const prerender = false;
+// Configuración básica para la API
+const apiBaseUrl = API_CONFIG.BASE_URL || "http://urbancms.up.railway.app/api/";
 
 // Definición de tipos para los artículos
 interface ArticleImage {
@@ -51,7 +50,7 @@ async function getArticles(page = 1) {
             `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ARTICLES}?page=${page}`,
         );
         const data = await response.json();
-        
+
         return data;
     } catch (error) {
         console.error("Error fetching articles:", error);
@@ -62,21 +61,21 @@ async function getArticles(page = 1) {
                 current_page: 1,
                 last_page: 1,
                 per_page: 10,
-                total: 0
+                total: 0,
             },
             links: {
                 first: null,
                 last: null,
                 prev: null,
-                next: null
-            }
+                next: null,
+            },
         };
     }
 }
 
 // Obtener el número de página actual desde los parámetros de URL
 const url = new URL(Astro.request.url);
-const currentPage = parseInt(url.searchParams.get('page') || '1');
+const currentPage = parseInt(url.searchParams.get("page") || "1");
 
 // Obtener los artículos y la información de paginación de la API
 const apiResponse = await getArticles(currentPage);
@@ -85,22 +84,22 @@ const meta = apiResponse.meta || {
     current_page: 1,
     last_page: 1,
     per_page: 10,
-    total: 0
+    total: 0,
 };
 const links = apiResponse.links || {
     first: null,
     last: null,
     prev: null,
-    next: null
+    next: null,
 };
 
 // Función para generar URL de paginación
 function getPageUrl(pageNum: number): string {
     const newUrl = new URL(Astro.request.url);
     if (pageNum === 1) {
-        newUrl.searchParams.delete('page');
+        newUrl.searchParams.delete("page");
     } else {
-        newUrl.searchParams.set('page', pageNum.toString());
+        newUrl.searchParams.set("page", pageNum.toString());
     }
     return newUrl.pathname + newUrl.search;
 }
@@ -115,207 +114,58 @@ function getPageUrl(pageNum: number): string {
         subtitle="Descubre las últimas tendencias y consejos sobre bienes raíces, construcción y arquitectura"
     />
 
-    <section class="py-12 px-4 bg-gray-100">
-        <div class="container mx-auto max-w-6xl">
-            {articles.length > 0 ? (
-                <>
-                    <!-- Lista de artículos -->
-                    <div>
-                        {/* <h2
-                            class="text-3xl font-bold mb-8 text-gray-800 font-poppins text-center"
-                        >
-                            Artículos Recientes
-                        </h2> */}
-                        <div
-                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                        >
-                            {
-                                articles.map((article: Article) => (
-                                    <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-transform hover:translate-y-[-5px] duration-300">
-                                        <div class="h-48 overflow-hidden">
-                                            <img
-                                                src={article.featured_image}
-                                                alt={article.title}
-                                                class="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
-                                            />
-                                        </div>
-                                        <div class="p-6">
-                                            <div class="flex items-center mb-2">
-                                                <span class="text-xs text-gray-500">
-                                                    {article.publication_date_formatted}
-                                                </span>
-                                                <span class="mx-2">•</span>
-                                                <span class="text-xs text-primary">
-                                                    Inmobiliaria
-                                                </span>
-                                            </div>
-                                            <h3 class="text-xl font-bold mb-2 text-gray-800 font-poppins line-clamp-2">
-                                                {article.title}
-                                            </h3>
-                                            
-                                            {/* Galería de miniaturas de imágenes */}
-                                            {article.images && article.images.length > 1 && (
-                                                <div class="flex gap-1 mb-3 overflow-x-auto pb-2">
-                                                    {article.images.slice(0, 4).map((image, index) => (
-                                                        <div class="flex-shrink-0 w-12 h-12 rounded overflow-hidden border border-gray-200">
-                                                            <img 
-                                                                src={image.url} 
-                                                                alt={`${article.title} - imagen ${index + 1}`}
-                                                                class="w-full h-full object-cover"
-                                                                loading="lazy"
-                                                            />
-                                                        </div>
-                                                    ))}
-                                                    {article.images.length > 4 && (
-                                                        <div class="flex-shrink-0 w-12 h-12 rounded overflow-hidden bg-gray-800 flex items-center justify-center text-white text-xs">
-                                                            +{article.images.length - 4}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            )}
-                                            
-                                            <p class="text-gray-600 mb-4 text-sm line-clamp-3">
-                                                {article.description}
-                                            </p>
-                                            <div class="mt-4 flex flex-wrap gap-2">
-                                                {article.keywords
-                                                    .slice(0, 3)
-                                                    .map((keyword: string) => (
-                                                        <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                                                            {keyword}
-                                                        </span>
-                                                    ))}
-                                            </div>
-                                            <div class="mt-4">
-                                                <a
-                                                    href={`/blog/${article.id}`}
-                                                    class="inline-flex items-center text-primary text-sm font-medium hover:underline"
-                                                >
-                                                    Leer más
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        class="h-4 w-4 ml-1"
-                                                        fill="none"
-                                                        viewBox="0 0 24 24"
-                                                        stroke="currentColor"
-                                                    >
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M14 5l7 7m0 0l-7 7m7-7H3"
-                                                        />
-                                                    </svg>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))
-                            }
-                        </div>
+    <section class="py-12 md:py-16 px-4 bg-gray-50">
+        <!-- Contenedor del blog con control de paginación basado en cliente -->
+        <div
+            id="blog-container"
+            class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8"
+        >
+            <!-- Indicador de carga -->
+            <div id="loading-indicator" class="w-full hidden">
+                <div class="flex flex-col items-center justify-center py-12">
+                    <div
+                        class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary mb-4"
+                    >
                     </div>
+                    <p class="text-gray-600">Cargando artículos...</p>
+                </div>
+            </div>
 
-                    <!-- Paginación -->
-                    <div class="mt-12">
-                        <div class="flex justify-center items-center gap-2">
-                            {/* Botón Anterior - siempre visible pero deshabilitado si es la primera página */}
-                            <a
-                                href={meta.current_page > 1 ? getPageUrl(meta.current_page - 1) : '#'}
-                                class={`inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium ${
-                                    meta.current_page > 1 
-                                        ? 'text-gray-700 hover:bg-gray-50' 
-                                        : 'text-gray-400 cursor-not-allowed opacity-60'
-                                } transition-colors`}
-                                onclick={meta.current_page === 1 ? "event.preventDefault()" : undefined}
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-5 w-5 mr-2"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M15 19l-7-7 7-7"
-                                    />
-                                </svg>
-                                Anterior
-                            </a>
-                            
-                            {/* Números de página */}
-                            {Array.from({ length: meta.last_page }, (_, i) => i + 1).map((pageNum) => {
-                                const visiblePageNumbers = 1; // Reducido para mostrar menos números
-                                const shouldShowPage = 
-                                    pageNum === 1 || 
-                                    pageNum === meta.last_page || 
-                                    Math.abs(pageNum - meta.current_page) < visiblePageNumbers + 1;
-                                
-                                const isLeftEllipsis = pageNum === 2 && meta.current_page > visiblePageNumbers + 2;
-                                const isRightEllipsis = pageNum === meta.last_page - 1 && meta.current_page < meta.last_page - visiblePageNumbers - 1;
-                                
-                                if (isLeftEllipsis || isRightEllipsis) {
-                                    return (
-                                        <span class="px-3 py-2 text-gray-500">...</span>
-                                    );
-                                }
-                                
-                                if (shouldShowPage) {
-                                    return (
-                                        <a
-                                            href={getPageUrl(pageNum)}
-                                            class={`inline-flex items-center justify-center w-10 h-10 rounded-full text-sm font-medium ${
-                                                pageNum === meta.current_page
-                                                    ? 'bg-primary text-white'
-                                                    : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                                            } transition-colors`}
-                                        >
-                                            {pageNum}
-                                        </a>
-                                    );
-                                }
-                                
-                                return null;
-                            })}
-                            
-                            {/* Botón Siguiente - siempre visible pero deshabilitado si es la última página */}
-                            <a
-                                href={meta.current_page < meta.last_page ? getPageUrl(meta.current_page + 1) : '#'}
-                                class={`inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium ${
-                                    meta.current_page < meta.last_page 
-                                        ? 'text-gray-700 hover:bg-gray-50' 
-                                        : 'text-gray-400 cursor-not-allowed opacity-60'
-                                } transition-colors`}
-                                onclick={meta.current_page === meta.last_page ? "event.preventDefault()" : undefined}
-                            >
-                                Siguiente
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-5 w-5 ml-2"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M9 5l7 7-7 7"
-                                    />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </>
-            ) : (
-                <!-- Mensaje cuando no hay artículos disponibles -->
-                <div class="py-16 text-center">
-                    <div class="bg-white rounded-xl p-8 shadow-md max-w-2xl mx-auto">
+            <!-- Mensaje cuando no hay artículos -->
+            <div id="no-articles-message" class="py-16 text-center hidden">
+                <div
+                    class="bg-white rounded-xl p-8 shadow-md max-w-2xl mx-auto"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-16 w-16 text-gray-300 mx-auto mb-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
+                        ></path>
+                    </svg>
+                    <h2
+                        class="text-2xl font-bold text-gray-800 mb-2 font-poppins"
+                    >
+                        No hay artículos disponibles
+                    </h2>
+                    <p class="text-gray-600 mb-6">
+                        Estamos trabajando en nuevos contenidos para nuestro
+                        blog. ¡Vuelve pronto para ver nuestros artículos!
+                    </p>
+                    <a
+                        href="/"
+                        class="inline-flex items-center px-4 py-2 bg-[#2e8d80] text-white rounded-md hover:bg-[#267569] transition-colors"
+                    >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            class="h-16 w-16 text-gray-300 mx-auto mb-4"
+                            class="h-5 w-5 mr-2"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -324,42 +174,412 @@ function getPageUrl(pageNum: number): string {
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2"
-                                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-                            />
+                                d="M3 12l2-2m0 0l7-7 7 7m-7-7v14"></path>
                         </svg>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-2 font-poppins">
-                            No hay artículos disponibles
-                        </h2>
-                        <p class="text-gray-600 mb-6">
-                            Estamos trabajando en nuevos contenidos para nuestro blog.
-                            ¡Vuelve pronto para ver nuestros artículos!
-                        </p>
-                        <a
-                            href="/"
-                            class="inline-flex items-center px-4 py-2 bg-[#2e8d80] text-white rounded-md hover:bg-[#267569] transition-colors"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="h-5 w-5 mr-2"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M3 12l2-2m0 0l7-7 7 7m-7-7v14"
-                                />
-                            </svg>
-                            Volver al inicio
-                        </a>
-                    </div>
+                        Volver al inicio
+                    </a>
                 </div>
-            )}
+            </div>
+
+            <!-- Listado de artículos -->
+            <div
+                id="articles-grid"
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+                <!-- Los artículos se cargarán aquí dinámicamente -->
+            </div>
+
+            <!-- Paginación -->
+            <div id="pagination-controls" class="mt-12 hidden">
+                <div class="flex justify-center items-center gap-2">
+                    <button
+                        id="prev-page-button"
+                        class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5 mr-2"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Anterior
+                    </button>
+
+                    <div id="page-numbers" class="flex space-x-2">
+                        <!-- Los números de página se cargarán aquí dinámicamente -->
+                    </div>
+
+                    <button
+                        id="next-page-button"
+                        class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled
+                    >
+                        Siguiente
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5 ml-2"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
     </section>
 </GeneralLayout>
+
+<script define:vars={{ apiBaseUrl }}>
+    // Variables globales
+    let currentPage = 1;
+    let totalPages = 1;
+    let isLoading = false;
+    let errorMessage = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // Referencias a elementos del DOM
+        const articlesGrid = document.getElementById("articles-grid");
+        const loadingIndicator = document.getElementById("loading-indicator");
+        const noArticlesMessage = document.getElementById(
+            "no-articles-message",
+        );
+        const paginationControls = document.getElementById(
+            "pagination-controls",
+        );
+        const prevPageButton = document.getElementById("prev-page-button");
+        const nextPageButton = document.getElementById("next-page-button");
+        const pageNumbers = document.getElementById("page-numbers");
+
+        // Inicializar con datos de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageParam = urlParams.get("page");
+
+        // Cargar los artículos iniciales
+        fetchArticles(pageParam ? parseInt(pageParam) : 1);
+
+        // Eventos para los botones de paginación
+        if (prevPageButton) {
+            prevPageButton.addEventListener("click", () => {
+                if (currentPage > 1) {
+                    fetchArticles(currentPage - 1);
+                }
+            });
+        }
+
+        if (nextPageButton) {
+            nextPageButton.addEventListener("click", () => {
+                if (currentPage < totalPages) {
+                    fetchArticles(currentPage + 1);
+                }
+            });
+        }
+
+        // Función principal para obtener artículos
+        function fetchArticles(page) {
+            // Resetear elementos UI
+            isLoading = true;
+            if (loadingIndicator) loadingIndicator.classList.remove("hidden");
+            if (articlesGrid) articlesGrid.classList.add("hidden");
+            if (noArticlesMessage) noArticlesMessage.classList.add("hidden");
+            if (paginationControls) paginationControls.classList.add("hidden");
+            if (articlesGrid) articlesGrid.innerHTML = "";
+
+            // Actualizar la URL del navegador
+            const browserUrl = new URL(window.location.href);
+            if (page === 1) {
+                browserUrl.searchParams.delete("page");
+            } else {
+                browserUrl.searchParams.set("page", page.toString());
+            }
+            window.history.pushState({}, "", browserUrl.toString());
+
+            // Construir URL de la API
+            const apiUrl = `${apiBaseUrl}articles?page=${page}`;
+
+            // Realizar la petición a la API
+            fetch(apiUrl)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`Error de API: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((result) => {
+                    if (result.success && result.data) {
+                        // Actualizar datos
+                        const articles = result.data;
+                        totalPages = result.meta.last_page;
+                        currentPage = result.meta.current_page;
+
+                        // Renderizar artículos
+                        renderArticles(articles);
+
+                        // Actualizar paginación
+                        renderPagination();
+
+                        // Desplazarse al inicio
+                        window.scrollTo({
+                            top: 0,
+                            behavior: "smooth",
+                        });
+                    } else {
+                        showNoArticles();
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error al cargar artículos:", error);
+                    showNoArticles();
+                })
+                .finally(() => {
+                    isLoading = false;
+                    if (loadingIndicator)
+                        loadingIndicator.classList.add("hidden");
+                });
+        }
+
+        // Renderizar artículos en la cuadrícula
+        function renderArticles(articles) {
+            if (!articlesGrid) return;
+
+            if (articles.length === 0) {
+                showNoArticles();
+                return;
+            }
+
+            articlesGrid.innerHTML = "";
+
+            articles.forEach((article) => {
+                const articleElement = createArticleElement(article);
+                articlesGrid.appendChild(articleElement);
+            });
+
+            articlesGrid.classList.remove("hidden");
+
+            if (paginationControls && totalPages > 1) {
+                paginationControls.classList.remove("hidden");
+            }
+        }
+
+        // Crear elemento HTML para un artículo
+        function createArticleElement(article) {
+            const articleCard = document.createElement("div");
+            articleCard.className =
+                "bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-transform hover:translate-y-[-5px] duration-300";
+
+            // Imagen destacada
+            const imageContainer = document.createElement("div");
+            imageContainer.className = "h-48 overflow-hidden";
+
+            const image = document.createElement("img");
+            image.src = article.featured_image;
+            image.alt = article.title;
+            image.className =
+                "w-full h-full object-cover transition-transform hover:scale-105 duration-500";
+
+            imageContainer.appendChild(image);
+            articleCard.appendChild(imageContainer);
+
+            // Contenido
+            const contentDiv = document.createElement("div");
+            contentDiv.className = "p-6";
+
+            // Metadata (fecha)
+            const metaDiv = document.createElement("div");
+            metaDiv.className = "flex items-center mb-2";
+
+            const dateSpan = document.createElement("span");
+            dateSpan.className = "text-xs text-gray-500";
+            dateSpan.textContent = article.publication_date_formatted;
+
+            const separatorSpan = document.createElement("span");
+            separatorSpan.className = "mx-2";
+            separatorSpan.textContent = "•";
+
+            const categorySpan = document.createElement("span");
+            categorySpan.className = "text-xs text-primary";
+            categorySpan.textContent = "Inmobiliaria";
+
+            metaDiv.appendChild(dateSpan);
+            metaDiv.appendChild(separatorSpan);
+            metaDiv.appendChild(categorySpan);
+            contentDiv.appendChild(metaDiv);
+
+            // Título
+            const title = document.createElement("h3");
+            title.className =
+                "text-xl font-bold mb-2 text-gray-800 font-poppins line-clamp-2";
+            title.textContent = article.title;
+            contentDiv.appendChild(title);
+
+            // Miniaturas de imágenes (si existen)
+            if (article.images && article.images.length > 1) {
+                const imagesContainer = document.createElement("div");
+                imagesContainer.className =
+                    "flex gap-1 mb-3 overflow-x-auto pb-2";
+
+                article.images.slice(0, 4).forEach((image, index) => {
+                    const imgContainer = document.createElement("div");
+                    imgContainer.className =
+                        "flex-shrink-0 w-12 h-12 rounded overflow-hidden border border-gray-200";
+
+                    const img = document.createElement("img");
+                    img.src = image.url;
+                    img.alt = `${article.title} - imagen ${index + 1}`;
+                    img.className = "w-full h-full object-cover";
+                    img.loading = "lazy";
+
+                    imgContainer.appendChild(img);
+                    imagesContainer.appendChild(imgContainer);
+                });
+
+                // Contador de imágenes adicionales
+                if (article.images.length > 4) {
+                    const counter = document.createElement("div");
+                    counter.className =
+                        "flex-shrink-0 w-12 h-12 rounded overflow-hidden bg-gray-800 flex items-center justify-center text-white text-xs";
+                    counter.textContent = `+${article.images.length - 4}`;
+                    imagesContainer.appendChild(counter);
+                }
+
+                contentDiv.appendChild(imagesContainer);
+            }
+
+            // Descripción
+            const description = document.createElement("p");
+            description.className = "text-gray-600 mb-4 text-sm line-clamp-3";
+            description.textContent = article.description;
+            contentDiv.appendChild(description);
+
+            // Keywords/etiquetas
+            const tagsContainer = document.createElement("div");
+            tagsContainer.className = "mt-4 flex flex-wrap gap-2";
+
+            article.keywords.slice(0, 3).forEach((keyword) => {
+                const tag = document.createElement("span");
+                tag.className =
+                    "text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full";
+                tag.textContent = keyword;
+                tagsContainer.appendChild(tag);
+            });
+
+            contentDiv.appendChild(tagsContainer);
+
+            // Enlace "Leer más"
+            const linkContainer = document.createElement("div");
+            linkContainer.className = "mt-4";
+
+            const link = document.createElement("a");
+            link.href = `/blog/${article.id}`;
+            link.className =
+                "inline-flex items-center text-primary text-sm font-medium hover:underline";
+            link.textContent = "Leer más";
+
+            const svg = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "svg",
+            );
+            svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+            svg.setAttribute("class", "h-4 w-4 ml-1");
+            svg.setAttribute("fill", "none");
+            svg.setAttribute("viewBox", "0 0 24 24");
+            svg.setAttribute("stroke", "currentColor");
+
+            const path = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "path",
+            );
+            path.setAttribute("stroke-linecap", "round");
+            path.setAttribute("stroke-linejoin", "round");
+            path.setAttribute("stroke-width", "2");
+            path.setAttribute("d", "M14 5l7 7m0 0l-7 7m7-7H3");
+
+            svg.appendChild(path);
+            link.appendChild(svg);
+            linkContainer.appendChild(link);
+            contentDiv.appendChild(linkContainer);
+
+            articleCard.appendChild(contentDiv);
+
+            return articleCard;
+        }
+
+        // Renderizar controles de paginación
+        function renderPagination() {
+            if (!pageNumbers || !prevPageButton || !nextPageButton) return;
+
+            // Limpiar números de página existentes
+            pageNumbers.innerHTML = "";
+
+            // Actualizar botones Anterior/Siguiente
+            prevPageButton.disabled = currentPage <= 1;
+            nextPageButton.disabled = currentPage >= totalPages;
+
+            // Generar números de página
+            const visiblePageNumbers = 1; // Cuántos números mostrar a cada lado
+
+            for (let i = 1; i <= totalPages; i++) {
+                // Mostrar siempre primera página, última página y páginas cercanas a la actual
+                const shouldShow =
+                    i === 1 ||
+                    i === totalPages ||
+                    Math.abs(i - currentPage) < visiblePageNumbers + 1;
+
+                const isLeftEllipsis =
+                    i === 2 && currentPage > visiblePageNumbers + 2;
+                const isRightEllipsis =
+                    i === totalPages - 1 &&
+                    currentPage < totalPages - visiblePageNumbers - 1;
+
+                if (isLeftEllipsis || isRightEllipsis) {
+                    // Mostrar puntos suspensivos
+                    const ellipsis = document.createElement("span");
+                    ellipsis.className = "px-3 py-2 text-gray-500";
+                    ellipsis.textContent = "...";
+                    pageNumbers.appendChild(ellipsis);
+                } else if (shouldShow) {
+                    // Mostrar número de página
+                    const pageButton = document.createElement("a");
+                    pageButton.href = "#";
+                    pageButton.className = `inline-flex items-center justify-center w-10 h-10 rounded-full text-sm font-medium ${
+                        i === currentPage
+                            ? "bg-[#2e8d80] text-white"
+                            : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                    } transition-colors`;
+                    pageButton.textContent = i.toString();
+
+                    // Evento al hacer clic
+                    pageButton.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        fetchArticles(i);
+                    });
+
+                    pageNumbers.appendChild(pageButton);
+                }
+            }
+        }
+
+        // Mostrar mensaje de "No hay artículos"
+        function showNoArticles() {
+            if (articlesGrid) articlesGrid.classList.add("hidden");
+            if (paginationControls) paginationControls.classList.add("hidden");
+            if (noArticlesMessage) noArticlesMessage.classList.remove("hidden");
+        }
+    });
+</script>
 
 <style>
     /* Definir el color primario para los enlaces y elementos destacados */

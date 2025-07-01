@@ -140,16 +140,16 @@ const formattedDate = publicationDate.toISOString();
 
                     <!-- Título principal -->
                     <h1
-                        class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-6 leading-tight"
+                        class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4 sm:mb-6 leading-tight"
                     >
                         {article.title}
                     </h1>
 
                     <!-- Etiquetas -->
-                    <div class="flex flex-wrap gap-2 mb-6">
+                    <div class="flex flex-wrap gap-1 sm:gap-2 mb-4 sm:mb-6">
                         {
                             article.keywords.map((keyword: string) => (
-                                <span class="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full hover:bg-gray-200 transition-colors">
+                                <span class="text-xs bg-gray-100 text-gray-700 px-2 sm:px-3 py-1 rounded-full hover:bg-gray-200 transition-colors">
                                     #{keyword}
                                 </span>
                             ))
@@ -158,7 +158,7 @@ const formattedDate = publicationDate.toISOString();
 
                     <!-- Descripción destacada (ahora arriba de la imagen) -->
                     <p
-                        class="text-lg md:text-xl text-gray-600 leading-relaxed mb-8 border-l-4 border-primary pl-4 italic"
+                        class="text-base sm:text-lg md:text-xl text-gray-600 leading-relaxed mb-6 sm:mb-8 border-l-4 border-primary pl-3 sm:pl-4 italic"
                     >
                         {article.description}
                     </p>
@@ -178,23 +178,6 @@ const formattedDate = publicationDate.toISOString();
         <!-- Contenido principal del artículo -->
         <div class="container mx-auto px-4 py-6">
             <div class="max-w-4xl mx-auto">
-                <!-- Información del autor (simulada) -->
-                <!-- <div class="flex items-center mb-10 p-4 bg-gray-50 rounded-xl">
-                    <div
-                        class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg"
-                    >
-                        UA
-                    </div>
-                    <div class="ml-4">
-                        <p class="font-medium text-gray-800">
-                            Urban Arquitectura
-                        </p>
-                        <p class="text-sm text-gray-500">
-                            Expertos en arquitectura y construcción
-                        </p>
-                    </div>
-                </div> -->
-
                 <!-- Contenido principal con estilo mejorado - SIN imágenes adicionales -->
                 <div class="prose prose-lg max-w-none">
                     {
@@ -217,49 +200,33 @@ const formattedDate = publicationDate.toISOString();
                                     );
                                 } else if (item.type === "paragraph") {
                                     content.push(
-                                        <p class="mb-6 text-gray-600 leading-relaxed text-lg">
+                                        <p class="mb-6 text-gray-600 leading-relaxed text-base sm:text-lg">
                                             {item.content}
                                         </p>,
                                     );
                                 } else if (item.type === "quote") {
                                     content.push(
-                                        <blockquote class="my-10 mx-auto max-w-3xl text-center px-8 py-6 bg-primary/5 rounded-lg italic text-gray-700 relative">
+                                        <blockquote class="my-8 mx-auto text-center px-6 py-6 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg border-l-4 border-primary shadow-sm relative">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
-                                                class="h-12 w-12 text-primary/20 absolute top-3 left-3 opacity-50"
+                                                class="h-10 w-10 text-primary/30 absolute top-3 left-3 opacity-70"
                                                 fill="currentColor"
                                                 viewBox="0 0 24 24"
                                             >
                                                 <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
                                             </svg>
-                                            <p class="mb-0 relative z-10 text-lg">
-                                                {item.content}
-                                            </p>
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                class="h-12 w-12 text-primary/20 absolute bottom-3 right-3 opacity-50 transform rotate-180"
-                                                fill="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                                            </svg>
+                                            <div class="text-gray-800 italic text-lg sm:text-xl font-serif ml-6 relative z-10">
+                                                "{item.content}"
+                                            </div>
                                         </blockquote>,
                                     );
                                 } else if (item.type === "list") {
-                                    const listItems = Array.isArray(
-                                        item.content,
-                                    )
-                                        ? item.content
-                                        : item.content
-                                              .split("\n")
-                                              .filter(
-                                                  (item) => item.trim() !== "",
-                                              );
-
+                                    // Dividir el contenido por líneas para crear elementos de lista
+                                    const listItems = item.content.split("\n");
                                     content.push(
                                         <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-600">
                                             {listItems.map((listItem) => (
-                                                <li class="mb-2">
+                                                <li class="mb-2 text-base sm:text-lg">
                                                     {listItem.trim()}
                                                 </li>
                                             ))}
@@ -267,7 +234,7 @@ const formattedDate = publicationDate.toISOString();
                                     );
                                 } else {
                                     content.push(
-                                        <p class="mb-6 text-gray-600">
+                                        <p class="mb-6 text-gray-600 text-base sm:text-lg">
                                             {item.content}
                                         </p>,
                                     );
@@ -312,16 +279,19 @@ const formattedDate = publicationDate.toISOString();
                     </div>
 
                     <!-- Compartir en redes sociales -->
-                    <div class="flex items-center">
-                        <span class="text-sm text-gray-600 mr-3"
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-0"
+                    >
+                        <span class="text-sm text-gray-600 mb-2 sm:mb-0 sm:mr-3"
                             >Compartir:</span
                         >
-                        <div class="flex space-x-2">
+                        <div class="flex space-x-3">
                             <a
                                 href={`https://www.facebook.com/sharer/sharer.php?u=${Astro.url}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full transition-colors w-8 h-8 flex items-center justify-center"
+                                class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full transition-colors w-9 h-9 sm:w-8 sm:h-8 flex items-center justify-center"
+                                aria-label="Compartir en Facebook"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -339,7 +309,8 @@ const formattedDate = publicationDate.toISOString();
                                 href={`https://twitter.com/intent/tweet?text=${article.title}&url=${Astro.url}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="bg-sky-500 hover:bg-sky-600 text-white p-2 rounded-full transition-colors w-8 h-8 flex items-center justify-center"
+                                class="bg-sky-500 hover:bg-sky-600 text-white p-2 rounded-full transition-colors w-9 h-9 sm:w-8 sm:h-8 flex items-center justify-center"
+                                aria-label="Compartir en Twitter"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -357,7 +328,8 @@ const formattedDate = publicationDate.toISOString();
                                 href={`https://api.whatsapp.com/send?text=${article.title} ${Astro.url}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full transition-colors w-8 h-8 flex items-center justify-center"
+                                class="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full transition-colors w-9 h-9 sm:w-8 sm:h-8 flex items-center justify-center"
+                                aria-label="Compartir en WhatsApp"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -375,7 +347,8 @@ const formattedDate = publicationDate.toISOString();
                                 href={`https://www.linkedin.com/shareArticle?mini=true&url=${Astro.url}&title=${article.title}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="bg-blue-700 hover:bg-blue-800 text-white p-2 rounded-full transition-colors w-8 h-8 flex items-center justify-center"
+                                class="bg-blue-700 hover:bg-blue-800 text-white p-2 rounded-full transition-colors w-9 h-9 sm:w-8 sm:h-8 flex items-center justify-center"
+                                aria-label="Compartir en LinkedIn"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -425,7 +398,7 @@ const formattedDate = publicationDate.toISOString();
 
                         <form id="comment-form">
                             <div
-                                class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"
+                                class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6"
                             >
                                 <div>
                                     <label
@@ -437,7 +410,7 @@ const formattedDate = publicationDate.toISOString();
                                         type="text"
                                         id="author_name"
                                         name="author_name"
-                                        class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm"
+                                        class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm text-sm sm:text-base"
                                         placeholder="Tu nombre"
                                         required
                                     />
@@ -452,13 +425,13 @@ const formattedDate = publicationDate.toISOString();
                                         type="email"
                                         id="author_email"
                                         name="author_email"
-                                        class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm"
+                                        class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm text-sm sm:text-base"
                                         placeholder="Tu email"
                                         required
                                     />
                                 </div>
                             </div>
-                            <div class="mb-6">
+                            <div class="mb-4 sm:mb-6">
                                 <label
                                     for="content"
                                     class="block text-sm font-medium text-gray-700 mb-1"
@@ -468,15 +441,21 @@ const formattedDate = publicationDate.toISOString();
                                     id="content"
                                     name="content"
                                     rows="4"
-                                    class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm"
+                                    class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm text-sm sm:text-base"
                                     placeholder="Escribe tu comentario aquí..."
                                     required></textarea>
                             </div>
-                            <div class="flex items-center justify-between">
-                                <div id="form-status" class="text-sm"></div>
+                            <div
+                                class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+                            >
+                                <div
+                                    id="form-status"
+                                    class="text-sm order-2 sm:order-1"
+                                >
+                                </div>
                                 <button
                                     type="submit"
-                                    class="bg-primary hover:bg-primary/90 text-gray-800 px-6 py-3 rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 font-medium text-base"
+                                    class="bg-primary hover:bg-primary/90 text-gray-800 px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 font-medium text-sm sm:text-base w-full sm:w-auto order-1 sm:order-2"
                                 >
                                     Enviar comentario
                                 </button>
@@ -487,30 +466,30 @@ const formattedDate = publicationDate.toISOString();
                     <!-- Lista de comentarios con diseño mejorado -->
                     {
                         article.comments && article.comments.length > 0 ? (
-                            <div class="space-y-6">
+                            <div class="space-y-4 sm:space-y-6">
                                 {article.comments.map((comment) => (
-                                    <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                                        <div class="flex items-start mb-4">
-                                            <div class="flex-shrink-0 bg-gradient-to-br from-primary/30 to-primary/50 w-12 h-12 rounded-full flex items-center justify-center text-gray-800 font-medium shadow-sm">
+                                    <div class="bg-white p-4 sm:p-6 rounded-xl border border-gray-100 shadow-sm">
+                                        <div class="flex flex-col sm:flex-row sm:items-start">
+                                            <div class="flex-shrink-0 bg-gradient-to-br from-primary/30 to-primary/50 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-gray-800 font-medium shadow-sm">
                                                 {comment.author_name
                                                     ? comment.author_name
                                                           .charAt(0)
                                                           .toUpperCase()
                                                     : "U"}
                                             </div>
-                                            <div class="ml-4">
-                                                <div class="flex items-center">
+                                            <div class="mt-3 sm:mt-0 sm:ml-4 flex-1">
+                                                <div class="flex flex-col sm:flex-row sm:items-center">
                                                     <h5 class="font-semibold text-gray-800">
                                                         {comment.author_name ||
                                                             "Usuario anónimo"}
                                                     </h5>
-                                                    <span class="ml-2 text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full">
+                                                    <span class="mt-1 sm:mt-0 sm:ml-2 text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full inline-block">
                                                         {
                                                             comment.created_at_formatted
                                                         }
                                                     </span>
                                                 </div>
-                                                <p class="mt-3 text-gray-600 whitespace-pre-line">
+                                                <p class="mt-2 sm:mt-3 text-gray-600 whitespace-pre-line text-sm sm:text-base">
                                                     {comment.content ||
                                                         "Sin contenido"}
                                                 </p>
@@ -520,10 +499,10 @@ const formattedDate = publicationDate.toISOString();
                                 ))}
                             </div>
                         ) : (
-                            <div class="bg-white p-8 rounded-xl border border-gray-100 shadow-sm text-center">
+                            <div class="bg-white p-6 sm:p-8 rounded-xl border border-gray-100 shadow-sm text-center">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    class="h-12 w-12 mx-auto text-gray-300 mb-4"
+                                    class="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-gray-300 mb-4"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                 >
@@ -534,10 +513,10 @@ const formattedDate = publicationDate.toISOString();
                                         d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                                     />
                                 </svg>
-                                <h4 class="text-lg font-medium text-gray-700 mb-2">
+                                <h4 class="text-base sm:text-lg font-medium text-gray-700 mb-2">
                                     No hay comentarios todavía
                                 </h4>
-                                <p class="text-gray-500">
+                                <p class="text-sm sm:text-base text-gray-500">
                                     ¡Sé el primero en comentar este artículo!
                                 </p>
                             </div>

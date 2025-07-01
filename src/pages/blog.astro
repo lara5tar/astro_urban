@@ -4,7 +4,7 @@ import HeroSeccion from "../components/HeroSeccion.astro";
 import { API_CONFIG } from "../config/api.js";
 
 // Configuración básica para la API
-const apiBaseUrl = API_CONFIG.BASE_URL || "http://urbancms.up.railway.app/api/";
+const apiBaseUrl = API_CONFIG.BASE_URL;
 
 // Definición de tipos para los artículos
 interface ArticleImage {
@@ -46,11 +46,18 @@ interface Article {
 // Función para obtener los artículos del blog desde la API
 async function getArticles(page = 1) {
     try {
-        const response = await fetch(
-            `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ARTICLES}?page=${page}`,
-        );
-        const data = await response.json();
+        const url = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ARTICLES}?page=${page}`;
+        console.log("Fetching articles from (server):", url);
 
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(
+                `Error de API: ${response.status} ${response.statusText}`,
+            );
+        }
+
+        const data = await response.json();
         return data;
     } catch (error) {
         console.error("Error fetching articles:", error);
@@ -243,7 +250,7 @@ function getPageUrl(pageNum: number): string {
     </section>
 </GeneralLayout>
 
-<script define:vars={{ apiBaseUrl }}>
+<script define:vars={{ apiBaseUrl: API_CONFIG.BASE_URL }}>
     // Variables globales
     let currentPage = 1;
     let totalPages = 1;
@@ -307,8 +314,10 @@ function getPageUrl(pageNum: number): string {
             }
             window.history.pushState({}, "", browserUrl.toString());
 
-            // Construir URL de la API
+            // Construir URL de la API - Usamos directamente la URL base que pasamos desde el componente
             const apiUrl = `${apiBaseUrl}articles?page=${page}`;
+
+            console.log("Fetching articles from:", apiUrl);
 
             // Realizar la petición a la API
             fetch(apiUrl)
@@ -378,11 +387,11 @@ function getPageUrl(pageNum: number): string {
         function createArticleElement(article) {
             const articleCard = document.createElement("div");
             articleCard.className =
-                "bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-transform hover:translate-y-[-5px] duration-300";
+                "bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 hover:translate-y-[-5px] flex flex-col h-full";
 
             // Imagen destacada
             const imageContainer = document.createElement("div");
-            imageContainer.className = "h-48 overflow-hidden";
+            imageContainer.className = "h-56 overflow-hidden relative";
 
             const image = document.createElement("img");
             image.src = article.featured_image;
@@ -390,51 +399,84 @@ function getPageUrl(pageNum: number): string {
             image.className =
                 "w-full h-full object-cover transition-transform hover:scale-105 duration-500";
 
+            // Añadir gradiente sutil sobre la imagen
+            const overlay = document.createElement("div");
+            overlay.className =
+                "absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-70";
+
             imageContainer.appendChild(image);
+            imageContainer.appendChild(overlay);
             articleCard.appendChild(imageContainer);
 
             // Contenido
             const contentDiv = document.createElement("div");
-            contentDiv.className = "p-6";
+            contentDiv.className = "p-6 flex-grow flex flex-col";
 
             // Metadata (fecha)
             const metaDiv = document.createElement("div");
-            metaDiv.className = "flex items-center mb-2";
+            metaDiv.className = "flex items-center mb-3";
 
-            const dateSpan = document.createElement("span");
-            dateSpan.className = "text-xs text-gray-500";
-            dateSpan.textContent = article.publication_date_formatted;
+            const dateSpan = document.createElement("div");
+            dateSpan.className = "flex items-center text-xs text-gray-500";
 
-            const separatorSpan = document.createElement("span");
-            separatorSpan.className = "mx-2";
-            separatorSpan.textContent = "•";
+            // Icono de calendario
+            const calendarIcon = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "svg",
+            );
+            calendarIcon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+            calendarIcon.setAttribute("class", "h-3.5 w-3.5 mr-1");
+            calendarIcon.setAttribute("fill", "none");
+            calendarIcon.setAttribute("viewBox", "0 0 24 24");
+            calendarIcon.setAttribute("stroke", "currentColor");
 
-            const categorySpan = document.createElement("span");
-            categorySpan.className = "text-xs text-primary";
-            categorySpan.textContent = "Inmobiliaria";
+            const calendarPath = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "path",
+            );
+            calendarPath.setAttribute("stroke-linecap", "round");
+            calendarPath.setAttribute("stroke-linejoin", "round");
+            calendarPath.setAttribute("stroke-width", "2");
+            calendarPath.setAttribute(
+                "d",
+                "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z",
+            );
+
+            calendarIcon.appendChild(calendarPath);
+            dateSpan.appendChild(calendarIcon);
+
+            const dateText = document.createElement("span");
+            dateText.textContent = article.publication_date_formatted;
+            dateSpan.appendChild(dateText);
 
             metaDiv.appendChild(dateSpan);
-            metaDiv.appendChild(separatorSpan);
-            metaDiv.appendChild(categorySpan);
             contentDiv.appendChild(metaDiv);
 
             // Título
             const title = document.createElement("h3");
             title.className =
-                "text-xl font-bold mb-2 text-gray-800 font-poppins line-clamp-2";
+                "text-xl font-bold mb-3 text-gray-800 font-poppins line-clamp-2 hover:text-primary transition-colors";
             title.textContent = article.title;
             contentDiv.appendChild(title);
+
+            // Descripción
+            const description = document.createElement("p");
+            description.className =
+                "text-gray-600 mb-5 text-sm leading-relaxed line-clamp-3 flex-grow";
+            description.textContent =
+                article.description || "Sin descripción disponible";
+            contentDiv.appendChild(description);
 
             // Miniaturas de imágenes (si existen)
             if (article.images && article.images.length > 1) {
                 const imagesContainer = document.createElement("div");
                 imagesContainer.className =
-                    "flex gap-1 mb-3 overflow-x-auto pb-2";
+                    "flex gap-1.5 mb-4 overflow-x-auto pb-1 scrollbar-hide";
 
                 article.images.slice(0, 4).forEach((image, index) => {
                     const imgContainer = document.createElement("div");
                     imgContainer.className =
-                        "flex-shrink-0 w-12 h-12 rounded overflow-hidden border border-gray-200";
+                        "flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border border-gray-100 hover:border-primary transition-colors";
 
                     const img = document.createElement("img");
                     img.src = image.url;
@@ -450,7 +492,7 @@ function getPageUrl(pageNum: number): string {
                 if (article.images.length > 4) {
                     const counter = document.createElement("div");
                     counter.className =
-                        "flex-shrink-0 w-12 h-12 rounded overflow-hidden bg-gray-800 flex items-center justify-center text-white text-xs";
+                        "flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center text-gray-600 text-xs font-medium";
                     counter.textContent = `+${article.images.length - 4}`;
                     imagesContainer.appendChild(counter);
                 }
@@ -458,34 +500,35 @@ function getPageUrl(pageNum: number): string {
                 contentDiv.appendChild(imagesContainer);
             }
 
-            // Descripción
-            const description = document.createElement("p");
-            description.className = "text-gray-600 mb-4 text-sm line-clamp-3";
-            description.textContent = article.description;
-            contentDiv.appendChild(description);
+            // Footer con etiquetas y botón de leer más
+            const footerDiv = document.createElement("div");
+            footerDiv.className =
+                "mt-auto pt-4 flex flex-wrap items-center justify-between border-t border-gray-100";
 
             // Keywords/etiquetas
             const tagsContainer = document.createElement("div");
-            tagsContainer.className = "mt-4 flex flex-wrap gap-2";
+            tagsContainer.className = "flex flex-wrap gap-1.5";
 
-            article.keywords.slice(0, 3).forEach((keyword) => {
+            // Aseguramos que haya un array de keywords
+            const keywords =
+                article.keywords && Array.isArray(article.keywords)
+                    ? article.keywords
+                    : [];
+            keywords.slice(0, 3).forEach((keyword) => {
                 const tag = document.createElement("span");
                 tag.className =
-                    "text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full";
+                    "text-xs bg-gray-50 text-gray-600 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors";
                 tag.textContent = keyword;
                 tagsContainer.appendChild(tag);
             });
 
-            contentDiv.appendChild(tagsContainer);
+            footerDiv.appendChild(tagsContainer);
 
             // Enlace "Leer más"
-            const linkContainer = document.createElement("div");
-            linkContainer.className = "mt-4";
-
             const link = document.createElement("a");
             link.href = `/blog/${article.id}`;
             link.className =
-                "inline-flex items-center text-primary text-sm font-medium hover:underline";
+                "inline-flex items-center text-primary text-sm font-medium hover:text-primary/80 transition-colors";
             link.textContent = "Leer más";
 
             const svg = document.createElementNS(
@@ -509,9 +552,9 @@ function getPageUrl(pageNum: number): string {
 
             svg.appendChild(path);
             link.appendChild(svg);
-            linkContainer.appendChild(link);
-            contentDiv.appendChild(linkContainer);
+            footerDiv.appendChild(link);
 
+            contentDiv.appendChild(footerDiv);
             articleCard.appendChild(contentDiv);
 
             return articleCard;

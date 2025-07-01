@@ -11,7 +11,7 @@ export default defineConfig({
 
     },
     image: {
-        domains: ["https://urbancms.up.railway.app"],
+        // domains: ["https://urbancms.up.railway.app"],
     },
 });
 

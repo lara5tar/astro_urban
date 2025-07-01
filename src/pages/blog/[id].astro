@@ -110,123 +110,142 @@ const formattedDate = publicationDate.toISOString();
     title={`${article.title} | Urban Arquitectura Blog`}
     description={article.meta_description}
 >
-    <article class="mt-0">
-        <!-- Imagen principal -->
-        <div class="relative w-full h-[40vh] md:h-[60vh]">
-            <img
-                src={article.featured_image}
-                alt={article.title}
-                class="w-full h-full object-cover"
-            />
-            <div
-                class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-            >
-                <div class="text-center px-4 max-w-4xl">
+    <article class="bg-white">
+        <!-- Cabecera de artículo con diseño moderno e imagen principal -->
+        <div class="bg-white pt-16 pb-6">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto">
+                    <!-- Datos del artículo -->
+                    <div
+                        class="flex items-center space-x-2 mb-4 text-sm text-gray-500"
+                    >
+                        <span class="flex items-center">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-4 w-4 mr-1"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                ></path>
+                            </svg>
+                            {article.publication_date_formatted}
+                        </span>
+                    </div>
+
+                    <!-- Título principal -->
                     <h1
-                        class="text-3xl md:text-5xl text-white font-bold mb-4 font-poppins"
+                        class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-6 leading-tight"
                     >
                         {article.title}
                     </h1>
-                    <div
-                        class="flex items-center justify-center text-white mb-4"
-                    >
-                        <span class="text-sm"
-                            >{article.publication_date_formatted}</span
-                        >
-                        <span class="mx-2">•</span>
-                        <span class="text-sm">Inmobiliaria</span>
-                    </div>
-                    <div class="flex flex-wrap gap-2 justify-center">
+
+                    <!-- Etiquetas -->
+                    <div class="flex flex-wrap gap-2 mb-6">
                         {
                             article.keywords.map((keyword: string) => (
-                                <span class="text-xs bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full">
-                                    {keyword}
+                                <span class="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full hover:bg-gray-200 transition-colors">
+                                    #{keyword}
                                 </span>
                             ))
                         }
+                    </div>
+
+                    <!-- Descripción destacada (ahora arriba de la imagen) -->
+                    <p
+                        class="text-lg md:text-xl text-gray-600 leading-relaxed mb-8 border-l-4 border-primary pl-4 italic"
+                    >
+                        {article.description}
+                    </p>
+
+                    <!-- Imagen principal (única) -->
+                    <div class="mb-10 rounded-xl overflow-hidden shadow-md">
+                        <img
+                            src={article.featured_image}
+                            alt={article.title}
+                            class="w-full h-auto object-cover"
+                        />
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Contenido del artículo -->
-        <div class="container mx-auto max-w-4xl px-4 py-12">
-            <div class="bg-white rounded-lg shadow-lg p-6 md:p-10">
-                <!-- Meta información -->
-                <div class="mb-8 pb-8 border-b border-gray-200">
-                    <p class="text-xl text-gray-700 font-medium mb-6">
-                        {article.description}
-                    </p>
-                    <div class="flex flex-wrap gap-2">
-                        {
-                            article.keywords.map((keyword: string) => (
-                                <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">
-                                    {keyword}
-                                </span>
-                            ))
-                        }
+        <!-- Contenido principal del artículo -->
+        <div class="container mx-auto px-4 py-6">
+            <div class="max-w-4xl mx-auto">
+                <!-- Información del autor (simulada) -->
+                <!-- <div class="flex items-center mb-10 p-4 bg-gray-50 rounded-xl">
+                    <div
+                        class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg"
+                    >
+                        UA
                     </div>
-                </div>
+                    <div class="ml-4">
+                        <p class="font-medium text-gray-800">
+                            Urban Arquitectura
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            Expertos en arquitectura y construcción
+                        </p>
+                    </div>
+                </div> -->
 
-                <!-- Contenido principal del artículo con imágenes integradas -->
+                <!-- Contenido principal con estilo mejorado - SIN imágenes adicionales -->
                 <div class="prose prose-lg max-w-none">
                     {
-                        /* Primer grupo de imágenes después de la descripción si hay imágenes */
-                    }
-                    {
-                        article.images && article.images.length > 0 && (
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                                {article.images
-                                    .slice(0, 2)
-                                    .map((image, index) => (
-                                        <div class="overflow-hidden rounded-lg shadow-sm">
-                                            <img
-                                                src={image.url}
-                                                alt={`${article.title} - imagen ${index + 1}`}
-                                                class="w-full h-auto object-cover"
-                                            />
-                                        </div>
-                                    ))}
-                            </div>
-                        )
-                    }
-
-                    {
-                        /* Renderizamos cada componente de contenido según su tipo */
-                    }
-                    {
                         article.content &&
-                            article.content.map((item, index) => {
-                                // Después de algunos bloques de contenido, intercalamos imágenes
+                            article.content.map((item) => {
                                 const content = [];
 
-                                // Mostrar diferentes componentes según el tipo
+                                // Estilos mejorados para diferentes tipos de contenido
                                 if (item.type === "heading") {
                                     content.push(
-                                        <h2 class="text-2xl font-bold text-[#2e8d80] mt-6 mb-4 font-poppins">
+                                        <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mt-10 mb-6 pb-2 border-b border-gray-200">
                                             {item.content}
                                         </h2>,
                                     );
                                 } else if (item.type === "subtitle") {
                                     content.push(
-                                        <h3 class="text-xl font-semibold text-[#2e8d80] mt-5 mb-3 font-poppins">
+                                        <h3 class="text-xl lg:text-2xl font-semibold text-gray-700 mt-8 mb-4">
                                             {item.content}
                                         </h3>,
                                     );
                                 } else if (item.type === "paragraph") {
                                     content.push(
-                                        <p class="mb-4 text-gray-700 leading-relaxed">
+                                        <p class="mb-6 text-gray-600 leading-relaxed text-lg">
                                             {item.content}
                                         </p>,
                                     );
                                 } else if (item.type === "quote") {
                                     content.push(
-                                        <blockquote class="border-l-4 border-[#2e8d80] pl-4 py-2 my-4 bg-gray-50 italic text-gray-700">
-                                            {item.content}
+                                        <blockquote class="my-10 mx-auto max-w-3xl text-center px-8 py-6 bg-primary/5 rounded-lg italic text-gray-700 relative">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                class="h-12 w-12 text-primary/20 absolute top-3 left-3 opacity-50"
+                                                fill="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                                            </svg>
+                                            <p class="mb-0 relative z-10 text-lg">
+                                                {item.content}
+                                            </p>
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                class="h-12 w-12 text-primary/20 absolute bottom-3 right-3 opacity-50 transform rotate-180"
+                                                fill="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                                            </svg>
                                         </blockquote>,
                                     );
                                 } else if (item.type === "list") {
-                                    // Si es una lista, los elementos están separados por saltos de línea (\n)
                                     const listItems = Array.isArray(
                                         item.content,
                                     )
@@ -238,9 +257,9 @@ const formattedDate = publicationDate.toISOString();
                                               );
 
                                     content.push(
-                                        <ul class="list-disc pl-5 mb-4">
+                                        <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-600">
                                             {listItems.map((listItem) => (
-                                                <li class="mb-2 text-gray-700">
+                                                <li class="mb-2">
                                                     {listItem.trim()}
                                                 </li>
                                             ))}
@@ -248,513 +267,494 @@ const formattedDate = publicationDate.toISOString();
                                     );
                                 } else {
                                     content.push(
-                                        <p class="mb-4 text-gray-700">
+                                        <p class="mb-6 text-gray-600">
                                             {item.content}
                                         </p>,
                                     );
                                 }
 
-                                // Intercalamos imágenes después de ciertos puntos del contenido
-                                // Si es un índice par y hay imágenes disponibles, mostrar una imagen después del contenido
-                                if (
-                                    index % 3 === 0 &&
-                                    article.images &&
-                                    article.images.length > 2
-                                ) {
-                                    const imageIndex =
-                                        2 + Math.floor(index / 3);
-                                    if (imageIndex < article.images.length) {
-                                        content.push(
-                                            <div class="my-8">
-                                                <img
-                                                    src={
-                                                        article.images[
-                                                            imageIndex
-                                                        ].url
-                                                    }
-                                                    alt={`${article.title} - imagen complementaria`}
-                                                    class="w-full h-auto rounded-lg shadow-md"
-                                                />
-                                            </div>,
-                                        );
-                                    }
-                                }
-
                                 return content;
                             })
                     }
-
-                    {
-                        /* Si hay más imágenes y no se han mostrado todas, mostrar las restantes al final */
-                    }
-                    {
-                        article.images &&
-                            article.images.length >
-                                2 +
-                                    Math.floor(
-                                        article.content?.length / 3 || 0,
-                                    ) && (
-                                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {article.images
-                                        .slice(
-                                            2 +
-                                                Math.floor(
-                                                    article.content?.length /
-                                                        3 || 0,
-                                                ),
-                                        )
-                                        .map((image, index) => (
-                                            <div class="overflow-hidden rounded-lg shadow-sm">
-                                                <img
-                                                    src={image.url}
-                                                    alt={`${article.title} - imagen adicional ${index + 1}`}
-                                                    class="w-full h-auto object-cover"
-                                                />
-                                            </div>
-                                        ))}
-                                </div>
-                            )
-                    }
                 </div>
 
-                <!-- Información de publicación -->
+                <!-- Pie del artículo con información de publicación -->
                 <div
-                    class="mt-12 pt-8 border-t border-gray-200 text-gray-500 text-sm"
+                    class="mt-10 pt-6 border-t border-gray-200 flex flex-col md:flex-row md:justify-between md:items-center"
                 >
-                    <p>Publicado el {article.publication_date_formatted}</p>
-                    <p>
-                        Última actualización: {
-                            new Date(article.updated_at).toLocaleDateString(
-                                "es-MX",
-                                {
-                                    day: "numeric",
-                                    month: "long",
-                                    year: "numeric",
-                                },
-                            )
-                        }
-                    </p>
+                    <div class="text-gray-500 text-sm mb-4 md:mb-0">
+                        <p class="flex items-center">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-4 w-4 mr-2 text-primary"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                ></path>
+                            </svg>
+                            Última actualización: {
+                                new Date(article.updated_at).toLocaleDateString(
+                                    "es-MX",
+                                    {
+                                        day: "numeric",
+                                        month: "long",
+                                        year: "numeric",
+                                    },
+                                )
+                            }
+                        </p>
+                    </div>
+
+                    <!-- Compartir en redes sociales -->
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-600 mr-3"
+                            >Compartir:</span
+                        >
+                        <div class="flex space-x-2">
+                            <a
+                                href={`https://www.facebook.com/sharer/sharer.php?u=${Astro.url}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full transition-colors w-8 h-8 flex items-center justify-center"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"
+                                    ></path>
+                                </svg>
+                            </a>
+                            <a
+                                href={`https://twitter.com/intent/tweet?text=${article.title}&url=${Astro.url}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="bg-sky-500 hover:bg-sky-600 text-white p-2 rounded-full transition-colors w-8 h-8 flex items-center justify-center"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"
+                                    ></path>
+                                </svg>
+                            </a>
+                            <a
+                                href={`https://api.whatsapp.com/send?text=${article.title} ${Astro.url}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full transition-colors w-8 h-8 flex items-center justify-center"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"
+                                    ></path>
+                                </svg>
+                            </a>
+                            <a
+                                href={`https://www.linkedin.com/shareArticle?mini=true&url=${Astro.url}&title=${article.title}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="bg-blue-700 hover:bg-blue-800 text-white p-2 rounded-full transition-colors w-8 h-8 flex items-center justify-center"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"
+                                    ></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Sección de comentarios -->
-                <div class="mt-12 pt-8 border-t border-gray-200">
+                <!-- Sección de comentarios mejorada -->
+                <div class="mt-16">
                     <h3
-                        class="text-xl font-bold mb-6 text-gray-800 font-poppins"
+                        class="text-2xl font-bold text-gray-800 mb-8 flex items-center"
                     >
-                        Escribir comentario
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6 mr-2 text-primary"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+                            ></path>
+                        </svg>
+                        Comentarios
                     </h3>
 
-                    <!-- Formulario para enviar un comentario -->
-                    <form id="comment-form" class="mb-10">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label
-                                    for="author_name"
-                                    class="block text-sm font-medium text-gray-700 mb-1"
-                                    >Nombre</label
-                                >
-                                <input
-                                    type="text"
-                                    id="author_name"
-                                    name="author_name"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#2e8d80] focus:border-[#2e8d80]"
-                                    placeholder="Tu nombre"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    for="author_email"
-                                    class="block text-sm font-medium text-gray-700 mb-1"
-                                    >Email</label
-                                >
-                                <input
-                                    type="email"
-                                    id="author_email"
-                                    name="author_email"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#2e8d80] focus:border-[#2e8d80]"
-                                    placeholder="Tu email"
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <div class="mb-4">
-                            <label
-                                for="content"
-                                class="block text-sm font-medium text-gray-700 mb-1"
-                                >Comentario</label
-                            >
-                            <textarea
-                                id="content"
-                                name="content"
-                                rows="4"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#2e8d80] focus:border-[#2e8d80]"
-                                placeholder="Escribe tu comentario aquí..."
-                                required></textarea>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <button
-                                type="submit"
-                                class="bg-[#2e8d80] text-white px-6 py-2 rounded-md hover:bg-[#267569] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2e8d80] focus:ring-offset-2"
-                            >
-                                Enviar comentario
-                            </button>
-                            <div id="form-status" class="text-sm"></div>
-                        </div>
-                    </form>
+                    <!-- Formulario de comentarios mejorado -->
+                    <div
+                        class="bg-gray-50 rounded-2xl p-6 md:p-8 mb-10 shadow-sm border border-gray-100"
+                    >
+                        <h4 class="text-lg font-semibold mb-6 text-gray-800">
+                            ¿Qué opinas sobre este artículo?
+                        </h4>
 
-                    <!-- Lista de comentarios -->
-                    {
-                        article.comments && article.comments.length > 0 && (
-                            <div>
-                                <h4 class="text-lg font-semibold mb-4 text-gray-800">
-                                    Comentarios ({article.comments.length})
-                                </h4>
-                                <div class="space-y-6">
-                                    {article.comments.map((comment) => (
-                                        <div class="bg-gray-50 p-4 rounded-lg">
-                                            <div class="flex items-center mb-2">
-                                                <span class="font-medium">
-                                                    {comment.author_name ||
-                                                        "Usuario anónimo"}
-                                                </span>
-                                                <span class="mx-2">•</span>
-                                                <span class="text-sm text-gray-500">
-                                                    {
-                                                        comment.created_at_formatted
-                                                    }
-                                                </span>
-                                            </div>
-                                            <p class="text-gray-700">
-                                                {comment.content ||
-                                                    "Sin contenido"}
-                                            </p>
-                                        </div>
-                                    ))}
+                        <form id="comment-form">
+                            <div
+                                class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"
+                            >
+                                <div>
+                                    <label
+                                        for="author_name"
+                                        class="block text-sm font-medium text-gray-700 mb-1"
+                                        >Nombre</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="author_name"
+                                        name="author_name"
+                                        class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm"
+                                        placeholder="Tu nombre"
+                                        required
+                                    />
                                 </div>
+                                <div>
+                                    <label
+                                        for="author_email"
+                                        class="block text-sm font-medium text-gray-700 mb-1"
+                                        >Email</label
+                                    >
+                                    <input
+                                        type="email"
+                                        id="author_email"
+                                        name="author_email"
+                                        class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm"
+                                        placeholder="Tu email"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div class="mb-6">
+                                <label
+                                    for="content"
+                                    class="block text-sm font-medium text-gray-700 mb-1"
+                                    >Comentario</label
+                                >
+                                <textarea
+                                    id="content"
+                                    name="content"
+                                    rows="4"
+                                    class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm"
+                                    placeholder="Escribe tu comentario aquí..."
+                                    required></textarea>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div id="form-status" class="text-sm"></div>
+                                <button
+                                    type="submit"
+                                    class="bg-primary hover:bg-primary/90 text-gray-800 px-6 py-3 rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 font-medium text-base"
+                                >
+                                    Enviar comentario
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Lista de comentarios con diseño mejorado -->
+                    {
+                        article.comments && article.comments.length > 0 ? (
+                            <div class="space-y-6">
+                                {article.comments.map((comment) => (
+                                    <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+                                        <div class="flex items-start mb-4">
+                                            <div class="flex-shrink-0 bg-gradient-to-br from-primary/30 to-primary/50 w-12 h-12 rounded-full flex items-center justify-center text-gray-800 font-medium shadow-sm">
+                                                {comment.author_name
+                                                    ? comment.author_name
+                                                          .charAt(0)
+                                                          .toUpperCase()
+                                                    : "U"}
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="flex items-center">
+                                                    <h5 class="font-semibold text-gray-800">
+                                                        {comment.author_name ||
+                                                            "Usuario anónimo"}
+                                                    </h5>
+                                                    <span class="ml-2 text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full">
+                                                        {
+                                                            comment.created_at_formatted
+                                                        }
+                                                    </span>
+                                                </div>
+                                                <p class="mt-3 text-gray-600 whitespace-pre-line">
+                                                    {comment.content ||
+                                                        "Sin contenido"}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div class="bg-white p-8 rounded-xl border border-gray-100 shadow-sm text-center">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-12 w-12 mx-auto text-gray-300 mb-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="1.5"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                                    />
+                                </svg>
+                                <h4 class="text-lg font-medium text-gray-700 mb-2">
+                                    No hay comentarios todavía
+                                </h4>
+                                <p class="text-gray-500">
+                                    ¡Sé el primero en comentar este artículo!
+                                </p>
                             </div>
                         )
                     }
                 </div>
-
-                <!-- Compartir en redes sociales -->
-                <div class="mt-8">
-                    <p class="text-lg font-medium mb-4">
-                        Compartir este artículo
-                    </p>
-                    <div class="flex space-x-4">
-                        <a
-                            href={`https://www.facebook.com/sharer/sharer.php?u=${Astro.url}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="text-blue-600 hover:text-blue-800"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                            >
-                                <path
-                                    d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"
-                                ></path>
-                            </svg>
-                        </a>
-                        <a
-                            href={`https://twitter.com/intent/tweet?text=${article.title}&url=${Astro.url}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="text-blue-400 hover:text-blue-600"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                            >
-                                <path
-                                    d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"
-                                ></path>
-                            </svg>
-                        </a>
-                        <a
-                            href={`https://www.linkedin.com/shareArticle?mini=true&url=${Astro.url}&title=${article.title}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="text-blue-700 hover:text-blue-900"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                            >
-                                <path
-                                    d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"
-                                ></path>
-                            </svg>
-                        </a>
-                        <a
-                            href={`https://api.whatsapp.com/send?text=${article.title} ${Astro.url}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="text-green-600 hover:text-green-800"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                            >
-                                <path
-                                    d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"
-                                ></path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
             </div>
 
-            <!-- Artículos relacionados -->
-            <!-- <div class="mt-12">
-                <h3 class="text-2xl font-bold mb-6 text-gray-800 font-poppins">
-                    Artículos relacionados
-                </h3>
-                <p class="text-gray-600 mb-8">
-                    Estos artículos pueden interesarte
-                </p>
+            <script define:vars={{ API_CONFIG, articleId }}>
+                // Script de comentarios
+                document.addEventListener("DOMContentLoaded", function () {
+                    const commentForm = document.getElementById("comment-form");
+                    const formStatus = document.getElementById("form-status");
+                    // Usar directamente el articleId pasado desde el servidor en lugar de intentar extraerlo de la URL
+                    // const articleId =
+                    //     new URLSearchParams(window.location.search).get("id") ||
+                    //     window.location.pathname
+                    //         .split("/")
+                    //         .filter(Boolean)
+                    //         .pop();
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white rounded-lg overflow-hidden shadow-md">
-                        <img
-                            src="http://th7vkryfyi.sharedwithexpose.com/storage/placeholder/blog-image-2.jpg"
-                            alt="Artículo relacionado"
-                            class="w-full h-48 object-cover"
-                        />
-                        <div class="p-4">
-                            <h4 class="font-bold text-gray-800 mb-2">
-                                Guía para inversionistas inmobiliarios
-                            </h4>
-                            <p class="text-sm text-gray-600">
-                                Todo lo que necesitas saber antes de invertir en
-                                propiedades.
-                            </p>
-                        </div>
-                    </div>
+                    if (commentForm) {
+                        commentForm.addEventListener(
+                            "submit",
+                            async function (e) {
+                                e.preventDefault();
 
-                    <div class="bg-white rounded-lg overflow-hidden shadow-md">
-                        <img
-                            src="http://th7vkryfyi.sharedwithexpose.com/storage/placeholder/blog-image-1.jpg"
-                            alt="Artículo relacionado"
-                            class="w-full h-48 object-cover"
-                        />
-                        <div class="p-4">
-                            <h4 class="font-bold text-gray-800 mb-2">
-                                Tendencias de diseño arquitectónico
-                            </h4>
-                            <p class="text-sm text-gray-600">
-                                Las tendencias que están definiendo la
-                                arquitectura moderna.
-                            </p>
-                        </div>
-                    </div>
+                                // Obtener los valores del formulario
+                                const authorNameEl =
+                                    document.getElementById("author_name");
+                                const authorEmailEl =
+                                    document.getElementById("author_email");
+                                const contentEl =
+                                    document.getElementById("content");
 
-                    <div class="bg-white rounded-lg overflow-hidden shadow-md">
-                        <img
-                            src="http://th7vkryfyi.sharedwithexpose.com/storage/placeholder/blog-image-2.jpg"
-                            alt="Artículo relacionado"
-                            class="w-full h-48 object-cover"
-                        />
-                        <div class="p-4">
-                            <h4 class="font-bold text-gray-800 mb-2">
-                                Cómo financiar tu primera propiedad
-                            </h4>
-                            <p class="text-sm text-gray-600">
-                                Opciones de financiamiento para compradores
-                                primerizos.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
+                                if (
+                                    !authorNameEl ||
+                                    !authorEmailEl ||
+                                    !contentEl
+                                ) {
+                                    console.error(
+                                        "No se pudieron encontrar los campos del formulario",
+                                    );
+                                    return;
+                                }
+
+                                // Usar una solución alternativa a 'as HTMLInputElement' para evitar errores de TypeScript
+                                const authorName =
+                                    authorNameEl && authorNameEl.value
+                                        ? authorNameEl.value
+                                        : "";
+                                const authorEmail =
+                                    authorEmailEl && authorEmailEl.value
+                                        ? authorEmailEl.value
+                                        : "";
+                                const content =
+                                    contentEl && contentEl.value
+                                        ? contentEl.value
+                                        : "";
+
+                                // Actualizar el estado del formulario
+                                if (formStatus) {
+                                    formStatus.innerHTML =
+                                        '<span class="text-blue-500">Enviando comentario...</span>';
+                                }
+
+                                try {
+                                    // Preparar los datos con el formato exacto que espera el backend
+                                    const commentData = {
+                                        author_name: authorName,
+                                        author_email: authorEmail,
+                                        content: content,
+                                    };
+
+                                    // URL para enviar comentarios - usando una construcción más segura
+                                    let commentEndpoint;
+                                    try {
+                                        if (
+                                            typeof API_CONFIG.ENDPOINTS
+                                                .ARTICLE_COMMENTS === "function"
+                                        ) {
+                                            commentEndpoint = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ARTICLE_COMMENTS(articleId)}`;
+                                        } else {
+                                            // Fallback en caso de que la función no esté disponible
+                                            commentEndpoint = `${API_CONFIG.BASE_URL}articles/${articleId}/comments`;
+                                        }
+                                    } catch (error) {
+                                        console.error(
+                                            "Error al construir el endpoint:",
+                                            error,
+                                        );
+                                        // Fallback en caso de error
+                                        commentEndpoint = `${API_CONFIG.BASE_URL}articles/${articleId}/comments`;
+                                    }
+
+                                    console.log(
+                                        "Enviando comentario a:",
+                                        commentEndpoint,
+                                    );
+                                    console.log(
+                                        "Datos del comentario:",
+                                        commentData,
+                                    );
+
+                                    const response = await fetch(
+                                        commentEndpoint,
+                                        {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type":
+                                                    "application/json",
+                                                Accept: "application/json",
+                                            },
+                                            body: JSON.stringify(commentData),
+                                        },
+                                    );
+
+                                    console.log(
+                                        "Estado de la respuesta:",
+                                        response.status,
+                                        response.statusText,
+                                    );
+
+                                    let resultText = "";
+                                    try {
+                                        const result = await response.json();
+                                        console.log(
+                                            "Respuesta completa de la API:",
+                                            result,
+                                        );
+                                        resultText = JSON.stringify(
+                                            result,
+                                            null,
+                                            2,
+                                        );
+
+                                        if (response.ok && formStatus) {
+                                            // Mostrar mensaje de éxito
+                                            formStatus.innerHTML = `
+                                                <div class="p-4 bg-green-50 text-green-700 rounded-lg mb-4">
+                                                    <p class="font-medium">¡Comentario enviado con éxito!</p>
+                                                    <p class="text-sm mt-1">Tu comentario aparecerá después de ser revisado.</p>
+                                                    <details class="mt-3">
+                                                        <summary class="cursor-pointer text-xs text-green-600">Ver detalles de respuesta</summary>
+                                                        <pre class="mt-2 p-2 bg-gray-50 rounded text-xs overflow-auto max-h-40">${resultText}</pre>
+                                                    </details>
+                                                </div>
+                                            `;
+
+                                            // Limpiar el formulario
+                                            if (
+                                                commentForm instanceof
+                                                HTMLFormElement
+                                            ) {
+                                                commentForm.reset();
+                                            }
+
+                                            // Opcional: recargar la página después de un breve retraso
+                                            setTimeout(() => {
+                                                window.location.reload();
+                                            }, 3000);
+                                        } else if (formStatus) {
+                                            // Mostrar mensaje de error
+                                            const errorMessage =
+                                                result.message ||
+                                                "Hubo un error al enviar el comentario. Por favor, intenta de nuevo.";
+                                            formStatus.innerHTML = `
+                                                <div class="p-4 bg-red-50 text-red-700 rounded-lg mb-4">
+                                                    <p class="font-medium">Error al enviar el comentario</p>
+                                                    <p class="text-sm mt-1">${errorMessage}</p>
+                                                    <details class="mt-3">
+                                                        <summary class="cursor-pointer text-xs text-red-600">Ver detalles del error</summary>
+                                                        <pre class="mt-2 p-2 bg-gray-50 rounded text-xs overflow-auto max-h-40">${resultText}</pre>
+                                                    </details>
+                                                </div>
+                                            `;
+                                        }
+                                    } catch (jsonError) {
+                                        console.error(
+                                            "Error al procesar la respuesta JSON:",
+                                            jsonError,
+                                        );
+                                        // Si no se puede parsear la respuesta como JSON
+                                        const responseText =
+                                            await response.text();
+                                        if (formStatus) {
+                                            formStatus.innerHTML = `
+                                                <div class="p-4 bg-red-50 text-red-700 rounded-lg mb-4">
+                                                    <p class="font-medium">Error al procesar la respuesta</p>
+                                                    <p class="text-sm mt-1">No se pudo interpretar la respuesta del servidor.</p>
+                                                    <details class="mt-3">
+                                                        <summary class="cursor-pointer text-xs text-red-600">Ver respuesta del servidor</summary>
+                                                        <pre class="mt-2 p-2 bg-gray-50 rounded text-xs overflow-auto max-h-40">${responseText}</pre>
+                                                    </details>
+                                                </div>
+                                            `;
+                                        }
+                                    }
+                                } catch (error) {
+                                    console.error(
+                                        "Error en la solicitud:",
+                                        error,
+                                    );
+                                    if (formStatus) {
+                                        formStatus.innerHTML = `
+                                            <div class="p-4 bg-red-50 text-red-700 rounded-lg mb-4">
+                                                <p class="font-medium">Error de conexión</p>
+                                                <p class="text-sm mt-1">No se pudo conectar con el servidor. Verifica tu conexión a internet.</p>
+                                            </div>
+                                        `;
+                                    }
+                                }
+                            },
+                        );
+                    }
+                });
+            </script>
         </div>
-    </article>
-</GeneralLayout>
-
-<style>
-    /* Estilos para el contenido de tipo blog */
-    .prose h2 {
-        font-family: "Poppins", sans-serif;
-        color: #2e8d80;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
-        font-size: 1.75rem;
-    }
-
-    .prose h3 {
-        font-family: "Poppins", sans-serif;
-        color: #2e8d80;
-        margin-top: 1.5rem;
-        margin-bottom: 0.75rem;
-        font-size: 1.35rem;
-    }
-
-    .prose p {
-        margin-bottom: 1.5rem;
-        line-height: 1.8;
-    }
-
-    .prose ul {
-        margin-bottom: 1.5rem;
-        padding-left: 1.5rem;
-    }
-
-    .prose li {
-        margin-bottom: 0.5rem;
-    }
-
-    .prose blockquote {
-        background-color: #f8f9fa;
-        border-left: 4px solid #2e8d80;
-        padding: 1.25rem;
-        margin: 1.5rem 0;
-        font-style: italic;
-        color: #4a5568;
-    }
-
-    .prose strong {
-        color: #2e8d80;
-    }
-</style>
-
-<script is:inline>
-    // Importar la configuración de la API directamente en el script del cliente
-    const apiConfig = {
-        BASE_URL: "http://urbancms.up.railway.app/api/",
-        ENDPOINTS: {
-            ARTICLES: "articles",
-            ARTICLE_DETAIL: function (id) {
-                return `articles/${id}`;
-            },
-            ARTICLE_COMMENTS: function (id) {
-                return `articles/${id}/comments`;
-            },
-        },
-    };
-
-    // Función para enviar comentarios
-    document.addEventListener("DOMContentLoaded", function () {
-        const commentForm = document.getElementById("comment-form");
-        const formStatus = document.getElementById("form-status");
-
-        if (commentForm) {
-            commentForm.addEventListener("submit", async function (e) {
-                e.preventDefault();
-
-                // Cambiar estado del botón
-                const submitButton = commentForm.querySelector(
-                    'button[type="submit"]',
-                );
-                if (!submitButton) return;
-
-                const originalButtonText =
-                    submitButton.textContent || "Enviar comentario";
-                submitButton.textContent = "Enviando...";
-                // Usamos setAttribute para evitar errores de tipo con disabled
-                submitButton.setAttribute("disabled", "true");
-
-                // Obtener datos del formulario con casting explícito
-                const authorNameInput = /** @type {HTMLInputElement} */ (
-                    document.getElementById("author_name")
-                );
-                const authorEmailInput = /** @type {HTMLInputElement} */ (
-                    document.getElementById("author_email")
-                );
-                const contentInput = /** @type {HTMLTextAreaElement} */ (
-                    document.getElementById("content")
-                );
-
-                if (
-                    !authorNameInput ||
-                    !authorEmailInput ||
-                    !contentInput ||
-                    !formStatus
-                ) {
-                    console.error(
-                        "No se encontraron los campos del formulario",
-                    );
-                    return;
-                }
-
-                const authorName = authorNameInput.value;
-                const authorEmail = authorEmailInput.value;
-                const content = contentInput.value;
-                const articleId =
-                    window.location.pathname.split("/").pop() || "";
-
-                try {
-                    // Crear la URL manualmente con la función del endpoint
-                    const commentsUrl = `${apiConfig.BASE_URL}${apiConfig.ENDPOINTS.ARTICLE_COMMENTS(articleId)}`;
-
-                    // Enviar comentario
-                    const response = await fetch(commentsUrl, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Accept: "application/json",
-                        },
-                        body: JSON.stringify({
-                            author_name: authorName,
-                            author_email: authorEmail,
-                            content: content,
-                        }),
-                    });
-
-                    const result = await response.json();
-
-                    if (result.success) {
-                        // Mostrar mensaje de éxito
-                        formStatus.textContent =
-                            "¡Comentario enviado exitosamente!";
-                        formStatus.className = "text-sm text-green-600";
-
-                        // Usamos la propiedad reset solo si es un HTMLFormElement
-                        if (typeof commentForm.reset === "function") {
-                            commentForm.reset();
-                        }
-
-                        // Recargar la página después de 2 segundos para mostrar el nuevo comentario
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 2000);
-                    } else {
-                        // Mostrar mensaje de error
-                        formStatus.textContent =
-                            result.message ||
-                            "Error al enviar el comentario. Inténtalo de nuevo.";
-                        formStatus.className = "text-sm text-red-600";
-                    }
-                } catch (error) {
-                    // Mostrar mensaje de error
-                    if (formStatus) {
-                        formStatus.textContent =
-                            "Error al enviar el comentario. Inténtalo de nuevo.";
-                        formStatus.className = "text-sm text-red-600";
-                    }
-                    console.error("Error:", error);
-                } finally {
-                    // Restaurar estado del botón
-                    if (submitButton) {
-                        submitButton.textContent = originalButtonText;
-                        // Usamos removeAttribute para evitar errores de tipo con disabled
-                        submitButton.removeAttribute("disabled");
-                    }
-                }
-            });
-        }
-    });
-</script>
+    </article></GeneralLayout
+>

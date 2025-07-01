@@ -2,6 +2,7 @@
 import GeneralLayout from "../../../layouts/GeneralLayout.astro";
 import logo from "../../../assets/logo.svg";
 import { Image } from "astro:assets";
+import { API_CONFIG } from "../../../config/api.js";
 
 // Definición de interfaces TypeScript
 interface Location {
@@ -25,7 +26,13 @@ export async function getStaticPaths() {
     const fetchProperties = async (): Promise<Property[]> => {
         try {
             const response = await fetch(
-                "https://urbancms.up.railway.app/api/properties",
+                `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PROPERTIES}`,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        // Agregar cualquier otro encabezado necesario, como autenticación
+                    },
+                },
             );
             const data = await response.json();
             return data.data || [];

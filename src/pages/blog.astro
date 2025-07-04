@@ -505,24 +505,10 @@ function getPageUrl(pageNum: number): string {
             footerDiv.className =
                 "mt-auto pt-4 flex flex-wrap items-center justify-between border-t border-gray-100";
 
-            // Keywords/etiquetas
-            const tagsContainer = document.createElement("div");
-            tagsContainer.className = "flex flex-wrap gap-1.5";
-
-            // Aseguramos que haya un array de keywords
-            const keywords =
-                article.keywords && Array.isArray(article.keywords)
-                    ? article.keywords
-                    : [];
-            keywords.slice(0, 3).forEach((keyword) => {
-                const tag = document.createElement("span");
-                tag.className =
-                    "text-xs bg-gray-50 text-gray-600 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors";
-                tag.textContent = keyword;
-                tagsContainer.appendChild(tag);
-            });
-
-            footerDiv.appendChild(tagsContainer);
+            // Crear un div espaciador para mantener el layout
+            const spacerDiv = document.createElement("div");
+            spacerDiv.className = "flex-grow";
+            footerDiv.appendChild(spacerDiv);
 
             // Enlace "Leer más"
             const link = document.createElement("a");

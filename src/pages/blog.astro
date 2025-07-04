@@ -191,22 +191,22 @@ function getPageUrl(pageNum: number): string {
             <!-- Listado de artículos -->
             <div
                 id="articles-grid"
-                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8"
             >
                 <!-- Los artículos se cargarán aquí dinámicamente -->
             </div>
 
-            <!-- Paginación -->
-            <div id="pagination-controls" class="mt-12 hidden">
-                <div class="flex justify-center items-center gap-2">
+            <!-- Paginación con diseño mejorado para móviles -->
+            <div id="pagination-controls" class="mt-8 md:mt-12 hidden">
+                <div class="flex flex-wrap justify-center items-center gap-2">
                     <button
                         id="prev-page-button"
-                        class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5 mr-2"
+                            class="h-4 w-4 mr-1 sm:mr-2"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -217,22 +217,25 @@ function getPageUrl(pageNum: number): string {
                                 stroke-width="2"
                                 d="M15 19l-7-7 7-7"></path>
                         </svg>
-                        Anterior
+                        <span>Anterior</span>
                     </button>
 
-                    <div id="page-numbers" class="flex space-x-2">
+                    <div
+                        id="page-numbers"
+                        class="flex flex-wrap justify-center space-x-1 sm:space-x-2"
+                    >
                         <!-- Los números de página se cargarán aquí dinámicamente -->
                     </div>
 
                     <button
                         id="next-page-button"
-                        class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled
                     >
-                        Siguiente
+                        <span>Siguiente</span>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5 ml-2"
+                            class="h-4 w-4 ml-1 sm:ml-2"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -389,15 +392,16 @@ function getPageUrl(pageNum: number): string {
             articleCard.className =
                 "bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 hover:translate-y-[-5px] flex flex-col h-full";
 
-            // Imagen destacada
+            // Imagen destacada con altura optimizada para móviles
             const imageContainer = document.createElement("div");
-            imageContainer.className = "h-56 overflow-hidden relative";
+            imageContainer.className = "h-48 sm:h-56 overflow-hidden relative";
 
             const image = document.createElement("img");
             image.src = article.featured_image;
             image.alt = article.title;
             image.className =
                 "w-full h-full object-cover transition-transform hover:scale-105 duration-500";
+            image.loading = "lazy"; // Mejora rendimiento
 
             // Añadir gradiente sutil sobre la imagen
             const overlay = document.createElement("div");
@@ -408,13 +412,13 @@ function getPageUrl(pageNum: number): string {
             imageContainer.appendChild(overlay);
             articleCard.appendChild(imageContainer);
 
-            // Contenido
+            // Contenido con padding ajustado para móviles
             const contentDiv = document.createElement("div");
-            contentDiv.className = "p-6 flex-grow flex flex-col";
+            contentDiv.className = "p-4 sm:p-6 flex-grow flex flex-col";
 
-            // Metadata (fecha)
+            // Metadata (fecha) con tamaño optimizado
             const metaDiv = document.createElement("div");
-            metaDiv.className = "flex items-center mb-3";
+            metaDiv.className = "flex items-center mb-2 sm:mb-3";
 
             const dateSpan = document.createElement("div");
             dateSpan.className = "flex items-center text-xs text-gray-500";
@@ -452,31 +456,31 @@ function getPageUrl(pageNum: number): string {
             metaDiv.appendChild(dateSpan);
             contentDiv.appendChild(metaDiv);
 
-            // Título
+            // Título con tamaños responsivos
             const title = document.createElement("h3");
             title.className =
-                "text-xl font-bold mb-3 text-gray-800 font-poppins line-clamp-2 hover:text-primary transition-colors";
+                "text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-gray-800 font-poppins line-clamp-2 hover:text-primary transition-colors";
             title.textContent = article.title;
             contentDiv.appendChild(title);
 
-            // Descripción
+            // Descripción con tamaño de texto mejorado
             const description = document.createElement("p");
             description.className =
-                "text-gray-600 mb-5 text-sm leading-relaxed line-clamp-3 flex-grow";
+                "text-gray-600 mb-4 sm:mb-5 text-sm leading-relaxed line-clamp-3 flex-grow";
             description.textContent =
                 article.description || "Sin descripción disponible";
             contentDiv.appendChild(description);
 
-            // Miniaturas de imágenes (si existen)
+            // Miniaturas de imágenes optimizadas para móvil (si existen)
             if (article.images && article.images.length > 1) {
                 const imagesContainer = document.createElement("div");
                 imagesContainer.className =
-                    "flex gap-1.5 mb-4 overflow-x-auto pb-1 scrollbar-hide";
+                    "flex gap-1.5 mb-3 sm:mb-4 overflow-x-auto pb-1 scrollbar-hide";
 
                 article.images.slice(0, 4).forEach((image, index) => {
                     const imgContainer = document.createElement("div");
                     imgContainer.className =
-                        "flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border border-gray-100 hover:border-primary transition-colors";
+                        "flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden border border-gray-100 hover:border-primary transition-colors";
 
                     const img = document.createElement("img");
                     img.src = image.url;
@@ -492,7 +496,7 @@ function getPageUrl(pageNum: number): string {
                 if (article.images.length > 4) {
                     const counter = document.createElement("div");
                     counter.className =
-                        "flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center text-gray-600 text-xs font-medium";
+                        "flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center text-gray-600 text-xs font-medium";
                     counter.textContent = `+${article.images.length - 4}`;
                     imagesContainer.appendChild(counter);
                 }
@@ -500,21 +504,21 @@ function getPageUrl(pageNum: number): string {
                 contentDiv.appendChild(imagesContainer);
             }
 
-            // Footer con etiquetas y botón de leer más
+            // Footer con etiquetas y botón de leer más - mejor espacio para tocar
             const footerDiv = document.createElement("div");
             footerDiv.className =
-                "mt-auto pt-4 flex flex-wrap items-center justify-between border-t border-gray-100";
+                "mt-auto pt-3 sm:pt-4 flex flex-wrap items-center justify-between border-t border-gray-100";
 
             // Crear un div espaciador para mantener el layout
             const spacerDiv = document.createElement("div");
             spacerDiv.className = "flex-grow";
             footerDiv.appendChild(spacerDiv);
 
-            // Enlace "Leer más"
+            // Enlace "Leer más" con área de toque mejorada
             const link = document.createElement("a");
             link.href = `/blog/${article.id}`;
             link.className =
-                "inline-flex items-center text-primary text-sm font-medium hover:text-primary/80 transition-colors";
+                "inline-flex items-center text-primary text-sm font-medium hover:text-primary/80 transition-colors py-1 px-1";
             link.textContent = "Leer más";
 
             const svg = document.createElementNS(
@@ -557,8 +561,10 @@ function getPageUrl(pageNum: number): string {
             prevPageButton.disabled = currentPage <= 1;
             nextPageButton.disabled = currentPage >= totalPages;
 
-            // Generar números de página
-            const visiblePageNumbers = 1; // Cuántos números mostrar a cada lado
+            // En dispositivos móviles, mostrar menos números de página
+            const isMobile = window.innerWidth < 640;
+            // Cuántos números mostrar a cada lado
+            const visiblePageNumbers = isMobile ? 0 : 1;
 
             for (let i = 1; i <= totalPages; i++) {
                 // Mostrar siempre primera página, última página y páginas cercanas a la actual
@@ -576,19 +582,24 @@ function getPageUrl(pageNum: number): string {
                 if (isLeftEllipsis || isRightEllipsis) {
                     // Mostrar puntos suspensivos
                     const ellipsis = document.createElement("span");
-                    ellipsis.className = "px-3 py-2 text-gray-500";
+                    ellipsis.className =
+                        "px-2 py-1 sm:px-3 sm:py-2 text-gray-500";
                     ellipsis.textContent = "...";
                     pageNumbers.appendChild(ellipsis);
                 } else if (shouldShow) {
-                    // Mostrar número de página
+                    // Mostrar número de página con tamaño optimizado para móvil
                     const pageButton = document.createElement("a");
                     pageButton.href = "#";
-                    pageButton.className = `inline-flex items-center justify-center w-10 h-10 rounded-full text-sm font-medium ${
+                    pageButton.className = `inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full text-sm font-medium ${
                         i === currentPage
                             ? "bg-[#2e8d80] text-white"
                             : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
                     } transition-colors`;
                     pageButton.textContent = i.toString();
+
+                    // Ampliar el área táctil para móviles
+                    pageButton.style.minWidth = isMobile ? "32px" : "40px";
+                    pageButton.style.minHeight = isMobile ? "32px" : "40px";
 
                     // Evento al hacer clic
                     pageButton.addEventListener("click", (e) => {

@@ -112,18 +112,18 @@ const formattedDate = publicationDate.toISOString();
     description={article.meta_description}
 >
     <article class="bg-white">
-        <!-- Cabecera de artículo con diseño moderno e imagen principal -->
-        <div class="bg-white pt-16 pb-6">
+        <!-- Cabecera de artículo con diseño mejorado para dispositivos móviles -->
+        <div class="bg-white pt-10 sm:pt-16 pb-4 sm:pb-6">
             <div class="container mx-auto px-4">
                 <div class="max-w-4xl mx-auto">
                     <!-- Datos del artículo -->
                     <div
-                        class="flex items-center space-x-2 mb-4 text-sm text-gray-500"
+                        class="flex items-center space-x-2 mb-3 sm:mb-4 text-xs sm:text-sm text-gray-500"
                     >
                         <span class="flex items-center">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                class="h-4 w-4 mr-1"
+                                class="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -139,50 +139,57 @@ const formattedDate = publicationDate.toISOString();
                         </span>
                     </div>
 
-                    <!-- Título principal -->
+                    <!-- Título principal optimizado para móvil -->
                     <h1
-                        class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4 sm:mb-6 leading-tight"
+                        class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-800 mb-3 sm:mb-4 md:mb-6 leading-tight"
                     >
                         {article.title}
                     </h1>
 
-                    <!-- Etiquetas -->
-                    <div class="flex flex-wrap gap-1 sm:gap-2 mb-4 sm:mb-6">
+                    <!-- Etiquetas con mejor espaciado para tocar -->
+                    <div
+                        class="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4 md:mb-6"
+                    >
                         {
                             article.keywords.map((keyword: string) => (
-                                <span class="text-xs bg-gray-100 text-gray-700 px-2 sm:px-3 py-1 rounded-full hover:bg-gray-200 transition-colors">
+                                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1.5 rounded-full hover:bg-gray-200 transition-colors">
                                     #{keyword}
                                 </span>
                             ))
                         }
                     </div>
 
-                    <!-- Descripción destacada (ahora arriba de la imagen) -->
+                    <!-- Descripción destacada con mejor legibilidad en móvil -->
                     <p
-                        class="text-base sm:text-lg md:text-xl text-gray-600 leading-relaxed mb-6 sm:mb-8 border-l-4 border-primary pl-3 sm:pl-4 italic"
+                        class="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed mb-4 sm:mb-6 md:mb-8 border-l-4 border-primary pl-3 sm:pl-4 italic"
                     >
                         {article.description}
                     </p>
 
-                    <!-- Imagen principal (única) -->
+                    <!-- Imagen principal optimizada para carga en móvil -->
                     <div
-                        class="mb-10 rounded-xl overflow-hidden shadow-md mx-auto max-w-2xl"
+                        class="mb-6 sm:mb-8 md:mb-10 rounded-xl overflow-hidden shadow-md mx-auto max-w-2xl"
                     >
                         <img
                             src={article.featured_image}
                             alt={article.title}
                             class="w-full h-auto object-cover"
+                            loading="eager"
+                            width="800"
+                            height="500"
                         />
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Contenido principal del artículo -->
-        <div class="container mx-auto px-4 py-6">
+        <!-- Contenido principal del artículo optimizado para móviles -->
+        <div class="container mx-auto px-4 py-4 sm:py-6">
             <div class="max-w-4xl mx-auto">
-                <!-- Contenido principal con estilo mejorado - SIN imágenes adicionales -->
-                <div class="prose prose-lg max-w-none">
+                <!-- Contenido principal con estilo mejorado para móviles -->
+                <div
+                    class="prose prose-sm sm:prose-base lg:prose-lg max-w-none"
+                >
                     {
                         article.content &&
                             article.content.map((item) => {
@@ -191,34 +198,34 @@ const formattedDate = publicationDate.toISOString();
                                 // Estilos mejorados para diferentes tipos de contenido
                                 if (item.type === "heading") {
                                     content.push(
-                                        <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mt-10 mb-6 pb-2 border-b border-gray-200">
+                                        <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mt-6 sm:mt-10 mb-4 sm:mb-6 pb-2 border-b border-gray-200">
                                             {item.content}
                                         </h2>,
                                     );
                                 } else if (item.type === "subtitle") {
                                     content.push(
-                                        <h3 class="text-xl lg:text-2xl font-semibold text-gray-700 mt-8 mb-4">
+                                        <h3 class="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-700 mt-5 sm:mt-8 mb-3 sm:mb-4">
                                             {item.content}
                                         </h3>,
                                     );
                                 } else if (item.type === "paragraph") {
                                     content.push(
-                                        <p class="mb-6 text-gray-600 leading-relaxed text-base sm:text-lg">
+                                        <p class="mb-4 sm:mb-6 text-gray-600 leading-relaxed text-sm sm:text-base lg:text-lg">
                                             {item.content}
                                         </p>,
                                     );
                                 } else if (item.type === "quote") {
                                     content.push(
-                                        <blockquote class="my-8 mx-auto text-center px-6 py-6 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg border-l-4 border-primary shadow-sm relative">
+                                        <blockquote class="my-6 sm:my-8 mx-auto text-center px-4 sm:px-6 py-4 sm:py-6 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg border-l-4 border-primary shadow-sm relative">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
-                                                class="h-10 w-10 text-primary/30 absolute top-3 left-3 opacity-70"
+                                                class="h-8 w-8 sm:h-10 sm:w-10 text-primary/30 absolute top-3 left-3 opacity-70"
                                                 fill="currentColor"
                                                 viewBox="0 0 24 24"
                                             >
                                                 <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
                                             </svg>
-                                            <div class="text-gray-800 italic text-lg sm:text-xl font-serif ml-6 relative z-10">
+                                            <div class="text-gray-800 italic text-base sm:text-lg lg:text-xl font-serif ml-4 sm:ml-6 relative z-10">
                                                 "{item.content}"
                                             </div>
                                         </blockquote>,
@@ -227,9 +234,9 @@ const formattedDate = publicationDate.toISOString();
                                     // Dividir el contenido por líneas para crear elementos de lista
                                     const listItems = item.content.split("\n");
                                     content.push(
-                                        <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-600">
+                                        <ul class="list-disc pl-5 sm:pl-6 mb-4 sm:mb-6 space-y-1.5 sm:space-y-2 text-gray-600">
                                             {listItems.map((listItem) => (
-                                                <li class="mb-2 text-base sm:text-lg">
+                                                <li class="mb-1.5 sm:mb-2 text-sm sm:text-base lg:text-lg">
                                                     {listItem.trim()}
                                                 </li>
                                             ))}
@@ -237,7 +244,7 @@ const formattedDate = publicationDate.toISOString();
                                     );
                                 } else {
                                     content.push(
-                                        <p class="mb-6 text-gray-600 text-base sm:text-lg">
+                                        <p class="mb-4 sm:mb-6 text-gray-600 text-sm sm:text-base lg:text-lg">
                                             {item.content}
                                         </p>,
                                     );
@@ -248,15 +255,15 @@ const formattedDate = publicationDate.toISOString();
                     }
                 </div>
 
-                <!-- Pie del artículo con información de publicación -->
+                <!-- Pie del artículo con información de publicación optimizado para móvil -->
                 <div
-                    class="mt-10 pt-6 border-t border-gray-200 flex flex-col md:flex-row md:justify-between md:items-center"
+                    class="mt-8 sm:mt-10 pt-4 sm:pt-6 border-t border-gray-200 flex flex-col md:flex-row md:justify-between md:items-center"
                 >
-                    <div class="text-gray-500 text-sm mb-4 md:mb-0">
+                    <div class="text-gray-500 text-xs sm:text-sm mb-4 md:mb-0">
                         <p class="flex items-center">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                class="h-4 w-4 mr-2 text-primary"
+                                class="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-primary"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -281,19 +288,20 @@ const formattedDate = publicationDate.toISOString();
                         </p>
                     </div>
 
-                    <!-- Compartir en redes sociales -->
+                    <!-- Compartir en redes sociales con mejor área táctil -->
                     <div
                         class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-0"
                     >
-                        <span class="text-sm text-gray-600 mb-2 sm:mb-0 sm:mr-3"
+                        <span
+                            class="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-0 sm:mr-3"
                             >Compartir:</span
                         >
-                        <div class="flex space-x-3">
+                        <div class="flex space-x-4">
                             <a
                                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(Astro.url.toString())}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="bg-sky-500 hover:bg-sky-600 text-white p-2 rounded-full transition-colors w-9 h-9 sm:w-8 sm:h-8 flex items-center justify-center"
+                                class="bg-sky-500 hover:bg-sky-600 text-white p-2.5 rounded-full transition-colors w-10 h-10 sm:w-9 sm:h-9 flex items-center justify-center"
                                 aria-label="Compartir en Twitter"
                             >
                                 <svg
@@ -312,7 +320,7 @@ const formattedDate = publicationDate.toISOString();
                                 href={`https://api.whatsapp.com/send?text=${encodeURIComponent(article.title + " " + Astro.url.toString())}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full transition-colors w-9 h-9 sm:w-8 sm:h-8 flex items-center justify-center"
+                                class="bg-green-500 hover:bg-green-600 text-white p-2.5 rounded-full transition-colors w-10 h-10 sm:w-9 sm:h-9 flex items-center justify-center"
                                 aria-label="Compartir en WhatsApp"
                             >
                                 <svg
@@ -331,14 +339,14 @@ const formattedDate = publicationDate.toISOString();
                     </div>
                 </div>
 
-                <!-- Sección de comentarios mejorada -->
-                <div class="mt-16">
+                <!-- Sección de comentarios mejorada para móviles -->
+                <div class="mt-10 sm:mt-16">
                     <h3
-                        class="text-2xl font-bold text-gray-800 mb-8 flex items-center"
+                        class="text-xl sm:text-2xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6 mr-2 text-primary"
+                            class="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-primary"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -353,17 +361,19 @@ const formattedDate = publicationDate.toISOString();
                         Comentarios
                     </h3>
 
-                    <!-- Formulario de comentarios mejorado -->
+                    <!-- Formulario de comentarios mejorado para móvil -->
                     <div
-                        class="bg-gray-50 rounded-2xl p-6 md:p-8 mb-10 shadow-sm border border-gray-100"
+                        class="bg-gray-50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-8 mb-8 sm:mb-10 shadow-sm border border-gray-100"
                     >
-                        <h4 class="text-lg font-semibold mb-6 text-gray-800">
+                        <h4
+                            class="text-base sm:text-lg font-semibold mb-3 sm:mb-4 md:mb-6 text-gray-800"
+                        >
                             ¿Qué opinas sobre este artículo?
                         </h4>
 
                         <form id="comment-form">
                             <div
-                                class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6"
+                                class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6 mb-3 sm:mb-4 md:mb-6"
                             >
                                 <div>
                                     <label
@@ -375,7 +385,7 @@ const formattedDate = publicationDate.toISOString();
                                         type="text"
                                         id="name"
                                         name="name"
-                                        class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm text-sm sm:text-base"
+                                        class="w-full px-3 sm:px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm text-sm sm:text-base"
                                         placeholder="Tu nombre"
                                         required
                                     />
@@ -390,13 +400,13 @@ const formattedDate = publicationDate.toISOString();
                                         type="email"
                                         id="email"
                                         name="email"
-                                        class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm text-sm sm:text-base"
+                                        class="w-full px-3 sm:px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm text-sm sm:text-base"
                                         placeholder="Tu email"
                                         required
                                     />
                                 </div>
                             </div>
-                            <div class="mb-4 sm:mb-6">
+                            <div class="mb-3 sm:mb-4">
                                 <label
                                     for="message"
                                     class="block text-sm font-medium text-gray-700 mb-1"
@@ -406,21 +416,21 @@ const formattedDate = publicationDate.toISOString();
                                     id="message"
                                     name="message"
                                     rows="4"
-                                    class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm text-sm sm:text-base"
+                                    class="w-full px-3 sm:px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm text-sm sm:text-base"
                                     placeholder="Escribe tu comentario aquí..."
                                     required></textarea>
                             </div>
                             <div
-                                class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+                                class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
                             >
                                 <div
                                     id="form-status"
-                                    class="text-sm order-2 sm:order-1"
+                                    class="text-xs sm:text-sm order-2 sm:order-1"
                                 >
                                 </div>
                                 <button
                                     type="submit"
-                                    class="bg-primary hover:bg-primary/90 text-gray-800 px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 font-medium text-sm sm:text-base w-full sm:w-auto order-1 sm:order-2"
+                                    class="bg-primary hover:bg-primary/90 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 font-medium text-sm sm:text-base w-full sm:w-auto order-1 sm:order-2 hover:shadow-lg"
                                 >
                                     Enviar comentario
                                 </button>
@@ -428,32 +438,32 @@ const formattedDate = publicationDate.toISOString();
                         </form>
                     </div>
 
-                    <!-- Lista de comentarios con diseño mejorado -->
+                    <!-- Lista de comentarios optimizada para móvil -->
                     {
                         article.comments && article.comments.length > 0 ? (
-                            <div class="space-y-4 sm:space-y-6">
+                            <div class="space-y-3 sm:space-y-4 md:space-y-6">
                                 {article.comments.map((comment) => (
-                                    <div class="bg-white p-4 sm:p-6 rounded-xl border border-gray-100 shadow-sm">
-                                        <div class="flex flex-col sm:flex-row sm:items-start">
-                                            <div class="flex-shrink-0 bg-gradient-to-br from-primary/30 to-primary/50 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-gray-800 font-medium shadow-sm">
+                                    <div class="bg-white p-3 sm:p-4 md:p-6 rounded-xl border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md">
+                                        <div class="flex items-start">
+                                            <div class="flex-shrink-0 bg-gradient-to-br from-primary/30 to-primary/50 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-gray-800 font-medium shadow-sm">
                                                 {comment.name
                                                     ? comment.name
                                                           .charAt(0)
                                                           .toUpperCase()
                                                     : "U"}
                                             </div>
-                                            <div class="mt-3 sm:mt-0 sm:ml-4 flex-1">
-                                                <div class="flex flex-col sm:flex-row sm:items-center">
-                                                    <h5 class="font-semibold text-gray-800">
+                                            <div class="ml-2 sm:ml-3 md:ml-4 flex-1">
+                                                <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                                    <h5 class="font-semibold text-gray-800 text-sm sm:text-base">
                                                         {comment.name ||
                                                             "Usuario anónimo"}
                                                     </h5>
-                                                    <span class="mt-1 sm:mt-0 sm:ml-2 text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full inline-block">
+                                                    <span class="text-xs bg-gray-100 text-gray-500 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full inline-block">
                                                         {comment.created_at_formatted ||
                                                             comment.formatted_date}
                                                     </span>
                                                 </div>
-                                                <p class="mt-2 sm:mt-3 text-gray-600 whitespace-pre-line text-sm sm:text-base">
+                                                <p class="mt-1.5 sm:mt-2 text-gray-600 whitespace-pre-line text-xs sm:text-sm md:text-base leading-relaxed">
                                                     {comment.message ||
                                                         "Sin contenido"}
                                                 </p>
@@ -463,24 +473,25 @@ const formattedDate = publicationDate.toISOString();
                                 ))}
                             </div>
                         ) : (
-                            <div class="bg-white p-6 sm:p-8 rounded-xl border border-gray-100 shadow-sm text-center">
+                            <div class="bg-white p-4 sm:p-6 md:p-8 rounded-xl border border-gray-100 shadow-sm text-center">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    class="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-gray-300 mb-4"
+                                    class="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 mx-auto text-gray-300 mb-3 sm:mb-4"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                 >
                                     <path
+                                        stroke="currentColor"
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
                                         stroke-width="1.5"
                                         d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                                     />
                                 </svg>
-                                <h4 class="text-base sm:text-lg font-medium text-gray-700 mb-2">
+                                <h4 class="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2">
                                     No hay comentarios todavía
                                 </h4>
-                                <p class="text-sm sm:text-base text-gray-500">
+                                <p class="text-xs sm:text-sm md:text-base text-gray-500">
                                     ¡Sé el primero en comentar este artículo!
                                 </p>
                             </div>

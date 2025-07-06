@@ -3,19 +3,38 @@ import GeneralLayout from "../layouts/GeneralLayout.astro";
 import { Image } from "astro:assets";
 import { API_CONFIG } from "../config/api.js";
 
+// Forzar renderizado del lado del servidor para contenido dinámico
+export const prerender = false;
+
 // Función para obtener propiedades desde la API con soporte para paginación
 const fetchProperties = async (page = 1) => {
     try {
+        console.log(
+            `Fetching properties from API: ${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PROPERTIES}?page=${page}`,
+        );
+
         const response = await fetch(
             `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PROPERTIES}?page=${page}`,
             {
                 headers: {
                     "Content-Type": "application/json",
-                    // Agregar cualquier otro encabezado necesario, como autenticación
+                    Accept: "application/json",
+                    // Agregar cache busting para evitar cache del navegador
+                    "Cache-Control": "no-cache, no-store, must-revalidate",
+                    Pragma: "no-cache",
+                    Expires: "0",
                 },
+                // Evitar cache del fetch
+                cache: "no-store",
             },
         );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
+        console.log(`Fetched ${data?.data?.length || 0} properties from API`);
 
         // Verificar si hay datos y transformarlos al formato necesario
         if (data && data.data && Array.isArray(data.data)) {
@@ -51,9 +70,27 @@ const initialData = await fetchProperties(1);
 const properties = initialData.properties;
 const initialMeta = initialData.meta;
 const hasMorePages = initialData.hasMorePages;
+
+// Agregar timestamp para debugging
+const buildTime = new Date().toISOString();
+console.log(
+    `Page rendered at: ${buildTime}, Properties count: ${properties.length}`,
+);
 ---
 
 <GeneralLayout title="Inmobiliaria - Urban Real Estate">
+    <!-- Debug info (solo visible en desarrollo) -->
+    {
+        process.env.NODE_ENV === "development" && (
+            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
+                <p class="font-bold">Debug Info:</p>
+                <p>Página renderizada: {buildTime}</p>
+                <p>Propiedades cargadas: {properties.length}</p>
+                <p>API URL: {API_CONFIG.BASE_URL}</p>
+            </div>
+        )
+    }
+
     <!-- Grid de propiedades -->
     <div class="block">
         <div
@@ -105,8 +142,14 @@ const hasMorePages = initialData.hasMorePages;
         </div>
     </div>
 
-    <script define:vars={{ initialMeta, hasMorePages }}>
-        // Improved domino animation effect
+    <script
+        define:vars={{
+            initialMeta,
+            hasMorePages,
+            apiBaseUrl: API_CONFIG.BASE_URL,
+        }}
+    >
+        // Improved domino animation effect with fresh data fetching
         document.addEventListener("DOMContentLoaded", () => {
             const items = document.querySelectorAll(".grid-item");
             const propertiesGrid = document.getElementById("properties-grid");
@@ -152,36 +195,62 @@ const hasMorePages = initialData.hasMorePages;
 
                 try {
                     const nextPage = currentPage + 1;
-                    const response = await fetch(
-                        `/api/properties?page=${nextPage}`,
-                    );
+                    // Usar la URL base de la API directamente con cache busting
+                    const cacheBuster = new Date().getTime();
+                    const apiUrl = `${apiBaseUrl}properties?page=${nextPage}&_t=${cacheBuster}`;
+
+                    console.log(`Loading more properties from: ${apiUrl}`);
+
+                    const response = await fetch(apiUrl, {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                            "Cache-Control":
+                                "no-cache, no-store, must-revalidate",
+                            Pragma: "no-cache",
+                        },
+                        cache: "no-store",
+                    });
 
                     if (!response.ok) {
-                        throw new Error("Error al cargar más propiedades");
+                        throw new Error(
+                            `Error al cargar más propiedades: ${response.status}`,
+                        );
                     }
 
                     const data = await response.json();
+                    console.log(
+                        `Loaded ${data?.data?.length || 0} more properties`,
+                    );
 
                     // Si hay propiedades, agregarlas al grid
-                    if (data.properties && data.properties.length > 0) {
+                    if (data.data && data.data.length > 0) {
                         currentPage = nextPage;
 
                         // Agregar nuevas propiedades al grid
-                        data.properties.forEach((property, idx) => {
+                        data.data.forEach((property, idx) => {
                             const globalIndex =
                                 document.querySelectorAll(".grid-item").length;
-
                             const propertyElement =
                                 document.createElement("div");
                             propertyElement.className = "relative grid-item";
                             propertyElement.dataset.index =
                                 globalIndex.toString();
 
+                            const imageUrl =
+                                property.images && property.images.length > 0
+                                    ? property.images[0]
+                                    : "https://placehold.co/800x800/222/fff?text=Imagen+no+disponible";
+
+                            const location = property.location
+                                ? property.location.line2
+                                : "Ubicación no disponible";
+
                             propertyElement.innerHTML = `
                                 <a href="/inmobiliaria/propiedad/${property.id}" class="block">
                                     <img
-                                        src="${property.imageUrl}"
-                                        alt="${property.type} - ${property.location}"
+                                        src="${imageUrl}"
+                                        alt="${property.type} - ${location}"
                                         class="w-full aspect-square object-cover transition-transform duration-300 ease-in-out hover:scale-105"
                                         loading="lazy"
                                         width="800"
@@ -189,7 +258,7 @@ const hasMorePages = initialData.hasMorePages;
                                     />
                                     <div class="absolute inset-0 flex flex-col justify-center items-center bg-black/30 hover:bg-black/50 transition-colors duration-300">
                                         <div class="font-montserrat font-bold text-lg md:text-xl lg:text-2xl tracking-widest py-2 px-4 bg-black/40 uppercase text-center inline-block min-w-[150px] max-w-[90%] mx-auto border border-white/50 text-white">
-                                            ${property.location}
+                                            ${location}
                                         </div>
                                     </div>
                                 </a>
@@ -199,7 +268,8 @@ const hasMorePages = initialData.hasMorePages;
                         });
 
                         // Comprobar si hay más páginas
-                        noMorePages = !data.hasMorePages;
+                        noMorePages =
+                            data.meta?.current_page >= data.meta?.last_page;
 
                         // Animar nuevos elementos
                         setTimeout(animateItems, 100);

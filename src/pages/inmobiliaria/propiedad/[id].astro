@@ -1,292 +1,305 @@
 ---
 import GeneralLayout from "../../../layouts/GeneralLayout.astro";
-import logo from "../../../assets/logo.svg";
 import { Image } from "astro:assets";
+import logo from "/src/public/icons/logo_movil.webp";
 import { API_CONFIG } from "../../../config/api.js";
 
-// Definición de interfaces TypeScript
-interface Location {
+// Forzar renderizado del lado del servidor para contenido dinámico
+export const prerender = false;
+
+// Definir tipos para la propiedad
+interface PropertyLocation {
     line1?: string;
     line2?: string;
     line3?: string;
 }
 
 interface Property {
-    id: number;
+    id: string;
     type: string;
     is_for_sale: boolean;
-    investment_formatted?: string;
-    location?: Location;
-    features?: string[];
+    investment_formatted: string;
+    description?: string;
+    location?: PropertyLocation;
     images?: string[];
+    features?: string[];
 }
 
-export async function getStaticPaths() {
-    // Función para obtener todas las propiedades
-    const fetchProperties = async (): Promise<Property[]> => {
-        try {
-            const response = await fetch(
-                `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PROPERTIES}`,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        // Agregar cualquier otro encabezado necesario, como autenticación
-                    },
+// Obtener el ID de la propiedad desde los parámetros de la URL
+const { id } = Astro.params;
+
+// Validar que el ID existe
+if (!id) {
+    return Astro.redirect("/404");
+}
+
+// Función para obtener una propiedad específica por ID
+async function getPropertyById(propertyId: string): Promise<Property | null> {
+    try {
+        console.log(`Fetching property ${propertyId} from API`);
+
+        const response = await fetch(
+            `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PROPERTY_DETAIL(propertyId)}`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    "Cache-Control": "no-cache, no-store, must-revalidate",
+                    Pragma: "no-cache",
                 },
-            );
-            const data = await response.json();
-            return data.data || [];
-        } catch (error) {
-            console.error("Error al obtener propiedades:", error);
-            return [];
+                cache: "no-store",
+            },
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-    };
 
-    const properties = await fetchProperties();
+        const data = await response.json();
+        console.log(`Property ${propertyId} fetched successfully`);
 
-    // Crear rutas para cada propiedad
-    return properties.map((property) => ({
-        params: { id: property.id.toString() },
-        props: { property },
-    }));
+        if (data.success && data.data) {
+            return data.data as Property;
+        }
+        return null;
+    } catch (error) {
+        console.error(`Error fetching property ${propertyId}:`, error);
+        return null;
+    }
 }
 
-// Definir el tipo de las props
-const { property } = Astro.props as { property: Property };
+// Obtener la propiedad
+const property = await getPropertyById(id);
 
-// Formatear ubicación
-const formatLocation = (location?: Location): string => {
-    if (!location) return "Ubicación no disponible";
-    return `${location.line1 || ""}, ${location.line2 || ""}, ${location.line3 || ""}`.replace(
-        /^, |, $|, , /g,
-        "",
+// Si no se encuentra la propiedad, redirigir a 404
+if (!property) {
+    return Astro.redirect("/404");
+}
+
+// Obtener imágenes válidas (filtrar imágenes vacías o inválidas)
+const validImages = property.images
+    ? property.images.filter((img: string) => img && img.trim() !== "")
+    : [];
+
+// Si no hay imágenes, usar placeholder
+if (validImages.length === 0) {
+    validImages.push(
+        "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible",
     );
-};
+}
 
-// Formatear características específicas
-const getFeatureValue = (features?: string[], name?: string): string | null => {
-    if (!features || !Array.isArray(features) || !name) return null;
-
-    // Buscar característica por nombre
-    const feature = features.find(
-        (f) =>
-            typeof f === "string" &&
-            f.toLowerCase().includes(name.toLowerCase()),
-    );
-
-    if (feature) {
-        // Extraer el valor numérico de la característica
-        const matches = feature.match(/\d+/);
-        return matches ? matches[0] : null;
-    }
-
-    return null;
-};
-
-// Filtrar imágenes válidas
-const validImages =
-    property.images?.filter((img) => img && img.trim() !== "") || [];
+// Timestamp para debugging
+const renderTime = new Date().toISOString();
+console.log(`Property page rendered at: ${renderTime} for property ID: ${id}`);
 ---
 
 <GeneralLayout
-    title={`${property.type} - ${property.location?.line1 || "Propiedad"} | Urban Inmobiliaria`}
-    description={`${property.type} en ${formatLocation(property.location)} - ${property.investment_formatted}`}
+    title={`${property.type} en ${property.location?.line2 || "Ubicación"} - Urban Inmobiliaria`}
+    description={`${property.type} ${property.is_for_sale ? "en venta" : "en renta"} por ${property.investment_formatted}. ${property.description || ""}`}
 >
-    <div class="bg-white">
-        <div class="max-w-7xl mx-auto py-5 px-5 font-montserrat text-gray-800">
-            <!-- Header responsivo con logo y estado de propiedad -->
+    <main class="bg-white min-h-screen">
+        <!-- Debug info (solo visible en desarrollo) -->
+        {
+            process.env.NODE_ENV === "development" && (
+                <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4">
+                    <p class="font-bold">Debug Info - Property Page:</p>
+                    <p>Página renderizada: {renderTime}</p>
+                    <p>Property ID: {id}</p>
+                    <p>Property Type: {property.type}</p>
+                    <p>Images: {validImages.length}</p>
+                </div>
+            )
+        }
+
+        <!-- Header responsivo con logo y estado de propiedad -->
+        <div
+            class="flex flex-col sm:flex-row justify-between items-end mb-5 sm:mb-0 gap-4"
+        >
+            <div class="hidden sm:flex items-center h-full ml-0 sm:ml-5">
+                <Image
+                    src={logo}
+                    alt="Urban Inmobiliaria"
+                    class="h-20 sm:h-25 md:h-35 object-contain"
+                    width={200}
+                    height={200}
+                />
+            </div>
             <div
-                class="flex flex-col sm:flex-row justify-between items-end mb-5 sm:mb-0 gap-4"
+                class="bg-[#2e8d80] w-full sm:w-auto pr-0 pb-2 sm:pb-0 sm:pr-5 flex items-center"
             >
-                <div class="hidden sm:flex items-center h-full ml-0 sm:ml-5">
-                    <Image
-                        src={logo}
-                        alt="Urban Inmobiliaria"
-                        class="h-20 sm:h-25 md:h-35 object-contain"
-                        width={200}
-                        height={200}
+                <h1
+                    class="text-2xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wider text-white px-5 sm:px-10 md:px-20 bg-gray-800 h-full w-full sm:w-auto py-3 sm:py-8 flex items-center justify-center"
+                >
+                    {property.is_for_sale ? "VENTA" : "RENTA"}
+                </h1>
+            </div>
+        </div>
+
+        <!-- Galería de imágenes responsiva -->
+        <div class="mb-10">
+            <div
+                class="grid grid-cols-1 sm:grid-cols-2 grid-rows-1 sm:grid-rows-2 h-auto sm:h-[500px] md:h-[700px]"
+            >
+                <div
+                    class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
+                    data-index="0"
+                >
+                    <img
+                        src={validImages.length > 0
+                            ? validImages[0]
+                            : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
+                        alt={`${property.type} - Vista principal`}
+                        class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                     />
                 </div>
                 <div
-                    class="bg-[#2e8d80] w-full sm:w-auto pr-0 pb-2 sm:pb-0 sm:pr-5 flex items-center"
+                    class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
+                    data-index="1"
                 >
-                    <h1
-                        class="text-2xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wider text-white px-5 sm:px-10 md:px-20 bg-gray-800 h-full w-full sm:w-auto py-3 sm:py-8 flex items-center justify-center"
-                    >
-                        {property.is_for_sale ? "VENTA" : "RENTA"}
-                    </h1>
+                    <img
+                        src={validImages.length > 1
+                            ? validImages[1]
+                            : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
+                        alt={`${property.type} - Interior`}
+                        class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    />
                 </div>
-            </div>
-
-            <!-- Galería de imágenes responsiva -->
-            <div class="mb-10">
                 <div
-                    class="grid grid-cols-1 sm:grid-cols-2 grid-rows-1 sm:grid-rows-2 h-auto sm:h-[500px] md:h-[700px]"
+                    class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
+                    data-index="2"
                 >
-                    <div
-                        class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
-                        data-index="0"
-                    >
-                        <img
-                            src={validImages.length > 0
-                                ? validImages[0]
-                                : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
-                            alt={`${property.type} - Vista principal`}
-                            class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                        />
-                    </div>
-                    <div
-                        class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
-                        data-index="1"
-                    >
-                        <img
-                            src={validImages.length > 1
-                                ? validImages[1]
-                                : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
-                            alt={`${property.type} - Interior`}
-                            class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                        />
-                    </div>
-                    <div
-                        class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
-                        data-index="2"
-                    >
-                        <img
-                            src={validImages.length > 2
-                                ? validImages[2]
-                                : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
-                            alt={`${property.type} - Interior`}
-                            class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                        />
-                    </div>
-                    <div
-                        class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
-                        data-index="3"
-                    >
-                        <img
-                            src={validImages.length > 3
-                                ? validImages[3]
-                                : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
-                            alt={`${property.type} - Interior`}
-                            class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                        />
-                    </div>
+                    <img
+                        src={validImages.length > 2
+                            ? validImages[2]
+                            : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
+                        alt={`${property.type} - Interior`}
+                        class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    />
                 </div>
-            </div>
-
-            <!-- Información de la propiedad con diseño responsivo -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <div class="bg-white mb-5">
-                        <div class="">
-                            <h2
-                                class="text-xl md:text-2xl font-bold uppercase text-gray-800 text-center mb-4 border border-gray-800 py-2"
-                            >
-                                UBICACIÓN
-                            </h2>
-                            <p class="text-lg md:text-xl text-center">
-                                {
-                                    property.location?.line1 ||
-                                        "Monte Elbrus 336"
-                                }<br />
-                                {
-                                    property.location?.line2 ||
-                                        "Frac. Colinas de Juriquilla"
-                                }<br />
-                                {property.location?.line3 || "Querétaro, Mex."}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="bg-white">
-                        <div class="">
-                            <h2
-                                class="text-xl md:text-2xl font-bold uppercase text-gray-800 text-center mb-4 border border-gray-800 py-2"
-                            >
-                                INVERSIÓN
-                            </h2>
-                            <p
-                                class="text-2xl md:text-3xl font-bold text-gray-800 text-center"
-                            >
-                                {property.investment_formatted || "$ 5,900,000"}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-[#2e8d80] pr-0 pb-3 sm:pb-0 sm:pr-5">
-                    <div
-                        class="h-full w-full bg-gray-800 text-white p-5 flex flex-col justify-start"
-                    >
-                        <h2
-                            class="text-xl md:text-2xl font-bold uppercase text-white text-center mb-4 md:mb-6 border border-white py-2"
-                        >
-                            CARACTERÍSTICAS
-                        </h2>
-
-                        {
-                            property.features &&
-                            property.features.length > 0 ? (
-                                <div class="grid grid-cols-1  md:gap-4">
-                                    {property.features.map((feature) => (
-                                        <div class="flex items-center p-2 md:p-0">
-                                            <div class="mr-3 text-[#2e8d80] bg-white rounded-full p-1 flex-shrink-0">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    class="h-4 w-4"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    stroke="currentColor"
-                                                >
-                                                    <path
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M5 13l4 4L19 7"
-                                                    />
-                                                </svg>
-                                            </div>
-                                            <span class="text-white text-base md:text-lg">
-                                                {feature}
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p class="text-center text-white">
-                                    Características no disponibles
-                                </p>
-                            )
-                        }
-                    </div>
-                </div>
-            </div>
-
-            <!-- Botones de contacto -->
-            <div class="mt-0">
-                <!-- Usando el componente WhatsAppButton que ya está en GeneralLayout -->
-                {
-                    /* El componente WhatsAppButton ya está incluido en GeneralLayout */
-                }
-                <script
-                    define:vars={{
-                        propertyId: property.id,
-                        propertyLocation:
-                            property.location?.line1 || "su propiedad",
-                    }}
+                <div
+                    class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
+                    data-index="3"
                 >
-                    // Personalizar el mensaje del botón de WhatsApp para esta propiedad específica
-                    document.addEventListener("DOMContentLoaded", () => {
-                        const whatsappButton =
-                            document.querySelector(".whatsapp-button");
-                        if (whatsappButton) {
-                            const newMessage = `Hola, estoy interesado en la propiedad con ID: ${propertyId} ubicada en ${propertyLocation}`;
-                            whatsappButton.href = `https://wa.link/ktvkib?text=${encodeURIComponent(newMessage)}`;
-                        }
-                    });
-                </script>
+                    <img
+                        src={validImages.length > 3
+                            ? validImages[3]
+                            : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
+                        alt={`${property.type} - Interior`}
+                        class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                </div>
             </div>
         </div>
-    </div>
+
+        <!-- Información de la propiedad con diseño responsivo -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <div class="bg-white mb-5">
+                    <div class="">
+                        <h2
+                            class="text-xl md:text-2xl font-bold uppercase text-gray-800 text-center mb-4 border border-gray-800 py-2"
+                        >
+                            UBICACIÓN
+                        </h2>
+                        <p class="text-lg md:text-xl text-center">
+                            {property.location?.line1 || "Monte Elbrus 336"}<br
+                            />
+                            {
+                                property.location?.line2 ||
+                                    "Frac. Colinas de Juriquilla"
+                            }<br />
+                            {property.location?.line3 || "Querétaro, Mex."}
+                        </p>
+                    </div>
+                </div>
+                <div class="bg-white">
+                    <div class="">
+                        <h2
+                            class="text-xl md:text-2xl font-bold uppercase text-gray-800 text-center mb-4 border border-gray-800 py-2"
+                        >
+                            INVERSIÓN
+                        </h2>
+                        <p
+                            class="text-2xl md:text-3xl font-bold text-gray-800 text-center"
+                        >
+                            {property.investment_formatted || "$ 5,900,000"}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#2e8d80] pr-0 pb-3 sm:pb-0 sm:pr-5">
+                <div
+                    class="h-full w-full bg-gray-800 text-white p-5 flex flex-col justify-start"
+                >
+                    <h2
+                        class="text-xl md:text-2xl font-bold uppercase text-white text-center mb-4 md:mb-6 border border-white py-2"
+                    >
+                        CARACTERÍSTICAS
+                    </h2>
+
+                    {
+                        property.features && property.features.length > 0 ? (
+                            <div class="grid grid-cols-1  md:gap-4">
+                                {property.features.map((feature: string) => (
+                                    <div class="flex items-center p-2 md:p-0">
+                                        <div class="mr-3 text-[#2e8d80] bg-white rounded-full p-1 flex-shrink-0">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                class="h-4 w-4"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M5 13l4 4L19 7"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <span class="text-white text-base md:text-lg">
+                                            {feature}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p class="text-center text-white">
+                                Características no disponibles
+                            </p>
+                        )
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de contacto -->
+        <div class="mt-0">
+            <!-- Usando el componente WhatsAppButton que ya está en GeneralLayout -->
+            {
+                /* El componente WhatsAppButton ya está incluido en GeneralLayout */
+            }
+            <script
+                define:vars={{
+                    propertyId: property.id,
+                    propertyLocation:
+                        property.location?.line1 || "su propiedad",
+                }}
+            >
+                // Personalizar el mensaje del botón de WhatsApp para esta propiedad específica
+                document.addEventListener("DOMContentLoaded", () => {
+                    const whatsappButton =
+                        document.querySelector(".whatsapp-button");
+                    if (whatsappButton) {
+                        const newMessage = `Hola, estoy interesado en la propiedad con ID: ${propertyId} ubicada en ${propertyLocation}`;
+                        whatsappButton.href = `https://wa.link/ktvkib?text=${encodeURIComponent(newMessage)}`;
+                    }
+                });
+            </script>
+        </div>
+    </main>
 
     <!-- Modal para carrusel de imágenes -->
     <div

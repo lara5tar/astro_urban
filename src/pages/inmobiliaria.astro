@@ -3,124 +3,57 @@ import GeneralLayout from "../layouts/GeneralLayout.astro";
 import { Image } from "astro:assets";
 import { API_CONFIG } from "../config/api.js";
 
-// Forzar renderizado del lado del servidor para contenido dinámico
-export const prerender = false;
+// Remover la línea de prerender para volver a generación estática
+// export const prerender = false; // REMOVIDO
 
-// Función para obtener propiedades desde la API con soporte para paginación
-const fetchProperties = async (page = 1) => {
-    try {
-        console.log(
-            `Fetching properties from API: ${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PROPERTIES}?page=${page}`,
-        );
-
-        const response = await fetch(
-            `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PROPERTIES}?page=${page}`,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                    // Agregar cache busting para evitar cache del navegador
-                    "Cache-Control": "no-cache, no-store, must-revalidate",
-                    Pragma: "no-cache",
-                    Expires: "0",
-                },
-                // Evitar cache del fetch
-                cache: "no-store",
-            },
-        );
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log(`Fetched ${data?.data?.length || 0} properties from API`);
-
-        // Verificar si hay datos y transformarlos al formato necesario
-        if (data && data.data && Array.isArray(data.data)) {
-            return {
-                properties: data.data.map((property: any) => ({
-                    id: property.id,
-                    imageUrl:
-                        property.images && property.images.length > 0
-                            ? property.images[0]
-                            : "https://placehold.co/800x800/222/fff?text=Imagen+no+disponible",
-                    text: `${property.type.toUpperCase()} - ${property.investment_formatted}`,
-                    location: property.location
-                        ? `${property.location.line2}`
-                        : "Ubicación no disponible",
-                    features: property.features || [],
-                    type: property.type,
-                    // Guardar el resto de datos que podrían ser útiles para la página de detalle
-                    fullData: property,
-                })),
-                meta: data.meta || {},
-                hasMorePages: data.meta?.current_page < data.meta?.last_page,
-            };
-        }
-        return { properties: [], meta: {}, hasMorePages: false };
-    } catch (error) {
-        console.error("Error al obtener propiedades:", error);
-        return { properties: [], meta: {}, hasMorePages: false };
-    }
-};
-
-// Obtener la primera página de propiedades para renderizar inicialmente
-const initialData = await fetchProperties(1);
-const properties = initialData.properties;
-const initialMeta = initialData.meta;
-const hasMorePages = initialData.hasMorePages;
-
-// Agregar timestamp para debugging
-const buildTime = new Date().toISOString();
-console.log(
-    `Page rendered at: ${buildTime}, Properties count: ${properties.length}`,
-);
+// Para la generación estática, mostraremos un estado inicial vacío
+// y cargaremos las propiedades dinámicamente desde el cliente
+const properties = []; // Array vacío para generación estática
+const initialMeta = { current_page: 1, last_page: 1 };
+const hasMorePages = false;
 ---
 
 <GeneralLayout title="Inmobiliaria - Urban Real Estate">
-    <!-- Debug info (solo visible en desarrollo) -->
-    {
-        process.env.NODE_ENV === "development" && (
-            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
-                <p class="font-bold">Debug Info:</p>
-                <p>Página renderizada: {buildTime}</p>
-                <p>Propiedades cargadas: {properties.length}</p>
-                <p>API URL: {API_CONFIG.BASE_URL}</p>
-            </div>
-        )
-    }
-
     <!-- Grid de propiedades -->
     <div class="block">
+        <!-- Indicador de carga inicial -->
+        <div id="initial-loading" class="w-full">
+            <div class="flex flex-col items-center justify-center py-16">
+                <div
+                    class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#2e8d80] mb-4"
+                >
+                </div>
+                <p class="text-gray-600 font-montserrat">
+                    Cargando propiedades...
+                </p>
+            </div>
+        </div>
+
+        <!-- Grid que se llenará dinámicamente -->
         <div
             id="properties-grid"
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 hidden"
         >
-            {
-                properties.map((property: any, index: number) => (
-                    <div class="relative grid-item" data-index={index}>
-                        <a
-                            href={`/inmobiliaria/propiedad/${property.id}`}
-                            class="block"
-                        >
-                            <Image
-                                src={property.imageUrl}
-                                alt={`${property.type} - ${property.location}`}
-                                class="w-full aspect-square object-cover transition-transform duration-300 ease-in-out hover:scale-105"
-                                loading={index < 6 ? "eager" : "lazy"}
-                                width={800}
-                                height={800}
-                            />
-                            <div class="absolute inset-0 flex flex-col justify-center items-center bg-black/30 hover:bg-black/50 transition-colors duration-300">
-                                <div class="font-montserrat font-bold text-lg md:text-xl lg:text-2xl tracking-widest py-2 px-4 bg-black/40 uppercase text-center inline-block min-w-[150px] max-w-[90%] mx-auto border border-white/50 text-white">
-                                    {property.location}
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                ))
-            }
+            <!-- Las propiedades se cargarán aquí dinámicamente -->
+        </div>
+
+        <!-- Mensaje cuando no hay propiedades -->
+        <div id="no-properties" class="text-center py-16 hidden">
+            <div class="bg-white rounded-xl p-8 shadow-md max-w-2xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                    No hay propiedades disponibles
+                </h2>
+                <p class="text-gray-600 mb-6">
+                    Actualmente no tenemos propiedades para mostrar. ¡Vuelve
+                    pronto!
+                </p>
+                <a
+                    href="/"
+                    class="inline-flex items-center px-4 py-2 bg-[#2e8d80] text-white rounded-md hover:bg-[#267569] transition-colors"
+                >
+                    Volver al inicio
+                </a>
+            </div>
         </div>
 
         <!-- Indicador de carga para lazy loading -->
@@ -142,64 +75,28 @@ console.log(
         </div>
     </div>
 
-    <script
-        define:vars={{
-            initialMeta,
-            hasMorePages,
-            apiBaseUrl: API_CONFIG.BASE_URL,
-        }}
-    >
-        // Improved domino animation effect with fresh data fetching
+    <script define:vars={{ apiBaseUrl: API_CONFIG.BASE_URL }}>
+        // Cargar propiedades dinámicamente desde el cliente
         document.addEventListener("DOMContentLoaded", () => {
-            const items = document.querySelectorAll(".grid-item");
             const propertiesGrid = document.getElementById("properties-grid");
+            const initialLoading = document.getElementById("initial-loading");
             const loadingIndicator =
                 document.getElementById("loading-indicator");
             const endOfResults = document.getElementById("end-of-results");
+            const noProperties = document.getElementById("no-properties");
 
             // Variables para el lazy loading
-            let currentPage = initialMeta?.current_page || 1;
+            let currentPage = 1;
             let isLoading = false;
-            let noMorePages = !hasMorePages;
+            let noMorePages = false;
 
-            // Check if element is approaching viewport (much earlier than before)
-            const isApproachingViewport = (element) => {
-                const rect = element.getBoundingClientRect();
-                const windowHeight =
-                    window.innerHeight || document.documentElement.clientHeight;
-                // Element is considered "approaching" if it's within 1.5 screen heights
-                return rect.top <= windowHeight * 1.5;
-            };
-
-            // Animate items that are approaching the viewport
-            const animateItems = () => {
-                document
-                    .querySelectorAll(".grid-item:not(.animated)")
-                    .forEach((item) => {
-                        if (isApproachingViewport(item)) {
-                            const index = parseInt(item.dataset.index ?? "0");
-                            const delay = (index % 12) * 70; // Solo aplicamos delay a los primeros 12 items por página
-                            setTimeout(() => {
-                                item.classList.add("animated");
-                            }, delay);
-                        }
-                    });
-            };
-
-            // Función para cargar más propiedades
-            const loadMoreProperties = async () => {
-                if (isLoading || noMorePages) return;
-
-                isLoading = true;
-                loadingIndicator.classList.remove("hidden");
-
+            // Función para obtener propiedades desde la API
+            async function fetchProperties(page = 1) {
                 try {
-                    const nextPage = currentPage + 1;
-                    // Usar la URL base de la API directamente con cache busting
                     const cacheBuster = new Date().getTime();
-                    const apiUrl = `${apiBaseUrl}properties?page=${nextPage}&_t=${cacheBuster}`;
+                    const apiUrl = `${apiBaseUrl}properties?page=${page}&_t=${cacheBuster}`;
 
-                    console.log(`Loading more properties from: ${apiUrl}`);
+                    console.log(`Fetching properties from: ${apiUrl}`);
 
                     const response = await fetch(apiUrl, {
                         headers: {
@@ -214,70 +111,101 @@ console.log(
 
                     if (!response.ok) {
                         throw new Error(
-                            `Error al cargar más propiedades: ${response.status}`,
+                            `HTTP error! status: ${response.status}`,
                         );
                     }
 
                     const data = await response.json();
                     console.log(
-                        `Loaded ${data?.data?.length || 0} more properties`,
+                        `Fetched ${data?.data?.length || 0} properties`,
                     );
 
-                    // Si hay propiedades, agregarlas al grid
-                    if (data.data && data.data.length > 0) {
+                    if (data && data.data && Array.isArray(data.data)) {
+                        return {
+                            properties: data.data.map((property) => ({
+                                id: property.id,
+                                imageUrl:
+                                    property.images &&
+                                    property.images.length > 0
+                                        ? property.images[0]
+                                        : "https://placehold.co/800x800/222/fff?text=Imagen+no+disponible",
+                                location: property.location
+                                    ? property.location.line2
+                                    : "Ubicación no disponible",
+                                type: property.type,
+                                fullData: property,
+                            })),
+                            meta: data.meta || {},
+                            hasMorePages:
+                                data.meta?.current_page < data.meta?.last_page,
+                        };
+                    }
+                    return { properties: [], meta: {}, hasMorePages: false };
+                } catch (error) {
+                    console.error("Error fetching properties:", error);
+                    return { properties: [], meta: {}, hasMorePages: false };
+                }
+            }
+
+            // Función para renderizar propiedades en el grid
+            function renderProperties(properties, append = false) {
+                if (!append) {
+                    propertiesGrid.innerHTML = "";
+                }
+
+                properties.forEach((property, index) => {
+                    const globalIndex = append
+                        ? document.querySelectorAll(".grid-item").length
+                        : index;
+                    const propertyElement = document.createElement("div");
+                    propertyElement.className = "relative grid-item";
+                    propertyElement.dataset.index = globalIndex.toString();
+
+                    propertyElement.innerHTML = `
+                        <a href="/inmobiliaria/propiedad/${property.id}" class="block">
+                            <img
+                                src="${property.imageUrl}"
+                                alt="${property.type} - ${property.location}"
+                                class="w-full aspect-square object-cover transition-transform duration-300 ease-in-out hover:scale-105"
+                                loading="${index < 6 ? "eager" : "lazy"}"
+                                width="800"
+                                height="800"
+                            />
+                            <div class="absolute inset-0 flex flex-col justify-center items-center bg-black/30 hover:bg-black/50 transition-colors duration-300">
+                                <div class="font-montserrat font-bold text-lg md:text-xl lg:text-2xl tracking-widest py-2 px-4 bg-black/40 uppercase text-center inline-block min-w-[150px] max-w-[90%] mx-auto border border-white/50 text-white">
+                                    ${property.location}
+                                </div>
+                            </div>
+                        </a>
+                    `;
+
+                    propertiesGrid.appendChild(propertyElement);
+                });
+
+                // Animar nuevos elementos
+                setTimeout(animateItems, 100);
+            }
+
+            // Función para cargar más propiedades
+            async function loadMoreProperties() {
+                if (isLoading || noMorePages) return;
+
+                isLoading = true;
+                loadingIndicator.classList.remove("hidden");
+
+                try {
+                    const nextPage = currentPage + 1;
+                    const result = await fetchProperties(nextPage);
+
+                    if (result.properties && result.properties.length > 0) {
                         currentPage = nextPage;
-
-                        // Agregar nuevas propiedades al grid
-                        data.data.forEach((property, idx) => {
-                            const globalIndex =
-                                document.querySelectorAll(".grid-item").length;
-                            const propertyElement =
-                                document.createElement("div");
-                            propertyElement.className = "relative grid-item";
-                            propertyElement.dataset.index =
-                                globalIndex.toString();
-
-                            const imageUrl =
-                                property.images && property.images.length > 0
-                                    ? property.images[0]
-                                    : "https://placehold.co/800x800/222/fff?text=Imagen+no+disponible";
-
-                            const location = property.location
-                                ? property.location.line2
-                                : "Ubicación no disponible";
-
-                            propertyElement.innerHTML = `
-                                <a href="/inmobiliaria/propiedad/${property.id}" class="block">
-                                    <img
-                                        src="${imageUrl}"
-                                        alt="${property.type} - ${location}"
-                                        class="w-full aspect-square object-cover transition-transform duration-300 ease-in-out hover:scale-105"
-                                        loading="lazy"
-                                        width="800"
-                                        height="800"
-                                    />
-                                    <div class="absolute inset-0 flex flex-col justify-center items-center bg-black/30 hover:bg-black/50 transition-colors duration-300">
-                                        <div class="font-montserrat font-bold text-lg md:text-xl lg:text-2xl tracking-widest py-2 px-4 bg-black/40 uppercase text-center inline-block min-w-[150px] max-w-[90%] mx-auto border border-white/50 text-white">
-                                            ${location}
-                                        </div>
-                                    </div>
-                                </a>
-                            `;
-
-                            propertiesGrid.appendChild(propertyElement);
-                        });
-
-                        // Comprobar si hay más páginas
-                        noMorePages =
-                            data.meta?.current_page >= data.meta?.last_page;
-
-                        // Animar nuevos elementos
-                        setTimeout(animateItems, 100);
+                        renderProperties(result.properties, true);
+                        noMorePages = !result.hasMorePages;
                     } else {
                         noMorePages = true;
                     }
                 } catch (error) {
-                    console.error("Error al cargar más propiedades:", error);
+                    console.error("Error loading more properties:", error);
                 } finally {
                     isLoading = false;
                     loadingIndicator.classList.add("hidden");
@@ -286,35 +214,82 @@ console.log(
                         endOfResults.classList.remove("hidden");
                     }
                 }
-            };
+            }
+
+            // Función de animación
+            function animateItems() {
+                document
+                    .querySelectorAll(".grid-item:not(.animated)")
+                    .forEach((item) => {
+                        if (isApproachingViewport(item)) {
+                            const index = parseInt(item.dataset.index ?? "0");
+                            const delay = (index % 12) * 70;
+                            setTimeout(() => {
+                                item.classList.add("animated");
+                            }, delay);
+                        }
+                    });
+            }
+
+            function isApproachingViewport(element) {
+                const rect = element.getBoundingClientRect();
+                const windowHeight =
+                    window.innerHeight || document.documentElement.clientHeight;
+                return rect.top <= windowHeight * 1.5;
+            }
 
             // Función para verificar si necesitamos cargar más propiedades
-            const checkForLoadMore = () => {
+            function checkForLoadMore() {
                 if (isLoading || noMorePages) return;
 
-                // Verificar si estamos cerca del final de la página
                 const scrollPosition = window.scrollY + window.innerHeight;
                 const pageHeight = document.body.scrollHeight;
-                const threshold = 200; // píxeles antes del final
+                const threshold = 200;
 
                 if (pageHeight - scrollPosition < threshold) {
                     loadMoreProperties();
                 }
-            };
+            }
 
-            // Run animation on load and scroll
-            animateItems();
-            window.addEventListener("scroll", () => {
-                animateItems();
-                checkForLoadMore();
-            });
+            // Cargar propiedades iniciales
+            async function loadInitialProperties() {
+                try {
+                    initialLoading.classList.remove("hidden");
+                    const result = await fetchProperties(1);
 
-            // Additional trigger for any images that might be missed
-            setTimeout(animateItems, 300);
+                    if (result.properties && result.properties.length > 0) {
+                        currentPage = 1;
+                        noMorePages = !result.hasMorePages;
 
-            // También verificamos inicialmente si necesitamos cargar más
-            // (útil para pantallas grandes donde el scroll puede no ser necesario)
-            setTimeout(checkForLoadMore, 1000);
+                        renderProperties(result.properties);
+
+                        // Mostrar el grid y ocultar el loading
+                        initialLoading.classList.add("hidden");
+                        propertiesGrid.classList.remove("hidden");
+
+                        // Configurar event listeners
+                        window.addEventListener("scroll", () => {
+                            animateItems();
+                            checkForLoadMore();
+                        });
+
+                        // Activar animaciones iniciales
+                        setTimeout(animateItems, 300);
+                        setTimeout(checkForLoadMore, 1000);
+                    } else {
+                        // No hay propiedades
+                        initialLoading.classList.add("hidden");
+                        noProperties.classList.remove("hidden");
+                    }
+                } catch (error) {
+                    console.error("Error loading initial properties:", error);
+                    initialLoading.classList.add("hidden");
+                    noProperties.classList.remove("hidden");
+                }
+            }
+
+            // Iniciar carga de propiedades
+            loadInitialProperties();
         });
     </script>
 
@@ -323,12 +298,10 @@ console.log(
             overflow: hidden;
             position: relative;
             opacity: 0;
-            transform: translateY(
-                30px
-            ); /* Reduced from 50px for subtler animation */
+            transform: translateY(30px);
             transition:
                 opacity 0.4s ease,
-                transform 0.4s ease; /* Faster transition */
+                transform 0.4s ease;
         }
 
         .grid-item.animated {

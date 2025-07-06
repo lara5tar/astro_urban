@@ -4,8 +4,19 @@ import { Image } from "astro:assets";
 import logo from "/src/public/icons/logo_movil.webp";
 import { API_CONFIG } from "../../../config/api.js";
 
-// Forzar renderizado del lado del servidor para contenido dinámico
-export const prerender = false;
+// Para páginas dinámicas en generación estática, usaremos getStaticPaths
+export async function getStaticPaths() {
+    // En generación estática, creamos rutas para IDs del 1 al 1000
+    // Las propiedades se cargarán dinámicamente desde el cliente
+    const paths = [];
+    for (let i = 1; i <= 1000; i++) {
+        paths.push({
+            params: { id: i.toString() },
+            props: { propertyId: i.toString() },
+        });
+    }
+    return paths;
+}
 
 // Definir tipos para la propiedad
 interface PropertyLocation {
@@ -25,443 +36,291 @@ interface Property {
     features?: string[];
 }
 
-// Obtener el ID de la propiedad desde los parámetros de la URL
+// Obtener el ID de la propiedad desde los parámetros
+const { propertyId } = Astro.props;
 const { id } = Astro.params;
 
-// Validar que el ID existe
-if (!id) {
-    return Astro.redirect("/404");
-}
-
-// Función para obtener una propiedad específica por ID
-async function getPropertyById(propertyId: string): Promise<Property | null> {
-    try {
-        console.log(`Fetching property ${propertyId} from API`);
-
-        const response = await fetch(
-            `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PROPERTY_DETAIL(propertyId)}`,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                    "Cache-Control": "no-cache, no-store, must-revalidate",
-                    Pragma: "no-cache",
-                },
-                cache: "no-store",
-            },
-        );
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log(`Property ${propertyId} fetched successfully`);
-
-        if (data.success && data.data) {
-            return data.data as Property;
-        }
-        return null;
-    } catch (error) {
-        console.error(`Error fetching property ${propertyId}:`, error);
-        return null;
-    }
-}
-
-// Obtener la propiedad
-const property = await getPropertyById(id);
-
-// Si no se encuentra la propiedad, redirigir a 404
-if (!property) {
-    return Astro.redirect("/404");
-}
-
-// Obtener imágenes válidas (filtrar imágenes vacías o inválidas)
-const validImages = property.images
-    ? property.images.filter((img: string) => img && img.trim() !== "")
-    : [];
-
-// Si no hay imágenes, usar placeholder
-if (validImages.length === 0) {
-    validImages.push(
-        "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible",
-    );
-}
-
-// Timestamp para debugging
-const renderTime = new Date().toISOString();
-console.log(`Property page rendered at: ${renderTime} for property ID: ${id}`);
+// Usar el ID de los parámetros como fallback
+const currentPropertyId = propertyId || id;
 ---
 
 <GeneralLayout
-    title={`${property.type} en ${property.location?.line2 || "Ubicación"} - Urban Inmobiliaria`}
-    description={`${property.type} ${property.is_for_sale ? "en venta" : "en renta"} por ${property.investment_formatted}. ${property.description || ""}`}
+    title="Propiedad - Urban Inmobiliaria"
+    description="Detalles de la propiedad"
 >
-    <main class="bg-white min-h-screen">
-        <!-- Debug info (solo visible en desarrollo) -->
-        {
-            process.env.NODE_ENV === "development" && (
-                <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4">
-                    <p class="font-bold">Debug Info - Property Page:</p>
-                    <p>Página renderizada: {renderTime}</p>
-                    <p>Property ID: {id}</p>
-                    <p>Property Type: {property.type}</p>
-                    <p>Images: {validImages.length}</p>
-                </div>
-            )
-        }
-
-        <!-- Header responsivo con logo y estado de propiedad -->
-        <div
-            class="flex flex-col sm:flex-row justify-between items-end mb-5 sm:mb-0 gap-4"
-        >
-            <div class="hidden sm:flex items-center h-full ml-0 sm:ml-5">
-                <Image
-                    src={logo}
-                    alt="Urban Inmobiliaria"
-                    class="h-20 sm:h-25 md:h-35 object-contain"
-                    width={200}
-                    height={200}
-                />
-            </div>
-            <div
-                class="bg-[#2e8d80] w-full sm:w-auto pr-0 pb-2 sm:pb-0 sm:pr-5 flex items-center"
-            >
-                <h1
-                    class="text-2xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wider text-white px-5 sm:px-10 md:px-20 bg-gray-800 h-full w-full sm:w-auto py-3 sm:py-8 flex items-center justify-center"
-                >
-                    {property.is_for_sale ? "VENTA" : "RENTA"}
-                </h1>
-            </div>
-        </div>
-
-        <!-- Galería de imágenes responsiva -->
-        <div class="mb-10">
-            <div
-                class="grid grid-cols-1 sm:grid-cols-2 grid-rows-1 sm:grid-rows-2 h-auto sm:h-[500px] md:h-[700px]"
-            >
-                <div
-                    class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
-                    data-index="0"
-                >
-                    <img
-                        src={validImages.length > 0
-                            ? validImages[0]
-                            : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
-                        alt={`${property.type} - Vista principal`}
-                        class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                    />
-                </div>
-                <div
-                    class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
-                    data-index="1"
-                >
-                    <img
-                        src={validImages.length > 1
-                            ? validImages[1]
-                            : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
-                        alt={`${property.type} - Interior`}
-                        class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                    />
-                </div>
-                <div
-                    class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
-                    data-index="2"
-                >
-                    <img
-                        src={validImages.length > 2
-                            ? validImages[2]
-                            : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
-                        alt={`${property.type} - Interior`}
-                        class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                    />
-                </div>
-                <div
-                    class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image"
-                    data-index="3"
-                >
-                    <img
-                        src={validImages.length > 3
-                            ? validImages[3]
-                            : "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible"}
-                        alt={`${property.type} - Interior`}
-                        class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                    />
-                </div>
-            </div>
-        </div>
-
-        <!-- Información de la propiedad con diseño responsivo -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <div class="bg-white mb-5">
-                    <div class="">
-                        <h2
-                            class="text-xl md:text-2xl font-bold uppercase text-gray-800 text-center mb-4 border border-gray-800 py-2"
-                        >
-                            UBICACIÓN
-                        </h2>
-                        <p class="text-lg md:text-xl text-center">
-                            {property.location?.line1 || "Monte Elbrus 336"}<br
-                            />
-                            {
-                                property.location?.line2 ||
-                                    "Frac. Colinas de Juriquilla"
-                            }<br />
-                            {property.location?.line3 || "Querétaro, Mex."}
-                        </p>
-                    </div>
-                </div>
-                <div class="bg-white">
-                    <div class="">
-                        <h2
-                            class="text-xl md:text-2xl font-bold uppercase text-gray-800 text-center mb-4 border border-gray-800 py-2"
-                        >
-                            INVERSIÓN
-                        </h2>
-                        <p
-                            class="text-2xl md:text-3xl font-bold text-gray-800 text-center"
-                        >
-                            {property.investment_formatted || "$ 5,900,000"}
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-[#2e8d80] pr-0 pb-3 sm:pb-0 sm:pr-5">
-                <div
-                    class="h-full w-full bg-gray-800 text-white p-5 flex flex-col justify-start"
-                >
-                    <h2
-                        class="text-xl md:text-2xl font-bold uppercase text-white text-center mb-4 md:mb-6 border border-white py-2"
-                    >
-                        CARACTERÍSTICAS
-                    </h2>
-
-                    {
-                        property.features && property.features.length > 0 ? (
-                            <div class="grid grid-cols-1  md:gap-4">
-                                {property.features.map((feature: string) => (
-                                    <div class="flex items-center p-2 md:p-0">
-                                        <div class="mr-3 text-[#2e8d80] bg-white rounded-full p-1 flex-shrink-0">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                class="h-4 w-4"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M5 13l4 4L19 7"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <span class="text-white text-base md:text-lg">
-                                            {feature}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <p class="text-center text-white">
-                                Características no disponibles
-                            </p>
-                        )
-                    }
-                </div>
-            </div>
-        </div>
-
-        <!-- Botones de contacto -->
-        <div class="mt-0">
-            <!-- Usando el componente WhatsAppButton que ya está en GeneralLayout -->
-            {
-                /* El componente WhatsAppButton ya está incluido en GeneralLayout */
-            }
-            <script
-                define:vars={{
-                    propertyId: property.id,
-                    propertyLocation:
-                        property.location?.line1 || "su propiedad",
-                }}
-            >
-                // Personalizar el mensaje del botón de WhatsApp para esta propiedad específica
-                document.addEventListener("DOMContentLoaded", () => {
-                    const whatsappButton =
-                        document.querySelector(".whatsapp-button");
-                    if (whatsappButton) {
-                        const newMessage = `Hola, estoy interesado en la propiedad con ID: ${propertyId} ubicada en ${propertyLocation}`;
-                        whatsappButton.href = `https://wa.link/ktvkib?text=${encodeURIComponent(newMessage)}`;
-                    }
-                });
-            </script>
-        </div>
-    </main>
-
-    <!-- Modal para carrusel de imágenes -->
+    <!-- Loading inicial -->
     <div
-        id="imageModal"
-        class="fixed inset-0 bg-black/80 z-50 items-center justify-center hidden"
+        id="property-loading"
+        class="min-h-screen bg-white flex items-center justify-center"
     >
-        <div
-            class="relative w-full h-full flex flex-col justify-center items-center p-4"
-        >
-            lara5tar
-            <!-- Botón de cerrar -->
-            <button
-                id="closeModal"
-                class="absolute top-4 right-4 text-white text-4xl z-10 hover:text-gray-300"
-            >
-                &times;
-            </button>
-
-            <!-- Controles del carrusel -->
-            <button
-                id="prevImage"
-                class="absolute left-4 text-white text-6xl z-10 opacity-70 hover:opacity-100 focus:outline-none"
-            >
-                &#10094;
-            </button>
-            <button
-                id="nextImage"
-                class="absolute right-4 text-white text-6xl z-10 opacity-70 hover:opacity-100 focus:outline-none"
-            >
-                &#10095;
-            </button>
-
-            <!-- Contenedor de imágenes -->
+        <div class="flex flex-col items-center">
             <div
-                id="carouselImages"
-                class="w-full max-w-4xl h-full max-h-[80vh] flex items-center justify-center"
+                class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#2e8d80] mb-4"
             >
-                <!-- Las imágenes se cargarán dinámicamente aquí -->
             </div>
-
-            <!-- Indicador de imagen actual -->
-            <div class="absolute bottom-4 w-full text-center">
-                <span
-                    id="currentImageIndicator"
-                    class="bg-white bg-opacity-70 text-black px-3 py-1 rounded-full text-sm"
-                >
-                    1 / {validImages.length || 1}
-                </span>
-            </div>
+            <p class="text-gray-600 font-montserrat">Cargando propiedad...</p>
         </div>
     </div>
 
-    <script define:vars={{ images: validImages }}>
-        // Almacenar todas las imágenes válidas
-        const galleryImages =
-            images.length > 0
-                ? images
-                : [
-                      "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible",
-                  ];
+    <!-- Contenido de la propiedad (se llenará dinámicamente) -->
+    <main id="property-content" class="bg-white min-h-screen hidden">
+        <!-- El contenido se generará dinámicamente -->
+    </main>
 
-        let currentImageIndex = 0;
+    <!-- Página de error 404 -->
+    <div
+        id="property-not-found"
+        class="min-h-screen bg-white flex items-center justify-center hidden"
+    >
+        <div class="text-center">
+            <h1 class="text-6xl font-bold text-gray-300 mb-4">404</h1>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                Propiedad no encontrada
+            </h2>
+            <p class="text-gray-600 mb-8">
+                La propiedad que buscas no existe o ha sido removida.
+            </p>
+            <a
+                href="/inmobiliaria"
+                class="inline-flex items-center px-6 py-3 bg-[#2e8d80] text-white rounded-md hover:bg-[#267569] transition-colors"
+            >
+                Ver todas las propiedades
+            </a>
+        </div>
+    </div>
 
-        // Elementos del DOM
-        const imageModal = document.getElementById("imageModal");
-        const closeModal = document.getElementById("closeModal");
-        const prevImage = document.getElementById("prevImage");
-        const nextImage = document.getElementById("nextImage");
-        const carouselImages = document.getElementById("carouselImages");
-        const currentImageIndicator = document.getElementById(
-            "currentImageIndicator",
-        );
-        const galleryElements = document.querySelectorAll(".gallery-image");
+    <script define:vars={{ API_CONFIG, propertyId: currentPropertyId }}>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const loadingEl = document.getElementById("property-loading");
+            const contentEl = document.getElementById("property-content");
+            const notFoundEl = document.getElementById("property-not-found");
 
-        // Función para abrir el modal con una imagen específica
-        function openModal(index) {
-            if (index >= 0 && index < galleryImages.length) {
-                currentImageIndex = index;
-                updateCarouselImage();
-                imageModal.classList.remove("hidden");
-                imageModal.classList.add("flex");
-                // Deshabilitar el scroll del body
-                document.body.style.overflow = "hidden";
+            // Función para obtener una propiedad por ID
+            async function fetchProperty(id) {
+                try {
+                    const cacheBuster = new Date().getTime();
+                    const apiUrl = `${API_CONFIG.BASE_URL}properties/${id}?_t=${cacheBuster}`;
+
+                    console.log(`Fetching property from: ${apiUrl}`);
+
+                    const response = await fetch(apiUrl, {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                            "Cache-Control":
+                                "no-cache, no-store, must-revalidate",
+                            Pragma: "no-cache",
+                        },
+                        cache: "no-store",
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(
+                            `HTTP error! status: ${response.status}`,
+                        );
+                    }
+
+                    const data = await response.json();
+
+                    if (data.success && data.data) {
+                        return data.data;
+                    }
+                    return null;
+                } catch (error) {
+                    console.error(`Error fetching property ${id}:`, error);
+                    return null;
+                }
             }
-        }
 
-        // Función para cerrar el modal
-        function closeModalHandler() {
-            imageModal.classList.add("hidden");
-            imageModal.classList.remove("flex");
-            // Habilitar el scroll del body
-            document.body.style.overflow = "";
-        }
+            // Función para renderizar la propiedad
+            function renderProperty(property) {
+                const validImages =
+                    property.images && property.images.length > 0
+                        ? property.images.filter(
+                              (img) => img && img.trim() !== "",
+                          )
+                        : [
+                              "https://via.placeholder.com/500x500/eeeeee/333333?text=No+disponible",
+                          ];
 
-        // Función para actualizar la imagen del carrusel
-        function updateCarouselImage() {
-            // Limpiar contenedor
-            carouselImages.innerHTML = "";
+                contentEl.innerHTML = `
+                    <!-- Header responsivo con logo y estado de propiedad -->
+                    <div class="flex flex-col sm:flex-row justify-between items-end mb-5 sm:mb-0 gap-4">
+                        <div class="hidden sm:flex items-center h-full ml-0 sm:ml-5">
+                            <img
+                                src="/src/public/icons/logo_movil.webp"
+                                alt="Urban Inmobiliaria"
+                                class="h-20 sm:h-25 md:h-35 object-contain"
+                                width="200"
+                                height="200"
+                            />
+                        </div>
+                        <div class="bg-[#2e8d80] w-full sm:w-auto pr-0 pb-2 sm:pb-0 sm:pr-5 flex items-center">
+                            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wider text-white px-5 sm:px-10 md:px-20 bg-gray-800 h-full w-full sm:w-auto py-3 sm:py-8 flex items-center justify-center">
+                                ${property.is_for_sale ? "VENTA" : "RENTA"}
+                            </h1>
+                        </div>
+                    </div>
 
-            // Crear nueva imagen
-            const img = document.createElement("img");
-            img.src = galleryImages[currentImageIndex];
-            img.alt = `Imagen ${currentImageIndex + 1}`;
-            img.className = "max-w-full max-h-full object-contain";
+                    <!-- Galería de imágenes responsiva -->
+                    <div class="mb-10">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 grid-rows-1 sm:grid-rows-2 h-auto sm:h-[500px] md:h-[700px]">
+                            ${validImages
+                                .slice(0, 4)
+                                .map(
+                                    (img, index) => `
+                                <div class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image" data-index="${index}">
+                                    <img
+                                        src="${img}"
+                                        alt="${property.type} - Vista ${index + 1}"
+                                        class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                                    />
+                                </div>
+                            `,
+                                )
+                                .join("")}
+                        </div>
+                    </div>
 
-            // Agregar imagen al contenedor
-            carouselImages.appendChild(img);
+                    <!-- Información de la propiedad -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="bg-white mb-5">
+                                <h2 class="text-xl md:text-2xl font-bold uppercase text-gray-800 text-center mb-4 border border-gray-800 py-2">
+                                    UBICACIÓN
+                                </h2>
+                                <p class="text-lg md:text-xl text-center">
+                                    ${property.location?.line1 || "Dirección no disponible"}<br/>
+                                    ${property.location?.line2 || ""}<br/>
+                                    ${property.location?.line3 || ""}
+                                </p>
+                            </div>
+                            <div class="bg-white">
+                                <h2 class="text-xl md:text-2xl font-bold uppercase text-gray-800 text-center mb-4 border border-gray-800 py-2">
+                                    INVERSIÓN
+                                </h2>
+                                <p class="text-2xl md:text-3xl font-bold text-gray-800 text-center">
+                                    ${property.investment_formatted || "Precio no disponible"}
+                                </p>
+                            </div>
+                        </div>
 
-            // Actualizar indicador
-            currentImageIndicator.textContent = `${currentImageIndex + 1} / ${galleryImages.length}`;
-        }
+                        <div class="bg-[#2e8d80] pr-0 pb-3 sm:pb-0 sm:pr-5">
+                            <div class="h-full w-full bg-gray-800 text-white p-5 flex flex-col justify-start">
+                                <h2 class="text-xl md:text-2xl font-bold uppercase text-white text-center mb-4 md:mb-6 border border-white py-2">
+                                    CARACTERÍSTICAS
+                                </h2>
+                                ${
+                                    property.features &&
+                                    property.features.length > 0
+                                        ? `
+                                    <div class="grid grid-cols-1 md:gap-4">
+                                        ${property.features
+                                            .map(
+                                                (feature) => `
+                                            <div class="flex items-center p-2 md:p-0">
+                                                <div class="mr-3 text-[#2e8d80] bg-white rounded-full p-1 flex-shrink-0">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                                    </svg>
+                                                </div>
+                                                <span class="text-white text-base md:text-lg">${feature}</span>
+                                            </div>
+                                        `,
+                                            )
+                                            .join("")}
+                                    </div>
+                                `
+                                        : `
+                                    <p class="text-center text-white">Características no disponibles</p>
+                                `
+                                }
+                            </div>
+                        </div>
+                    </div>
+                `;
 
-        // Función para ir a la imagen anterior
-        function goToPrevImage() {
-            currentImageIndex =
-                (currentImageIndex - 1 + galleryImages.length) %
-                galleryImages.length;
-            updateCarouselImage();
-        }
-
-        // Función para ir a la siguiente imagen
-        function goToNextImage() {
-            currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
-            updateCarouselImage();
-        }
-
-        // Añadir event listeners
-        galleryElements.forEach((element) => {
-            element.addEventListener("click", () => {
-                const index = parseInt(element.getAttribute("data-index")) || 0;
-                openModal(index);
-            });
-        });
-
-        closeModal.addEventListener("click", closeModalHandler);
-        prevImage.addEventListener("click", goToPrevImage);
-        nextImage.addEventListener("click", goToNextImage);
-
-        // Cerrar modal con tecla Escape
-        document.addEventListener("keydown", (e) => {
-            if (
-                e.key === "Escape" &&
-                !imageModal.classList.contains("hidden")
-            ) {
-                closeModalHandler();
-            } else if (
-                e.key === "ArrowLeft" &&
-                !imageModal.classList.contains("hidden")
-            ) {
-                goToPrevImage();
-            } else if (
-                e.key === "ArrowRight" &&
-                !imageModal.classList.contains("hidden")
-            ) {
-                goToNextImage();
+                // Configurar modal de imágenes
+                setupImageModal(validImages);
             }
-        });
 
-        // Cerrar modal haciendo clic en el fondo
-        imageModal.addEventListener("click", (e) => {
-            if (e.target === imageModal) {
-                closeModalHandler();
+            // Función para configurar el modal de imágenes
+            function setupImageModal(images) {
+                // Crear modal si no existe
+                if (!document.getElementById("imageModal")) {
+                    const modalHTML = `
+                        <div id="imageModal" class="fixed inset-0 bg-black/80 z-50 items-center justify-center hidden">
+                            <div class="relative w-full h-full flex flex-col justify-center items-center p-4">
+                                <button id="closeModal" class="absolute top-4 right-4 text-white text-4xl z-10 hover:text-gray-300">&times;</button>
+                                <button id="prevImage" class="absolute left-4 text-white text-6xl z-10 opacity-70 hover:opacity-100">&#10094;</button>
+                                <button id="nextImage" class="absolute right-4 text-white text-6xl z-10 opacity-70 hover:opacity-100">&#10095;</button>
+                                <div id="carouselImages" class="w-full max-w-4xl h-full max-h-[80vh] flex items-center justify-center"></div>
+                                <div class="absolute bottom-4 w-full text-center">
+                                    <span id="currentImageIndicator" class="bg-white bg-opacity-70 text-black px-3 py-1 rounded-full text-sm">1 / ${images.length}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.body.insertAdjacentHTML("beforeend", modalHTML);
+                }
+
+                // Configurar eventos del modal
+                let currentImageIndex = 0;
+                const modal = document.getElementById("imageModal");
+                const carouselImages =
+                    document.getElementById("carouselImages");
+                const indicator = document.getElementById(
+                    "currentImageIndicator",
+                );
+
+                function updateModal() {
+                    carouselImages.innerHTML = `<img src="${images[currentImageIndex]}" alt="Imagen ${currentImageIndex + 1}" class="max-w-full max-h-full object-contain">`;
+                    indicator.textContent = `${currentImageIndex + 1} / ${images.length}`;
+                }
+
+                document.getElementById("closeModal").onclick = () => {
+                    modal.classList.add("hidden");
+                    modal.classList.remove("flex");
+                };
+
+                document.getElementById("prevImage").onclick = () => {
+                    currentImageIndex =
+                        (currentImageIndex - 1 + images.length) % images.length;
+                    updateModal();
+                };
+
+                document.getElementById("nextImage").onclick = () => {
+                    currentImageIndex = (currentImageIndex + 1) % images.length;
+                    updateModal();
+                };
+
+                // Abrir modal al hacer clic en imágenes
+                document.querySelectorAll(".gallery-image").forEach((img) => {
+                    img.onclick = () => {
+                        currentImageIndex = parseInt(img.dataset.index) || 0;
+                        updateModal();
+                        modal.classList.remove("hidden");
+                        modal.classList.add("flex");
+                    };
+                });
+            }
+
+            // Cargar la propiedad
+            try {
+                const property = await fetchProperty(propertyId);
+
+                if (property) {
+                    renderProperty(property);
+                    loadingEl.classList.add("hidden");
+                    contentEl.classList.remove("hidden");
+                } else {
+                    loadingEl.classList.add("hidden");
+                    notFoundEl.classList.remove("hidden");
+                }
+            } catch (error) {
+                console.error("Error loading property:", error);
+                loadingEl.classList.add("hidden");
+                notFoundEl.classList.remove("hidden");
             }
         });
     </script>

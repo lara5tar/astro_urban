@@ -40,16 +40,18 @@ interface Article {
     }>;
 }
 
-// Configuración de paginación
-// La API ya maneja la paginación internamente
-
 // Función para obtener los artículos del blog desde la API
 async function getArticles(page = 1) {
     try {
         const url = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ARTICLES}?page=${page}`;
         console.log("Fetching articles from (server):", url);
 
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        });
 
         if (!response.ok) {
             throw new Error(
@@ -122,7 +124,6 @@ function getPageUrl(pageNum: number): string {
     />
 
     <section class="py-12 md:py-16 px-4 bg-gray-50">
-        <!-- Contenedor del blog con control de paginación basado en cliente -->
         <div
             id="blog-container"
             class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8"
@@ -253,7 +254,13 @@ function getPageUrl(pageNum: number): string {
     </section>
 </GeneralLayout>
 
-<script define:vars={{ apiBaseUrl: API_CONFIG.BASE_URL }}>
+<script
+    define:vars={{
+        apiBaseUrl: API_CONFIG.BASE_URL,
+        initialArticles: articles,
+        initialMeta: meta,
+    }}
+>
     // Variables globales
     let currentPage = 1;
     let totalPages = 1;
@@ -278,8 +285,15 @@ function getPageUrl(pageNum: number): string {
         const urlParams = new URLSearchParams(window.location.search);
         const pageParam = urlParams.get("page");
 
-        // Cargar los artículos iniciales
-        fetchArticles(pageParam ? parseInt(pageParam) : 1);
+        // Cargar artículos iniciales del servidor o hacer fetch
+        if (initialArticles && initialArticles.length > 0) {
+            currentPage = initialMeta.current_page || 1;
+            totalPages = initialMeta.last_page || 1;
+            renderArticles(initialArticles);
+            renderPagination();
+        } else {
+            fetchArticles(pageParam ? parseInt(pageParam) : 1);
+        }
 
         // Eventos para los botones de paginación
         if (prevPageButton) {
@@ -300,6 +314,8 @@ function getPageUrl(pageNum: number): string {
 
         // Función principal para obtener artículos
         function fetchArticles(page) {
+            if (isLoading) return;
+
             // Resetear elementos UI
             isLoading = true;
             if (loadingIndicator) loadingIndicator.classList.remove("hidden");
@@ -317,13 +333,17 @@ function getPageUrl(pageNum: number): string {
             }
             window.history.pushState({}, "", browserUrl.toString());
 
-            // Construir URL de la API - Usamos directamente la URL base que pasamos desde el componente
+            // Construir URL de la API
             const apiUrl = `${apiBaseUrl}articles?page=${page}`;
-
-            console.log("Fetching articles from:", apiUrl);
+            console.log("Fetching articles from (client):", apiUrl);
 
             // Realizar la petición a la API
-            fetch(apiUrl)
+            fetch(apiUrl, {
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+            })
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error(`Error de API: ${response.status}`);
@@ -331,16 +351,13 @@ function getPageUrl(pageNum: number): string {
                     return response.json();
                 })
                 .then((result) => {
+                    console.log("API Response:", result);
                     if (result.success && result.data) {
-                        // Actualizar datos
                         const articles = result.data;
                         totalPages = result.meta.last_page;
                         currentPage = result.meta.current_page;
 
-                        // Renderizar artículos
                         renderArticles(articles);
-
-                        // Actualizar paginación
                         renderPagination();
 
                         // Desplazarse al inicio
@@ -349,6 +366,9 @@ function getPageUrl(pageNum: number): string {
                             behavior: "smooth",
                         });
                     } else {
+                        console.warn(
+                            "No articles found or API response not successful",
+                        );
                         showNoArticles();
                     }
                 })
@@ -392,24 +412,189 @@ function getPageUrl(pageNum: number): string {
             articleCard.className =
                 "bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 hover:translate-y-[-5px] flex flex-col h-full";
 
-            // Imagen destacada con altura optimizada para móviles
+            // Imagen destacada o carrusel de imágenes
             const imageContainer = document.createElement("div");
             imageContainer.className = "h-48 sm:h-56 overflow-hidden relative";
 
-            const image = document.createElement("img");
-            image.src = article.featured_image;
-            image.alt = article.title;
-            image.className =
-                "w-full h-full object-cover transition-transform hover:scale-105 duration-500";
-            image.loading = "lazy"; // Mejora rendimiento
+            // Verificar si tiene múltiples imágenes para crear carrusel
+            if (article.images && article.images.length > 1) {
+                // Crear carrusel de imágenes
+                const carouselContainer = document.createElement("div");
+                carouselContainer.className = "relative w-full h-full";
 
-            // Añadir gradiente sutil sobre la imagen
-            const overlay = document.createElement("div");
-            overlay.className =
-                "absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-70";
+                // Contenedor de imágenes del carrusel
+                const carouselTrack = document.createElement("div");
+                carouselTrack.className =
+                    "flex transition-transform duration-300 ease-in-out h-full";
+                carouselTrack.style.transform = "translateX(0%)";
 
-            imageContainer.appendChild(image);
-            imageContainer.appendChild(overlay);
+                // Agregar todas las imágenes al carrusel
+                article.images.forEach((imageData, index) => {
+                    const slide = document.createElement("div");
+                    slide.className = "min-w-full h-full flex-shrink-0";
+
+                    const image = document.createElement("img");
+                    image.src =
+                        imageData.url ||
+                        article.featured_image ||
+                        "/images/placeholder.jpg";
+                    image.alt = `${article.title} - imagen ${index + 1}`;
+                    image.className = "w-full h-full object-cover";
+                    image.loading = index === 0 ? "eager" : "lazy";
+
+                    // Manejar errores de imagen
+                    image.onerror = function () {
+                        this.src = "/images/placeholder.jpg";
+                    };
+
+                    slide.appendChild(image);
+                    carouselTrack.appendChild(slide);
+                });
+
+                carouselContainer.appendChild(carouselTrack);
+
+                // Controles del carrusel (solo si hay más de 1 imagen)
+                if (article.images.length > 1) {
+                    // Botón anterior
+                    const prevButton = document.createElement("button");
+                    prevButton.className =
+                        "absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 transition-all duration-200 z-10";
+                    prevButton.innerHTML = "&#8249;";
+                    prevButton.setAttribute("aria-label", "Imagen anterior");
+
+                    // Botón siguiente
+                    const nextButton = document.createElement("button");
+                    nextButton.className =
+                        "absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 transition-all duration-200 z-10";
+                    nextButton.innerHTML = "&#8250;";
+                    nextButton.setAttribute("aria-label", "Imagen siguiente");
+
+                    // Indicadores de puntos
+                    const dotsContainer = document.createElement("div");
+                    dotsContainer.className =
+                        "absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10";
+
+                    for (let i = 0; i < article.images.length; i++) {
+                        const dot = document.createElement("button");
+                        dot.className = `w-2 h-2 rounded-full transition-all duration-200 ${i === 0 ? "bg-white" : "bg-white bg-opacity-50"}`;
+                        dot.setAttribute("aria-label", `Ir a imagen ${i + 1}`);
+                        dotsContainer.appendChild(dot);
+                    }
+
+                    // Lógica del carrusel
+                    let currentSlide = 0;
+                    const totalSlides = article.images.length;
+
+                    function updateCarousel() {
+                        const translateX = -currentSlide * 100;
+                        carouselTrack.style.transform = `translateX(${translateX}%)`;
+
+                        // Actualizar indicadores
+                        const dots = dotsContainer.children;
+                        for (let i = 0; i < dots.length; i++) {
+                            dots[i].className =
+                                `w-2 h-2 rounded-full transition-all duration-200 ${i === currentSlide ? "bg-white" : "bg-white bg-opacity-50"}`;
+                        }
+                    }
+
+                    function nextSlide() {
+                        currentSlide = (currentSlide + 1) % totalSlides;
+                        updateCarousel();
+                    }
+
+                    function prevSlide() {
+                        currentSlide =
+                            (currentSlide - 1 + totalSlides) % totalSlides;
+                        updateCarousel();
+                    }
+
+                    function goToSlide(index) {
+                        currentSlide = index;
+                        updateCarousel();
+                    }
+
+                    // Event listeners
+                    nextButton.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        nextSlide();
+                    });
+
+                    prevButton.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        prevSlide();
+                    });
+
+                    // Event listeners para los puntos
+                    Array.from(dotsContainer.children).forEach((dot, index) => {
+                        dot.addEventListener("click", (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            goToSlide(index);
+                        });
+                    });
+
+                    // Auto-play del carrusel (opcional)
+                    let autoPlayInterval;
+
+                    function startAutoPlay() {
+                        autoPlayInterval = setInterval(nextSlide, 4000); // Cambiar cada 4 segundos
+                    }
+
+                    function stopAutoPlay() {
+                        clearInterval(autoPlayInterval);
+                    }
+
+                    // Pausar auto-play al hacer hover
+                    carouselContainer.addEventListener(
+                        "mouseenter",
+                        stopAutoPlay,
+                    );
+                    carouselContainer.addEventListener(
+                        "mouseleave",
+                        startAutoPlay,
+                    );
+
+                    // Iniciar auto-play
+                    startAutoPlay();
+
+                    // Agregar controles al contenedor
+                    carouselContainer.appendChild(prevButton);
+                    carouselContainer.appendChild(nextButton);
+                    carouselContainer.appendChild(dotsContainer);
+                }
+
+                // Añadir gradiente sutil sobre el carrusel
+                const overlay = document.createElement("div");
+                overlay.className =
+                    "absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-70 pointer-events-none";
+                carouselContainer.appendChild(overlay);
+
+                imageContainer.appendChild(carouselContainer);
+            } else {
+                // Imagen simple (sin carrusel)
+                const image = document.createElement("img");
+                image.src = article.featured_image || "/images/placeholder.jpg";
+                image.alt = article.title;
+                image.className =
+                    "w-full h-full object-cover transition-transform hover:scale-105 duration-500";
+                image.loading = "lazy";
+
+                // Manejar errores de imagen
+                image.onerror = function () {
+                    this.src = "/images/placeholder.jpg";
+                };
+
+                // Añadir gradiente sutil sobre la imagen
+                const overlay = document.createElement("div");
+                overlay.className =
+                    "absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-70";
+
+                imageContainer.appendChild(image);
+                imageContainer.appendChild(overlay);
+            }
+
             articleCard.appendChild(imageContainer);
 
             // Contenido con padding ajustado para móviles
@@ -470,39 +655,6 @@ function getPageUrl(pageNum: number): string {
             description.textContent =
                 article.description || "Sin descripción disponible";
             contentDiv.appendChild(description);
-
-            // Miniaturas de imágenes optimizadas para móvil (si existen)
-            if (article.images && article.images.length > 1) {
-                const imagesContainer = document.createElement("div");
-                imagesContainer.className =
-                    "flex gap-1.5 mb-3 sm:mb-4 overflow-x-auto pb-1 scrollbar-hide";
-
-                article.images.slice(0, 4).forEach((image, index) => {
-                    const imgContainer = document.createElement("div");
-                    imgContainer.className =
-                        "flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden border border-gray-100 hover:border-primary transition-colors";
-
-                    const img = document.createElement("img");
-                    img.src = image.url;
-                    img.alt = `${article.title} - imagen ${index + 1}`;
-                    img.className = "w-full h-full object-cover";
-                    img.loading = "lazy";
-
-                    imgContainer.appendChild(img);
-                    imagesContainer.appendChild(imgContainer);
-                });
-
-                // Contador de imágenes adicionales
-                if (article.images.length > 4) {
-                    const counter = document.createElement("div");
-                    counter.className =
-                        "flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center text-gray-600 text-xs font-medium";
-                    counter.textContent = `+${article.images.length - 4}`;
-                    imagesContainer.appendChild(counter);
-                }
-
-                contentDiv.appendChild(imagesContainer);
-            }
 
             // Footer con etiquetas y botón de leer más - mejor espacio para tocar
             const footerDiv = document.createElement("div");
@@ -587,7 +739,7 @@ function getPageUrl(pageNum: number): string {
                     ellipsis.textContent = "...";
                     pageNumbers.appendChild(ellipsis);
                 } else if (shouldShow) {
-                    // Mostrar número de página con tamaño optimizado para móvil
+                    // Mostrar número de página with tamaño optimizado para móvil
                     const pageButton = document.createElement("a");
                     pageButton.href = "#";
                     pageButton.className = `inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full text-sm font-medium ${

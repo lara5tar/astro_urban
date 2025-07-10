@@ -1,7 +1,7 @@
 ---
 import GeneralLayout from "../../../layouts/GeneralLayout.astro";
 import { Image } from "astro:assets";
-import logo from "/src/public/icons/logo_movil.webp";
+import logo from "/src/public/icons/icono.png";
 import { API_CONFIG } from "../../../config/api.js";
 
 // Para páginas dinámicas en generación estática, usaremos getStaticPaths
@@ -47,6 +47,7 @@ const currentPropertyId = propertyId || id;
 <GeneralLayout
     title="Propiedad - Urban Inmobiliaria"
     description="Detalles de la propiedad"
+    image="/icono.png"
 >
     <!-- Loading inicial -->
     <div
@@ -70,7 +71,7 @@ const currentPropertyId = propertyId || id;
     <!-- Página de error 404 -->
     <div
         id="property-not-found"
-        class="min-h-screen bg-white flex items-center justify-center hidden"
+        class="min-h-screen bg-white items-center justify-center hidden"
     >
         <div class="text-center">
             <h1 class="text-6xl font-bold text-gray-300 mb-4">404</h1>
@@ -98,8 +99,7 @@ const currentPropertyId = propertyId || id;
             // Función para obtener una propiedad por ID
             async function fetchProperty(id) {
                 try {
-                    const cacheBuster = new Date().getTime();
-                    const apiUrl = `${API_CONFIG.BASE_URL}properties/${id}?_t=${cacheBuster}`;
+                    const apiUrl = `${API_CONFIG.BASE_URL}properties/${id}`;
 
                     console.log(`Fetching property from: ${apiUrl}`);
 
@@ -121,10 +121,13 @@ const currentPropertyId = propertyId || id;
                     }
 
                     const data = await response.json();
+                    console.log("Property data:", data);
 
-                    if (data.success && data.data) {
+                    // The API returns data in a "data" property, check if it exists
+                    if (data.data) {
                         return data.data;
                     }
+                    // If no data property, return null
                     return null;
                 } catch (error) {
                     console.error(`Error fetching property ${id}:`, error);
@@ -144,97 +147,101 @@ const currentPropertyId = propertyId || id;
                           ];
 
                 contentEl.innerHTML = `
-                    <!-- Header responsivo con logo y estado de propiedad -->
-                    <div class="flex flex-col sm:flex-row justify-between items-end mb-5 sm:mb-0 gap-4">
-                        <div class="hidden sm:flex items-center h-full ml-0 sm:ml-5">
-                            <img
-                                src="/src/public/icons/logo_movil.webp"
-                                alt="Urban Inmobiliaria"
-                                class="h-20 sm:h-25 md:h-35 object-contain"
-                                width="200"
-                                height="200"
-                            />
-                        </div>
-                        <div class="bg-[#2e8d80] w-full sm:w-auto pr-0 pb-2 sm:pb-0 sm:pr-5 flex items-center">
-                            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wider text-white px-5 sm:px-10 md:px-20 bg-gray-800 h-full w-full sm:w-auto py-3 sm:py-8 flex items-center justify-center">
-                                ${property.is_for_sale ? "VENTA" : "RENTA"}
-                            </h1>
-                        </div>
-                    </div>
-
-                    <!-- Galería de imágenes responsiva -->
-                    <div class="mb-10">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 grid-rows-1 sm:grid-rows-2 h-auto sm:h-[500px] md:h-[700px]">
-                            ${validImages
-                                .slice(0, 4)
-                                .map(
-                                    (img, index) => `
-                                <div class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image" data-index="${index}">
-                                    <img
-                                        src="${img}"
-                                        alt="${property.type} - Vista ${index + 1}"
-                                        class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                                    />
-                                </div>
-                            `,
-                                )
-                                .join("")}
-                        </div>
-                    </div>
-
-                    <!-- Información de la propiedad -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <div class="bg-white mb-5">
-                                <h2 class="text-xl md:text-2xl font-bold uppercase text-gray-800 text-center mb-4 border border-gray-800 py-2">
-                                    UBICACIÓN
-                                </h2>
-                                <p class="text-lg md:text-xl text-center">
-                                    ${property.location?.line1 || "Dirección no disponible"}<br/>
-                                    ${property.location?.line2 || ""}<br/>
-                                    ${property.location?.line3 || ""}
-                                </p>
+                    <div class="mx-auto max-w-5xl lg:max-w-6xl px-4 sm:px-6 py-10">
+                        <!-- Header responsivo con logo y estado de propiedad -->
+                        <div class="flex flex-col sm:flex-row justify-between items-end mb-5 sm:mb-0 gap-4">
+                            <div class="hidden sm:flex items-center h-full ml-0 sm:ml-5">
+                                <img
+                                    src="/icono.png"
+                                    alt="Urban Inmobiliaria"
+                                    class="h-14 sm:h-16 md:h-20 object-contain"
+                                    width="160"
+                                    height="160"
+                                />
                             </div>
-                            <div class="bg-white">
-                                <h2 class="text-xl md:text-2xl font-bold uppercase text-gray-800 text-center mb-4 border border-gray-800 py-2">
-                                    INVERSIÓN
-                                </h2>
-                                <p class="text-2xl md:text-3xl font-bold text-gray-800 text-center">
-                                    ${property.investment_formatted || "Precio no disponible"}
-                                </p>
+                            <div class="bg-[#2e8d80] w-full sm:w-auto pr-0 pb-2 sm:pb-0 sm:pr-5 flex items-center">
+                                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wider text-white px-5 sm:px-10 md:px-20 bg-gray-800 h-full w-full sm:w-auto py-3 sm:py-8 flex items-center justify-center">
+                                    ${property.is_for_sale == 1 ? "VENTA" : "RENTA"}
+                                </h1>
                             </div>
                         </div>
 
-                        <div class="bg-[#2e8d80] pr-0 pb-3 sm:pb-0 sm:pr-5">
-                            <div class="h-full w-full bg-gray-800 text-white p-5 flex flex-col justify-start">
-                                <h2 class="text-xl md:text-2xl font-bold uppercase text-white text-center mb-4 md:mb-6 border border-white py-2">
-                                    CARACTERÍSTICAS
-                                </h2>
-                                ${
-                                    property.features &&
-                                    property.features.length > 0
-                                        ? `
-                                    <div class="grid grid-cols-1 md:gap-4">
-                                        ${property.features
-                                            .map(
-                                                (feature) => `
-                                            <div class="flex items-center p-2 md:p-0">
-                                                <div class="mr-3 text-[#2e8d80] bg-white rounded-full p-1 flex-shrink-0">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                                    </svg>
-                                                </div>
-                                                <span class="text-white text-base md:text-lg">${feature}</span>
-                                            </div>
-                                        `,
-                                            )
-                                            .join("")}
+                        <div class="mt-10"><!-- Espaciador --></div>
+
+                        <!-- Galería de imágenes responsiva -->
+                        <div class="mb-10">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 grid-rows-1 sm:grid-rows-2 h-auto sm:h-[500px] md:h-[700px]">
+                                ${validImages
+                                    .slice(0, 4)
+                                    .map(
+                                        (img, index) => `
+                                    <div class="w-full h-[250px] sm:h-full overflow-hidden cursor-pointer gallery-image" data-index="${index}">
+                                        <img
+                                            src="${img}"
+                                            alt="${property.type} - Vista ${index + 1}"
+                                            class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                                        />
                                     </div>
-                                `
-                                        : `
-                                    <p class="text-center text-white">Características no disponibles</p>
-                                `
-                                }
+                                `,
+                                    )
+                                    .join("")}
+                            </div>
+                        </div>
+
+                        <!-- Información de la propiedad -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <div class="bg-white mb-5">
+                                    <h2 class="text-xl md:text-2xl font-bold uppercase text-gray-800 text-center mb-4 border border-gray-800 py-2">
+                                        UBICACIÓN
+                                    </h2>
+                                    <p class="text-lg md:text-xl text-center">
+                                        ${property.location?.line1 || "Dirección no disponible"}<br/>
+                                        ${property.location?.line2 || ""}<br/>
+                                        ${property.location?.line3 || ""}
+                                    </p>
+                                </div>
+                                <div class="bg-white">
+                                    <h2 class="text-xl md:text-2xl font-bold uppercase text-gray-800 text-center mb-4 border border-gray-800 py-2">
+                                        INVERSIÓN
+                                    </h2>
+                                    <p class="text-2xl md:text-3xl font-bold text-gray-800 text-center">
+                                        ${property.investment_formatted || "Precio no disponible"}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="bg-[#2e8d80] pr-0 pb-3 sm:pb-0 sm:pr-5">
+                                <div class="h-full w-full bg-gray-800 text-white p-5 flex flex-col justify-start">
+                                    <h2 class="text-xl md:text-2xl font-bold uppercase text-white text-center mb-4 md:mb-6 border border-white py-2">
+                                        CARACTERÍSTICAS
+                                    </h2>
+                                    ${
+                                        property.features &&
+                                        property.features.length > 0
+                                            ? `
+                                        <div class="grid grid-cols-1 md:gap-4">
+                                            ${property.features
+                                                .map(
+                                                    (feature) => `
+                                                <div class="flex items-center p-2 md:p-0">
+                                                    <div class="mr-3 text-[#2e8d80] bg-white rounded-full p-1 flex-shrink-0">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                                        </svg>
+                                                    </div>
+                                                    <span class="text-white text-base md:text-lg">${feature}</span>
+                                                </div>
+                                            `,
+                                                )
+                                                .join("")}
+                                        </div>
+                                    `
+                                            : `
+                                        <p class="text-center text-white">Características no disponibles</p>
+                                    `
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -316,11 +323,13 @@ const currentPropertyId = propertyId || id;
                 } else {
                     loadingEl.classList.add("hidden");
                     notFoundEl.classList.remove("hidden");
+                    notFoundEl.classList.add("flex");
                 }
             } catch (error) {
                 console.error("Error loading property:", error);
                 loadingEl.classList.add("hidden");
                 notFoundEl.classList.remove("hidden");
+                notFoundEl.classList.add("flex");
             }
         });
     </script>

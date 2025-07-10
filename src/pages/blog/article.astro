@@ -3,45 +3,6 @@ import GeneralLayout from "../../layouts/GeneralLayout.astro";
 import { Image } from "astro:assets";
 import HeroSeccion from "../../components/HeroSeccion.astro";
 import { API_CONFIG } from "../../config/api.js";
-
-// Generate static paths for all articles
-export async function getStaticPaths() {
-    try {
-        // Fetch all articles from the API
-        const response = await fetch(`${API_CONFIG.BASE_URL}articles`);
-
-        if (!response.ok) {
-            console.error(
-                "Failed to fetch articles for static paths:",
-                response.status,
-            );
-            return [];
-        }
-
-        const result = await response.json();
-
-        if (!result.success || !result.data) {
-            console.error("Invalid API response for static paths:", result);
-            return [];
-        }
-
-        // Generate paths for each article
-        const paths = result.data.map((article: any) => ({
-            params: { id: article.id.toString() },
-            props: { article }, // Pass article data as props for better performance
-        }));
-
-        console.log(`Generated ${paths.length} static paths for blog articles`);
-        return paths;
-    } catch (error) {
-        console.error("Error generating static paths:", error);
-        return [];
-    }
-}
-
-// Get the article data from props (passed from getStaticPaths)
-const { article } = Astro.props;
-const { id } = Astro.params;
 ---
 
 <GeneralLayout
@@ -113,7 +74,7 @@ const { id } = Astro.params;
         </div>
     </div>
 
-    <script define:vars={{ API_CONFIG, articleId: id }}>
+    <script define:vars={{ API_CONFIG }}>
         document.addEventListener("DOMContentLoaded", async function () {
             const articleContainer =
                 document.getElementById("article-container");
@@ -122,11 +83,17 @@ const { id } = Astro.params;
                 document.getElementById("loading-indicator");
             const errorMessage = document.getElementById("error-message");
 
-            // Use the article ID passed from Astro
+            // Obtener el ID del artículo desde la URL del navegador usando query parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const articleId = urlParams.get("id");
+
             console.log("Cargando artículo con ID:", articleId);
 
-            // If no ID, redirect to blog
+            // Si no hay ID en la URL, redirigir al blog
             if (!articleId) {
+                console.log(
+                    "No se encontró ID en la URL, redirigiendo al blog",
+                );
                 window.location.href = "/blog";
                 return;
             }

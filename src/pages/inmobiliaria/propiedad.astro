@@ -1,47 +1,8 @@
 ---
-import GeneralLayout from "../../../layouts/GeneralLayout.astro";
+import GeneralLayout from "../../layouts/GeneralLayout.astro";
 import { Image } from "astro:assets";
 import logo from "/src/public/icons/icono.png";
-import { API_CONFIG } from "../../../config/api.js";
-
-// Para páginas dinámicas en generación estática, usaremos getStaticPaths
-export async function getStaticPaths() {
-    // En generación estática, creamos rutas para IDs del 1 al 1000
-    // Las propiedades se cargarán dinámicamente desde el cliente
-    const paths = [];
-    for (let i = 1; i <= 1000; i++) {
-        paths.push({
-            params: { id: i.toString() },
-            props: { propertyId: i.toString() },
-        });
-    }
-    return paths;
-}
-
-// Definir tipos para la propiedad
-interface PropertyLocation {
-    line1?: string;
-    line2?: string;
-    line3?: string;
-}
-
-interface Property {
-    id: string;
-    type: string;
-    is_for_sale: boolean;
-    investment_formatted: string;
-    description?: string;
-    location?: PropertyLocation;
-    images?: string[];
-    features?: string[];
-}
-
-// Obtener el ID de la propiedad desde los parámetros
-const { propertyId } = Astro.props;
-const { id } = Astro.params;
-
-// Usar el ID de los parámetros como fallback
-const currentPropertyId = propertyId || id;
+import { API_CONFIG } from "../../config/api.js";
 ---
 
 <GeneralLayout
@@ -90,11 +51,26 @@ const currentPropertyId = propertyId || id;
         </div>
     </div>
 
-    <script define:vars={{ API_CONFIG, propertyId: currentPropertyId }}>
+    <script define:vars={{ API_CONFIG }}>
         document.addEventListener("DOMContentLoaded", async () => {
             const loadingEl = document.getElementById("property-loading");
             const contentEl = document.getElementById("property-content");
             const notFoundEl = document.getElementById("property-not-found");
+
+            // Obtener el ID de la propiedad desde la URL del navegador usando query parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const propertyId = urlParams.get("id");
+
+            console.log("Cargando propiedad con ID:", propertyId);
+
+            // Si no hay ID en la URL, redirigir a inmobiliaria
+            if (!propertyId) {
+                console.log(
+                    "No se encontró ID en la URL, redirigiendo a inmobiliaria",
+                );
+                window.location.href = "/inmobiliaria";
+                return;
+            }
 
             // Función para obtener una propiedad por ID
             async function fetchProperty(id) {

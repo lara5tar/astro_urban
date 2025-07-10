@@ -668,7 +668,7 @@ function getPageUrl(pageNum: number): string {
 
             // Enlace "Leer más" con área de toque mejorada
             const link = document.createElement("a");
-            link.href = `/blog/${article.id}`;
+            link.href = `/blog/article?id=${article.id}`;
             link.className =
                 "inline-flex items-center text-primary text-sm font-medium hover:text-primary/80 transition-colors py-1 px-1";
             link.textContent = "Leer más";

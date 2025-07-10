@@ -162,7 +162,7 @@ const hasMorePages = false;
                     propertyElement.dataset.index = globalIndex.toString();
 
                     propertyElement.innerHTML = `
-                        <a href="/inmobiliaria/propiedad/${property.id}" class="block">
+                        <a href="/inmobiliaria/propiedad?id=${property.id}" class="block">
                             <img
                                 src="${property.imageUrl}"
                                 alt="${property.type} - ${property.location}"

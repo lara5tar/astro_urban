@@ -4,11 +4,7 @@ import { Image } from "astro:assets";
 import HeroSeccion from "../../components/HeroSeccion.astro";
 import { API_CONFIG } from "../../config/api.js";
 
-// En lugar de usar getStaticPaths, utilizaremos el enfoque más simple
-// que funciona con la configuración actual de Astro
-export const prerender = false;
-
-// Esta página se renderizará en el servidor y no necesita getStaticPaths
+// Esta página se renderizará del lado del cliente usando JavaScript
 const { id } = Astro.params;
 ---
 

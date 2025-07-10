@@ -8,10 +8,15 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
     vite: {
         plugins: [tailwindcss()],
-
     },
     image: {
         // domains: ["https://urbancms.up.railway.app"],
     },
+    // Configuración para permitir rutas dinámicas sin generación estática
+    output: "static",
+    trailingSlash: "ignore",
+    build: {
+        format: "file"
+    }
 });
 

@@ -4,947 +4,809 @@ import { Image } from "astro:assets";
 import HeroSeccion from "../../components/HeroSeccion.astro";
 import { API_CONFIG } from "../../config/api.js";
 
-// Definición de tipos para los artículos
-interface ArticleImage {
-    id: number;
-    url: string;
-    display_order: number;
-}
+// En lugar de usar getStaticPaths, utilizaremos el enfoque más simple
+// que funciona con la configuración actual de Astro
+export const prerender = false;
 
-interface ArticleContent {
-    type: string;
-    content: string;
-}
-
-interface ArticleComment {
-    id: number;
-    name: string | null;
-    email: string | null;
-    message: string | null;
-    formatted_date: string | null;
-    created_at: string;
-    created_at_formatted: string;
-}
-
-interface Article {
-    id: number;
-    title: string;
-    slug: string;
-    description: string;
-    publication_date: string;
-    publication_date_formatted: string;
-    meta_title: string;
-    meta_description: string;
-    keywords: string[];
-    images: ArticleImage[];
-    featured_image: string;
-    created_at: string;
-    updated_at: string;
-    content_preview: string;
-    content: ArticleContent[];
-    content_html: string;
-    comments: ArticleComment[];
-}
-
-export async function getStaticPaths() {
-    try {
-        // Obtener todos los artículos
-        const response = await fetch(
-            `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ARTICLES}`,
-        );
-        const data = await response.json();
-
-        if (!data.success || !data.data) {
-            return [];
-        }
-
-        // Crear una ruta para cada artículo usando el ID
-        return data.data.map((article: Article) => {
-            return {
-                params: { id: article.id.toString() },
-                props: { articleId: article.id },
-            };
-        });
-    } catch (error) {
-        console.error("Error fetching articles:", error);
-        return [];
-    }
-}
-
-// Obtener el ID del artículo de los parámetros
-const { articleId } = Astro.props;
-
-// Función para obtener un artículo específico por ID
-async function getArticleById(id: number): Promise<Article | null> {
-    try {
-        const response = await fetch(
-            `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ARTICLE_DETAIL(id)}`,
-        );
-        const data = await response.json();
-
-        console.log(`Fetched article with ID ${id}:`, data);
-
-        if (data.success) {
-            return data.data;
-        }
-        return null;
-    } catch (error) {
-        console.error(`Error fetching article with ID ${id}:`, error);
-        return null;
-    }
-}
-
-// Obtener el artículo completo
-const article = await getArticleById(articleId);
-
-// Si no se encuentra el artículo, mostrar mensaje de error
-if (!article) {
-    return Astro.redirect("/404");
-}
-
-// Formatear fecha para SEO
-const publicationDate = new Date(article.publication_date);
-const formattedDate = publicationDate.toISOString();
+// Esta página se renderizará en el servidor y no necesita getStaticPaths
+const { id } = Astro.params;
 ---
 
 <GeneralLayout
-    title={`${article.title} | Urban Arquitectura Blog`}
-    description={article.meta_description}
+    title="Artículo | Urban Arquitectura Blog"
+    description="Cargando artículo..."
 >
-    <article class="bg-white">
-        <!-- Cabecera de artículo con diseño mejorado para dispositivos móviles -->
-        <div class="bg-white pt-10 sm:pt-16 pb-4 sm:pb-6">
-            <div class="container mx-auto px-4">
-                <div class="max-w-4xl mx-auto">
-                    <!-- Datos del artículo -->
-                    <div
-                        class="flex items-center space-x-2 mb-3 sm:mb-4 text-xs sm:text-sm text-gray-500"
-                    >
-                        <span class="flex items-center">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                ></path>
-                            </svg>
-                            {article.publication_date_formatted}
-                        </span>
-                    </div>
-
-                    <!-- Título principal optimizado para móvil -->
-                    <h1
-                        class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-800 mb-3 sm:mb-4 md:mb-6 leading-tight"
-                    >
-                        {article.title}
-                    </h1>
-
-                    <!-- Etiquetas con mejor espaciado para tocar -->
-                    <div
-                        class="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4 md:mb-6"
-                    >
-                        {
-                            article.keywords.map((keyword: string) => (
-                                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1.5 rounded-full hover:bg-gray-200 transition-colors">
-                                    #{keyword}
-                                </span>
-                            ))
-                        }
-                    </div>
-
-                    <!-- Descripción destacada con mejor legibilidad en móvil -->
-                    <p
-                        class="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed mb-4 sm:mb-6 md:mb-8 border-l-4 border-primary pl-3 sm:pl-4 italic"
-                    >
-                        {article.description}
-                    </p>
-
-                    <!-- Carrusel de imágenes o imagen principal optimizada para carga en móvil -->
-                    <div class="mb-6 sm:mb-8 md:mb-10 mx-auto max-w-4xl">
-                        {
-                            article.images && article.images.length > 1 ? (
-                                <!-- Carrusel de imágenes -->
-                                <div class="relative rounded-xl overflow-hidden shadow-lg">
-                                    <!-- Contenedor principal del carrusel -->
-                                    <div class="relative h-64 sm:h-80 md:h-96 lg:h-[500px]">
-                                        <!-- Track de imágenes -->
-                                        <div 
-                                            id="article-carousel-track" 
-                                            class="flex transition-transform duration-500 ease-in-out h-full"
-                                            style="transform: translateX(0%)"
-                                        >
-                                            {article.images.map((image, index) => (
-                                                <div class="min-w-full h-full flex-shrink-0 relative">
-                                                    <img
-                                                        src={image.url}
-                                                        alt={`${article.title} - imagen ${index + 1}`}
-                                                        class="w-full h-full object-cover"
-                                                        loading={index === 0 ? "eager" : "lazy"}
-                                                        width="800"
-                                                        height="500"
-                                                    />
-                                                    <!-- Gradiente opcional para mejor legibilidad de controles -->
-                                                    <div class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        <!-- Controles de navegación -->
-                                        <button 
-                                            id="article-carousel-prev"
-                                            class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-60 hover:bg-opacity-80 text-white rounded-full p-3 transition-all duration-200 z-10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
-                                            aria-label="Imagen anterior"
-                                        >
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                                            </svg>
-                                        </button>
-
-                                        <button 
-                                            id="article-carousel-next"
-                                            class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-60 hover:bg-opacity-80 text-white rounded-full p-3 transition-all duration-200 z-10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
-                                            aria-label="Imagen siguiente"
-                                        >
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                            </svg>
-                                        </button>
-
-                                        <!-- Indicadores de puntos -->
-                                        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-                                            {article.images.map((_, index) => (
-                                                <button 
-                                                    class={`article-carousel-dot w-3 h-3 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${index === 0 ? 'bg-white' : 'bg-white bg-opacity-50 hover:bg-opacity-75'}`}
-                                                    data-slide={index}
-                                                    aria-label={`Ir a imagen ${index + 1}`}
-                                                ></button>
-                                            ))}
-                                        </div>
-
-                                        <!-- Contador de imágenes -->
-                                        <div class="absolute top-4 right-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm z-10">
-                                            <span id="article-current-slide">1</span> / <span id="article-total-slides">{article.images.length}</span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Miniaturas (opcional, solo en pantallas grandes) -->
-                                    <div class="hidden md:block mt-4">
-                                        <div class="flex space-x-2 overflow-x-auto pb-2">
-                                            {article.images.map((image, index) => (
-                                                <button 
-                                                    class={`article-thumbnail flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${index === 0 ? 'border-primary' : 'border-gray-200 hover:border-gray-300'}`}
-                                                    data-slide={index}
-                                                >
-                                                    <img
-                                                        src={image.url}
-                                                        alt={`Miniatura ${index + 1}`}
-                                                        class="w-full h-full object-cover"
-                                                        loading="lazy"
-                                                    />
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <!-- Imagen simple -->
-                                <div class="rounded-xl overflow-hidden shadow-lg">
-                                    <img
-                                        src={article.featured_image}
-                                        alt={article.title}
-                                        class="w-full h-auto object-cover"
-                                        loading="eager"
-                                        width="800"
-                                        height="500"
-                                    />
-                                </div>
-                            )
-                        }
-                    </div>
-                </div>
+    <div id="article-container" class="bg-white min-h-screen">
+        <!-- Pantalla de carga inicial -->
+        <div
+            id="loading-indicator"
+            class="py-32 flex flex-col items-center justify-center"
+        >
+            <div
+                class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary mb-4"
+            >
             </div>
+            <p class="text-gray-600">Cargando artículo...</p>
         </div>
 
-        <!-- Contenido principal del artículo optimizado para móviles -->
-        <div class="container mx-auto px-4 py-4 sm:py-6">
-            <div class="max-w-4xl mx-auto">
-                <!-- Contenido principal con estilo mejorado para móviles -->
-                <div
-                    class="prose prose-sm sm:prose-base lg:prose-lg max-w-none"
+        <!-- Contenedor donde se insertará dinámicamente el artículo -->
+        <article id="article-content" class="hidden"></article>
+
+        <!-- Mensaje de error -->
+        <div id="error-message" class="hidden py-16 px-4">
+            <div
+                class="max-w-xl mx-auto bg-red-50 p-8 rounded-xl shadow-md text-center"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-16 w-16 text-red-500 mx-auto mb-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                 >
-                    {
-                        article.content &&
-                            article.content.map((item) => {
-                                const content = [];
-
-                                // Estilos mejorados para diferentes tipos de contenido
-                                if (item.type === "heading") {
-                                    content.push(
-                                        <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mt-6 sm:mt-10 mb-4 sm:mb-6 pb-2 border-b border-gray-200">
-                                            {item.content}
-                                        </h2>,
-                                    );
-                                } else if (item.type === "subtitle") {
-                                    content.push(
-                                        <h3 class="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-700 mt-5 sm:mt-8 mb-3 sm:mb-4">
-                                            {item.content}
-                                        </h3>,
-                                    );
-                                } else if (item.type === "paragraph") {
-                                    content.push(
-                                        <p class="mb-4 sm:mb-6 text-gray-600 leading-relaxed text-sm sm:text-base lg:text-lg">
-                                            {item.content}
-                                        </p>,
-                                    );
-                                } else if (item.type === "quote") {
-                                    content.push(
-                                        <blockquote class="my-6 sm:my-8 mx-auto text-center px-4 sm:px-6 py-4 sm:py-6 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg border-l-4 border-primary shadow-sm relative">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                class="h-8 w-8 sm:h-10 sm:w-10 text-primary/30 absolute top-3 left-3 opacity-70"
-                                                fill="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                                            </svg>
-                                            <div class="text-gray-800 italic text-base sm:text-lg lg:text-xl font-serif ml-4 sm:ml-6 relative z-10">
-                                                "{item.content}"
-                                            </div>
-                                        </blockquote>,
-                                    );
-                                } else if (item.type === "list") {
-                                    // Dividir el contenido por líneas para crear elementos de lista
-                                    const listItems = item.content.split("\n");
-                                    content.push(
-                                        <ul class="list-disc pl-5 sm:pl-6 mb-4 sm:mb-6 space-y-1.5 sm:space-y-2 text-gray-600">
-                                            {listItems.map((listItem) => (
-                                                <li class="mb-1.5 sm:mb-2 text-sm sm:text-base lg:text-lg">
-                                                    {listItem.trim()}
-                                                </li>
-                                            ))}
-                                        </ul>,
-                                    );
-                                } else {
-                                    content.push(
-                                        <p class="mb-4 sm:mb-6 text-gray-600 text-sm sm:text-base lg:text-lg">
-                                            {item.content}
-                                        </p>,
-                                    );
-                                }
-
-                                return content;
-                            })
-                    }
-                </div>
-
-                <!-- Pie del artículo con información de publicación optimizado para móvil -->
-                <div
-                    class="mt-8 sm:mt-10 pt-4 sm:pt-6 border-t border-gray-200 flex flex-col md:flex-row md:justify-between md:items-center"
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                    ></path>
+                </svg>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                    Artículo no encontrado
+                </h2>
+                <p class="text-gray-600 mb-6">
+                    Lo sentimos, no pudimos encontrar el artículo que estás
+                    buscando.
+                </p>
+                <a
+                    href="/blog"
+                    class="inline-flex items-center px-4 py-2 bg-[#2e8d80] text-white rounded-md hover:bg-[#267569] transition-colors"
                 >
-                    <div class="text-gray-500 text-xs sm:text-sm mb-4 md:mb-0">
-                        <p class="flex items-center">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-primary"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                                ></path>
-                            </svg>
-                            Última actualización: {
-                                new Date(article.updated_at).toLocaleDateString(
-                                    "es-MX",
-                                    {
-                                        day: "numeric",
-                                        month: "long",
-                                        year: "numeric",
-                                    },
-                                )
-                            }
-                        </p>
-                    </div>
-
-                    <!-- Compartir en redes sociales con mejor área táctil -->
-                    <div
-                        class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-0"
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 mr-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
                     >
-                        <span
-                            class="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-0 sm:mr-3"
-                            >Compartir:</span
-                        >
-                        <div class="flex space-x-4">
-                            <a
-                                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(Astro.url.toString())}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="bg-sky-500 hover:bg-sky-600 text-white p-2.5 rounded-full transition-colors w-10 h-10 sm:w-9 sm:h-9 flex items-center justify-center"
-                                aria-label="Compartir en Twitter"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="14"
-                                    height="14"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                >
-                                    <path
-                                        d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"
-                                    ></path>
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Volver al blog
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script define:vars={{ API_CONFIG, id }}>
+        document.addEventListener("DOMContentLoaded", async function () {
+            const articleContainer =
+                document.getElementById("article-container");
+            const articleContent = document.getElementById("article-content");
+            const loadingIndicator =
+                document.getElementById("loading-indicator");
+            const errorMessage = document.getElementById("error-message");
+
+            // Obtener el ID del artículo de los parámetros pasados desde el servidor
+            const articleId = id;
+
+            console.log("Cargando artículo con ID:", articleId);
+
+            // Cambiar el título del documento
+            document.title = "Cargando artículo... | Urban Arquitectura Blog";
+
+            try {
+                // Mostrar indicador de carga
+                loadingIndicator.classList.remove("hidden");
+                articleContent.classList.add("hidden");
+                errorMessage.classList.add("hidden");
+
+                // Obtener datos del artículo desde la API
+                const apiUrl = `${API_CONFIG.BASE_URL}articles/${articleId}`;
+                console.log("URL de la API para obtener el artículo:", apiUrl);
+
+                const response = await fetch(apiUrl, {
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                console.log("Estado de la respuesta:", response.status);
+
+                if (!response.ok) {
+                    throw new Error(`Error de API: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log("Respuesta de la API:", result);
+
+                if (!result.success || !result.data) {
+                    throw new Error("Artículo no encontrado o datos inválidos");
+                }
+
+                const article = result.data;
+
+                // Actualizar título y meta descripción
+                document.title = `${article.title} | Urban Arquitectura Blog`;
+                const metaDescription = document.querySelector(
+                    'meta[name="description"]',
+                );
+                if (metaDescription) {
+                    metaDescription.setAttribute(
+                        "content",
+                        article.meta_description || article.description,
+                    );
+                }
+
+                // Generar el HTML del artículo
+                articleContent.innerHTML = generateArticleHTML(article);
+
+                // Ocultar cargador y mostrar contenido
+                loadingIndicator.classList.add("hidden");
+                articleContent.classList.remove("hidden");
+
+                // Inicializar funcionalidades JS (carrusel, formulario de comentarios)
+                initArticleCarousel();
+                initCommentForm(articleId);
+            } catch (error) {
+                console.error("Error al cargar el artículo:", error);
+
+                // Mostrar mensaje de error
+                loadingIndicator.classList.add("hidden");
+                articleContent.classList.add("hidden");
+                errorMessage.classList.remove("hidden");
+            }
+        });
+
+        // Función para generar el HTML del artículo
+        function generateArticleHTML(article) {
+            // Formatear fecha para SEO
+            const publicationDate = new Date(article.publication_date);
+            const formattedDate = publicationDate.toISOString();
+
+            return `
+            <!-- Cabecera de artículo con diseño mejorado para dispositivos móviles -->
+            <div class="bg-white pt-10 sm:pt-10">
+                <div class="container mx-auto px-4">
+                    <div class="max-w-4xl mx-auto">
+                        <!-- Datos del artículo -->
+                        <div class="flex items-center space-x-2 mb-3 sm:mb-4 text-xs sm:text-sm text-gray-500">
+                            <span class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                 </svg>
-                            </a>
-                            <a
-                                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(article.title + " " + Astro.url.toString())}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="bg-green-500 hover:bg-green-600 text-white p-2.5 rounded-full transition-colors w-10 h-10 sm:w-9 sm:h-9 flex items-center justify-center"
-                                aria-label="Compartir en WhatsApp"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="14"
-                                    height="14"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                >
-                                    <path
-                                        d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"
-                                    ></path>
-                                </svg>
-                            </a>
+                                ${article.publication_date_formatted}
+                            </span>
+                        </div>
+
+                        <!-- Título principal optimizado para móvil con margen inferior aumentado -->
+                        <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-800 leading-tight mb-5">
+                            ${article.title}
+                        </h1>
+
+                        <!-- Etiquetas con mejor espaciado para tocar y margen inferior aumentado -->
+                        <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-5">
+                            ${
+                                article.keywords && article.keywords.length
+                                    ? article.keywords
+                                          .map(
+                                              (keyword) => `
+                                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1.5 rounded-full hover:bg-gray-200 transition-colors">
+                                    #${keyword}
+                                </span>
+                            `,
+                                          )
+                                          .join("")
+                                    : ""
+                            }
+                        </div>
+
+                        <!-- Descripción destacada con mejor legibilidad en móvil y margen inferior aumentado -->
+                        <p class="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed mb-5 border-l-4 border-primary pl-3 sm:pl-4 italic">
+                            ${article.description}
+                        </p>
+
+                        <!-- Carrusel de imágenes o imagen principal con margen inferior aumentado -->
+                        <div class="mb-5 mx-auto max-w-4xl">
+                            ${generateImagesSection(article)}
                         </div>
                     </div>
                 </div>
-
-                <!-- Sección de comentarios mejorada para móviles -->
-                <div class="mt-10 sm:mt-16">
-                    <h3
-                        class="text-xl sm:text-2xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-primary"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-                            ></path>
-                        </svg>
-                        Comentarios
-                    </h3>
-
-                    <!-- Formulario de comentarios mejorado para móvil -->
-                    <div
-                        class="bg-gray-50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-8 mb-8 sm:mb-10 shadow-sm border border-gray-100"
-                    >
-                        <h4
-                            class="text-base sm:text-lg font-semibold mb-3 sm:mb-4 md:mb-6 text-gray-800"
-                        >
-                            ¿Qué opinas sobre este artículo?
-                        </h4>
-
-                        <form id="comment-form">
-                            <div
-                                class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6 mb-3 sm:mb-4 md:mb-6"
-                            >
-                                <div>
-                                    <label
-                                        for="name"
-                                        class="block text-sm font-medium text-gray-700 mb-1"
-                                        >Nombre</label
-                                    >
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        name="name"
-                                        class="w-full px-3 sm:px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm text-sm sm:text-base"
-                                        placeholder="Tu nombre"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label
-                                        for="email"
-                                        class="block text-sm font-medium text-gray-700 mb-1"
-                                        >Email</label
-                                    >
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        class="w-full px-3 sm:px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm text-sm sm:text-base"
-                                        placeholder="Tu email"
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            <div class="mb-3 sm:mb-4">
-                                <label
-                                    for="message"
-                                    class="block text-sm font-medium text-gray-700 mb-1"
-                                    >Comentario</label
-                                >
-                                <textarea
-                                    id="message"
-                                    name="message"
-                                    rows="4"
-                                    class="w-full px-3 sm:px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm text-sm sm:text-base"
-                                    placeholder="Escribe tu comentario aquí..."
-                                    required></textarea>
-                            </div>
-                            <div
-                                class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
-                            >
-                                <div
-                                    id="form-status"
-                                    class="text-xs sm:text-sm order-2 sm:order-1"
-                                >
-                                </div>
-                                <button
-                                    type="submit"
-                                    class="bg-primary hover:bg-primary/90 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 font-medium text-sm sm:text-base w-full sm:w-auto order-1 sm:order-2 hover:shadow-lg"
-                                >
-                                    Enviar comentario
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Lista de comentarios optimizada para móvil -->
-                    {
-                        article.comments && article.comments.length > 0 ? (
-                            <div class="space-y-3 sm:space-y-4 md:space-y-6">
-                                {article.comments.map((comment) => (
-                                    <div class="bg-white p-3 sm:p-4 md:p-6 rounded-xl border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md">
-                                        <div class="flex items-start">
-                                            <div class="flex-shrink-0 bg-gradient-to-br from-primary/30 to-primary/50 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-gray-800 font-medium shadow-sm">
-                                                {comment.name
-                                                    ? comment.name
-                                                          .charAt(0)
-                                                          .toUpperCase()
-                                                    : "U"}
-                                            </div>
-                                            <div class="ml-2 sm:ml-3 md:ml-4 flex-1">
-                                                <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                                                    <h5 class="font-semibold text-gray-800 text-sm sm:text-base">
-                                                        {comment.name ||
-                                                            "Usuario anónimo"}
-                                                    </h5>
-                                                    <span class="text-xs bg-gray-100 text-gray-500 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full inline-block">
-                                                        {comment.created_at_formatted ||
-                                                            comment.formatted_date}
-                                                    </span>
-                                                </div>
-                                                <p class="mt-1.5 sm:mt-2 text-gray-600 whitespace-pre-line text-xs sm:text-sm md:text-base leading-relaxed">
-                                                    {comment.message ||
-                                                        "Sin contenido"}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div class="bg-white p-4 sm:p-6 md:p-8 rounded-xl border border-gray-100 shadow-sm text-center">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 mx-auto text-gray-300 mb-3 sm:mb-4"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke="currentColor"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="1.5"
-                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                                    />
-                                </svg>
-                                <h4 class="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2">
-                                    No hay comentarios todavía
-                                </h4>
-                                <p class="text-xs sm:text-sm md:text-base text-gray-500">
-                                    ¡Sé el primero en comentar este artículo!
-                                </p>
-                            </div>
-                        )
-                    }
-                </div>
             </div>
 
-            <!-- Espacio adicional al final de la página -->
-            <div class="py-16"></div>
+            <!-- Contenido principal del artículo optimizado para móviles -->
+            <div class="container mx-auto px-4 mt-5">
+                <div class="max-w-4xl mx-auto">
+                    <!-- Contenido principal con estilo mejorado para móviles -->
+                    <div class="prose prose-sm sm:prose-base lg:prose-lg max-w-none">
+                        ${generateContentHTML(article)}
+                    </div>
 
-            <script define:vars={{ API_CONFIG, articleId }}>
-                // Script de comentarios y carrusel de artículo
-                document.addEventListener("DOMContentLoaded", function () {
-                    // Inicializar carrusel de artículo
-                    initArticleCarousel();
+                    <!-- Pie del artículo con información de publicación con margen superior aumentado -->
+                    <div class="mt-10 pt-4 sm:pt-6 border-t border-gray-200 flex flex-col md:flex-row md:justify-between md:items-center">
+                        <div class="text-gray-500 text-xs sm:text-sm mb-5 md:mb-0">
+                            <p class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Última actualización: ${new Date(article.updated_at).toLocaleDateString("es-MX", { day: "numeric", month: "long", year: "numeric" })}
+                            </p>
+                        </div>
 
-                    // Script de comentarios
-                    const commentForm = document.getElementById("comment-form");
-                    const formStatus = document.getElementById("form-status");
-                    // Usar directamente el articleId pasado desde el servidor en lugar de intentar extraerlo de la URL
-                    // const articleId =
-                    //     new URLSearchParams(window.location.search).get("id") ||
-                    //     window.location.pathname
-                    //         .split("/")
-                    //         .filter(Boolean)
-                    //         .pop();
+                        <!-- Compartir en redes sociales con mejor área táctil -->
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-0">
+                            <span class="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-0 sm:mr-3">Compartir:</span>
+                            <div class="flex space-x-4">
+                                <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(window.location.href)}" target="_blank" rel="noopener noreferrer" class="bg-sky-500 hover:bg-sky-600 text-white p-2.5 rounded-full transition-colors w-10 h-10 sm:w-9 sm:h-9 flex items-center justify-center" aria-label="Compartir en Twitter">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
+                                    </svg>
+                                </a>
+                                <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(article.title + " " + window.location.href)}" target="_blank" rel="noopener noreferrer" class="bg-green-500 hover:bg-green-600 text-white p-2.5 rounded-full transition-colors w-10 h-10 sm:w-9 sm:h-9 flex items-center justify-center" aria-label="Compartir en WhatsApp">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
 
-                    if (commentForm) {
-                        commentForm.addEventListener(
-                            "submit",
-                            async function (e) {
-                                e.preventDefault();
+                    <!-- Sección de comentarios mejorada para móviles con margen superior aumentado -->
+                    <div class="mt-10">
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mb-5 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                            </svg>
+                            Comentarios
+                        </h3>
 
-                                // Obtener los valores del formulario
-                                const authorNameEl =
-                                    document.getElementById("name");
-                                const authorEmailEl =
-                                    document.getElementById("email");
-                                const contentEl =
-                                    document.getElementById("message");
+                        <!-- Formulario de comentarios mejorado para móvil con margen inferior aumentado -->
+                        <div class="bg-gray-50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-8 mb-10 shadow-sm border border-gray-100">
+                            <h4 class="text-base sm:text-lg font-semibold mb-5 text-gray-800">
+                                ¿Qué opinas sobre este artículo?
+                            </h4>
 
-                                if (
-                                    !authorNameEl ||
-                                    !authorEmailEl ||
-                                    !contentEl
-                                ) {
-                                    console.error(
-                                        "No se pudieron encontrar los campos del formulario",
-                                    );
-                                    return;
-                                }
+                            <form id="comment-form">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6 mb-5">
+                                    <div>
+                                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                                        <input type="text" id="name" name="name" class="w-full px-3 sm:px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm text-sm sm:text-base" placeholder="Tu nombre" required />
+                                    </div>
+                                    <div>
+                                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                        <input type="email" id="email" name="email" class="w-full px-3 sm:px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm text-sm sm:text-base" placeholder="Tu email" required />
+                                    </div>
+                                </div>
+                                <div class="mb-5">
+                                    <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Comentario</label>
+                                    <textarea id="message" name="message" rows="4" class="w-full px-3 sm:px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white shadow-sm text-sm sm:text-base" placeholder="Escribe tu comentario aquí..." required></textarea>
+                                </div>
+                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                    <div id="form-status" class="text-xs sm:text-sm order-2 sm:order-1"></div>
+                                    <button type="submit" class="bg-[#2e8d80] hover:bg-[#2e8d80]/90 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#2e8d80] focus:ring-offset-2 font-medium text-sm sm:text-base w-full sm:w-auto order-1 sm:order-2 hover:shadow-lg">
+                                        Enviar comentario
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
 
-                                // Usar una solución alternativa a 'as HTMLInputElement' para evitar errores de TypeScript
-                                const authorName =
-                                    authorNameEl && authorNameEl.value
-                                        ? authorNameEl.value
-                                        : "";
-                                const authorEmail =
-                                    authorEmailEl && authorEmailEl.value
-                                        ? authorEmailEl.value
-                                        : "";
-                                const content =
-                                    contentEl && contentEl.value
-                                        ? contentEl.value
-                                        : "";
+                        <!-- Lista de comentarios optimizada para móvil -->
+                        ${generateCommentsSection(article)}
+                    </div>
+                </div>
 
-                                // Actualizar el estado del formulario
-                                if (formStatus) {
-                                    formStatus.innerHTML =
-                                        '<span class="text-blue-500">Enviando comentario...</span>';
-                                }
+                <!-- Espacio adicional al final de la página -->
+                <div class="py-16"></div>
+            </div>
+        `;
+        }
 
-                                try {
-                                    // Preparar los datos con el formato exacto que espera el backend
-                                    const commentData = {
-                                        name: authorName,
-                                        email: authorEmail,
-                                        message: content,
-                                    };
+        // Función para generar el HTML de la sección de imágenes
+        function generateImagesSection(article) {
+            if (article.images && article.images.length > 1) {
+                // Carrusel de imágenes
+                const imagesHTML = article.images
+                    .map(
+                        (image, index) => `
+                <div class="min-w-full h-full flex-shrink-0 relative">
+                    <img src="${image.url}" alt="${article.title} - imagen ${index + 1}" class="w-full h-full object-cover" loading="${index === 0 ? "eager" : "lazy"}" width="800" height="500" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
+                </div>
+            `,
+                    )
+                    .join("");
 
-                                    // URL para enviar comentarios - usando una construcción más segura
-                                    let commentEndpoint;
-                                    try {
-                                        if (
-                                            typeof API_CONFIG.ENDPOINTS
-                                                .ARTICLE_COMMENTS === "function"
-                                        ) {
-                                            commentEndpoint = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ARTICLE_COMMENTS(articleId)}`;
-                                        } else {
-                                            // Fallback en caso de que la función no esté disponible
-                                            commentEndpoint = `${API_CONFIG.BASE_URL}articles/${articleId}/comments`;
-                                        }
-                                    } catch (error) {
-                                        console.error(
-                                            "Error al construir el endpoint:",
-                                            error,
-                                        );
-                                        // Fallback en caso de error
-                                        commentEndpoint = `${API_CONFIG.BASE_URL}articles/${articleId}/comments`;
-                                    }
+                const dotsHTML = article.images
+                    .map(
+                        (_, index) => `
+                <button class="article-carousel-dot w-3 h-3 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${index === 0 ? "bg-white" : "bg-white bg-opacity-50 hover:bg-opacity-75"}" data-slide="${index}" aria-label="Ir a imagen ${index + 1}"></button>
+            `,
+                    )
+                    .join("");
 
-                                    console.log(
-                                        "Enviando comentario a:",
-                                        commentEndpoint,
-                                    );
-                                    console.log(
-                                        "Datos del comentario:",
-                                        commentData,
-                                    );
+                const thumbnailsHTML = article.images
+                    .map(
+                        (image, index) => `
+                <button class="article-thumbnail flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${index === 0 ? "border-primary" : "border-gray-200 hover:border-gray-300"}" data-slide="${index}">
+                    <img src="${image.url}" alt="Miniatura ${index + 1}" class="w-full h-full object-cover" loading="lazy" />
+                </button>
+            `,
+                    )
+                    .join("");
 
-                                    const response = await fetch(
-                                        commentEndpoint,
-                                        {
-                                            method: "POST",
-                                            headers: {
-                                                "Content-Type":
-                                                    "application/json",
-                                                Accept: "application/json",
-                                            },
-                                            body: JSON.stringify(commentData),
-                                        },
-                                    );
+                return `
+                <div class="relative rounded-xl overflow-hidden shadow-lg">
+                    <!-- Contenedor principal del carrusel -->
+                    <div class="relative h-64 sm:h-80 md:h-96 lg:h-[500px]">
+                        <!-- Track de imágenes -->
+                        <div id="article-carousel-track" class="flex transition-transform duration-500 ease-in-out h-full" style="transform: translateX(0%)">
+                            ${imagesHTML}
+                        </div>
 
-                                    console.log(
-                                        "Estado de la respuesta:",
-                                        response.status,
-                                        response.statusText,
-                                    );
+                        <!-- Controles de navegación -->
+                        <button id="article-carousel-prev" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-60 hover:bg-opacity-80 text-white rounded-full p-3 transition-all duration-200 z-10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50" aria-label="Imagen anterior">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
 
-                                    let resultText = "";
-                                    try {
-                                        const result = await response.json();
-                                        console.log(
-                                            "Respuesta completa de la API:",
-                                            result,
-                                        );
-                                        resultText = JSON.stringify(
-                                            result,
-                                            null,
-                                            2,
-                                        );
+                        <button id="article-carousel-next" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-60 hover:bg-opacity-80 text-white rounded-full p-3 transition-all duration-200 z-10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50" aria-label="Imagen siguiente">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
 
-                                        if (response.ok && formStatus) {
-                                            // Mostrar mensaje de éxito
-                                            formStatus.innerHTML = `
-                                                <div class="p-4 bg-green-50 text-green-700 rounded-lg mb-4">
-                                                    <p class="font-medium">¡Comentario enviado con éxito!</p>
-                                                    <p class="text-sm mt-1">Tu comentario aparecerá después de ser revisado.</p>
-                                                    <details class="mt-3">
-                                                        <summary class="cursor-pointer text-xs text-green-600">Ver detalles de respuesta</summary>
-                                                        <pre class="mt-2 p-2 bg-gray-50 rounded text-xs overflow-auto max-h-40">${resultText}</pre>
-                                                    </details>
-                                                </div>
-                                            `;
+                        <!-- Indicadores de puntos -->
+                        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+                            ${dotsHTML}
+                        </div>
 
-                                            // Limpiar el formulario
-                                            if (
-                                                commentForm instanceof
-                                                HTMLFormElement
-                                            ) {
-                                                commentForm.reset();
-                                            }
+                        <!-- Contador de imágenes -->
+                        <div class="absolute top-4 right-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm z-10">
+                            <span id="article-current-slide">1</span> / <span id="article-total-slides">${article.images.length}</span>
+                        </div>
+                    </div>
 
-                                            // Opcional: recargar la página después de un breve retraso
-                                            setTimeout(() => {
-                                                window.location.reload();
-                                            }, 3000);
-                                        } else if (formStatus) {
-                                            // Mostrar mensaje de error
-                                            const errorMessage =
-                                                result.message ||
-                                                "Hubo un error al enviar el comentario. Por favor, intenta de nuevo.";
-                                            formStatus.innerHTML = `
-                                                <div class="p-4 bg-red-50 text-red-700 rounded-lg mb-4">
-                                                    <p class="font-medium">Error al enviar el comentario</p>
-                                                    <p class="text-sm mt-1">${errorMessage}</p>
-                                                    <details class="mt-3">
-                                                        <summary class="cursor-pointer text-xs text-red-600">Ver detalles del error</summary>
-                                                        <pre class="mt-2 p-2 bg-gray-50 rounded text-xs overflow-auto max-h-40">${resultText}</pre>
-                                                    </details>
-                                                </div>
-                                            `;
-                                        }
-                                    } catch (jsonError) {
-                                        console.error(
-                                            "Error al procesar la respuesta JSON:",
-                                            jsonError,
-                                        );
-                                        // Si no se puede parsear la respuesta como JSON
-                                        const responseText =
-                                            await response.text();
-                                        if (formStatus) {
-                                            formStatus.innerHTML = `
-                                                <div class="p-4 bg-red-50 text-red-700 rounded-lg mb-4">
-                                                    <p class="font-medium">Error al procesar la respuesta</p>
-                                                    <p class="text-sm mt-1">No se pudo interpretar la respuesta del servidor.</p>
-                                                    <details class="mt-3">
-                                                        <summary class="cursor-pointer text-xs text-red-600">Ver respuesta del servidor</summary>
-                                                        <pre class="mt-2 p-2 bg-gray-50 rounded text-xs overflow-auto max-h-40">${responseText}</pre>
-                                                    </details>
-                                                </div>
-                                            `;
-                                        }
-                                    }
-                                } catch (error) {
-                                    console.error(
-                                        "Error en la solicitud:",
-                                        error,
-                                    );
-                                    if (formStatus) {
-                                        formStatus.innerHTML = `
-                                            <div class="p-4 bg-red-50 text-red-700 rounded-lg mb-4">
-                                                <p class="font-medium">Error de conexión</p>
-                                                <p class="text-sm mt-1">No se pudo conectar con el servidor. Verifica tu conexión a internet.</p>
-                                            </div>
-                                        `;
-                                    }
-                                }
-                            },
+                    <!-- Miniaturas (opcional, solo en pantallas grandes) -->
+                    <div class="hidden md:block mt-4">
+                        <div class="flex space-x-2 overflow-x-auto pb-2">
+                            ${thumbnailsHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+            } else {
+                // Imagen simple
+                return `
+                <div class="rounded-xl overflow-hidden shadow-lg">
+                    <img src="${article.featured_image}" alt="${article.title}" class="w-full h-auto object-cover" loading="eager" width="800" height="500" />
+                </div>
+            `;
+            }
+        }
+
+        // Función para generar el HTML del contenido del artículo
+        function generateContentHTML(article) {
+            if (!article.content || article.content.length === 0) {
+                return '<p class="text-gray-600">Este artículo no tiene contenido disponible.</p>';
+            }
+
+            // Si tenemos el contenido ya formateado como HTML, usarlo directamente
+            if (article.content_html) {
+                return `<div class="article-content space-y-5">${article.content_html}</div>`;
+            }
+
+            // De lo contrario, procesamos el contenido por tipo
+            return article.content
+                .map((item) => {
+                    if (item.type === "heading") {
+                        return `<h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mt-10 sm:mt-14 mb-5 sm:mb-8 pb-2 border-b border-gray-200">${item.content}</h2>`;
+                    } else if (item.type === "subtitle") {
+                        return `<h3 class="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-700 mt-8 sm:mt-10 mb-5 sm:mb-6">${item.content}</h3>`;
+                    } else if (item.type === "paragraph") {
+                        return `<p class="mb-5 sm:mb-8 text-gray-600 leading-relaxed text-base sm:text-lg lg:text-xl">${item.content}</p>`;
+                    } else if (item.type === "quote") {
+                        return `
+                    <blockquote class="my-8 sm:my-10 mx-auto text-center px-4 sm:px-6 py-6 sm:py-8 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg border-l-4 border-primary shadow-sm relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 sm:h-10 sm:w-10 text-primary/30 absolute top-3 left-3 opacity-70" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                        </svg>
+                        <div class="text-gray-800 italic text-lg sm:text-xl lg:text-2xl font-serif ml-4 sm:ml-6 relative z-10">
+                            "${item.content}"
+                        </div>
+                    </blockquote>
+                `;
+                    } else if (item.type === "list") {
+                        const listItems = item.content
+                            .split("\n")
+                            .map(
+                                (listItem) =>
+                                    `<li class="mb-2 sm:mb-3 text-base sm:text-lg lg:text-xl">${listItem.trim()}</li>`,
+                            )
+                            .join("");
+
+                        return `
+                    <ul class="list-disc pl-5 sm:pl-6 mb-8 sm:mb-10 space-y-2 sm:space-y-3 text-gray-600">
+                        ${listItems}
+                    </ul>
+                `;
+                    } else {
+                        return `<p class="mb-5 sm:mb-8 text-gray-600 text-base sm:text-lg lg:text-xl">${item.content}</p>`;
+                    }
+                })
+                .join("");
+        }
+
+        // Función para generar el HTML de la sección de comentarios
+        function generateCommentsSection(article) {
+            if (article.comments && article.comments.length > 0) {
+                const commentsHTML = article.comments
+                    .map(
+                        (comment) => `
+                <div class="bg-white p-3 sm:p-4 md:p-6 rounded-xl border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 bg-gradient-to-br from-primary/30 to-primary/50 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-gray-800 font-medium shadow-sm">
+                            ${comment.name ? comment.name.charAt(0).toUpperCase() : "U"}
+                        </div>
+                        <div class="ml-2 sm:ml-3 md:ml-4 flex-1">
+                            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                <h5 class="font-semibold text-gray-800 text-sm sm:text-base">
+                                    ${comment.name || "Usuario anónimo"}
+                                </h5>
+                                <span class="text-xs bg-gray-100 text-gray-500 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full inline-block">
+                                    ${comment.created_at_formatted || comment.formatted_date}
+                                </span>
+                            </div>
+                            <p class="mt-0.5 sm:mt-1 text-gray-600 whitespace-pre-line text-xs sm:text-sm md:text-base leading-relaxed">
+                                ${comment.message || "Sin contenido"}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `,
+                    )
+                    .join("");
+
+                return `<div class="space-y-3 sm:space-y-4 md:space-y-6">${commentsHTML}</div>`;
+            } else {
+                return `
+                <div class="bg-white p-4 sm:p-6 md:p-8 rounded-xl border border-gray-100 shadow-sm text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 mx-auto text-gray-300 mb-3 sm:mb-4" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <h4 class="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-1 sm:mb-2">
+                        No hay comentarios todavía
+                    </h4>
+                    <p class="text-xs sm:text-sm md:text-base text-gray-500">
+                        ¡Sé el primero en comentar este artículo!
+                    </p>
+                </div>
+            `;
+            }
+        }
+
+        // Función para inicializar el carrusel del artículo
+        function initArticleCarousel() {
+            const track = document.getElementById("article-carousel-track");
+            const prevButton = document.getElementById("article-carousel-prev");
+            const nextButton = document.getElementById("article-carousel-next");
+            const dots = document.querySelectorAll(".article-carousel-dot");
+            const thumbnails = document.querySelectorAll(".article-thumbnail");
+            const currentSlideEl = document.getElementById(
+                "article-current-slide",
+            );
+            const totalSlidesEl = document.getElementById(
+                "article-total-slides",
+            );
+
+            if (!track) return; // No hay carrusel en este artículo
+
+            let currentSlide = 0;
+            const totalSlides = dots.length;
+
+            // Función para actualizar el carrusel
+            function updateCarousel() {
+                if (!track) return;
+
+                const translateX = -currentSlide * 100;
+                track.style.transform = `translateX(${translateX}%)`;
+
+                // Actualizar indicadores de puntos
+                dots.forEach((dot, index) => {
+                    if (index === currentSlide) {
+                        dot.className = dot.className.replace(
+                            "bg-white bg-opacity-50",
+                            "bg-white",
+                        );
+                    } else {
+                        dot.className = dot.className.replace(
+                            "bg-white",
+                            "bg-white bg-opacity-50",
                         );
                     }
                 });
 
-                // Función para inicializar el carrusel del artículo
-                function initArticleCarousel() {
-                    const track = document.getElementById("article-carousel-track");
-                    const prevButton = document.getElementById("article-carousel-prev");
-                    const nextButton = document.getElementById("article-carousel-next");
-                    const dots = document.querySelectorAll(".article-carousel-dot");
-                    const thumbnails = document.querySelectorAll(".article-thumbnail");
-                    const currentSlideEl = document.getElementById("article-current-slide");
-                    const totalSlidesEl = document.getElementById("article-total-slides");
-
-                    if (!track) return; // No hay carrusel en este artículo
-
-                    let currentSlide = 0;
-                    const totalSlides = dots.length;
-
-                    // Función para actualizar el carrusel
-                    function updateCarousel() {
-                        if (!track) return;
-                        
-                        const translateX = -currentSlide * 100;
-                        track.style.transform = `translateX(${translateX}%)`;
-                        
-                        // Actualizar indicadores de puntos
-                        dots.forEach((dot, index) => {
-                            if (index === currentSlide) {
-                                dot.className = dot.className.replace('bg-white bg-opacity-50', 'bg-white');
-                            } else {
-                                dot.className = dot.className.replace('bg-white', 'bg-white bg-opacity-50');
-                            }
-                        });
-
-                        // Actualizar miniaturas
-                        thumbnails.forEach((thumb, index) => {
-                            if (index === currentSlide) {
-                                thumb.className = thumb.className.replace('border-gray-200', 'border-primary');
-                            } else {
-                                thumb.className = thumb.className.replace('border-primary', 'border-gray-200');
-                            }
-                        });
-
-                        // Actualizar contador
-                        if (currentSlideEl) {
-                            currentSlideEl.textContent = (currentSlide + 1).toString();
-                        }
+                // Actualizar miniaturas
+                thumbnails.forEach((thumb, index) => {
+                    if (index === currentSlide) {
+                        thumb.className = thumb.className.replace(
+                            "border-gray-200",
+                            "border-primary",
+                        );
+                    } else {
+                        thumb.className = thumb.className.replace(
+                            "border-primary",
+                            "border-gray-200",
+                        );
                     }
+                });
 
-                    // Función para ir a la siguiente imagen
-                    function nextSlide() {
-                        currentSlide = (currentSlide + 1) % totalSlides;
-                        updateCarousel();
-                    }
-
-                    // Función para ir a la imagen anterior
-                    function prevSlide() {
-                        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-                        updateCarousel();
-                    }
-
-                    // Función para ir a una imagen específica
-                    function goToSlide(index) {
-                        currentSlide = index;
-                        updateCarousel();
-                    }
-
-                    // Event listeners para botones de navegación
-                    if (nextButton) {
-                        nextButton.addEventListener("click", nextSlide);
-                    }
-
-                    if (prevButton) {
-                        prevButton.addEventListener("click", prevSlide);
-                    }
-
-                    // Event listeners para indicadores de puntos
-                    dots.forEach((dot, index) => {
-                        dot.addEventListener("click", () => goToSlide(index));
-                    });
-
-                    // Event listeners para miniaturas
-                    thumbnails.forEach((thumb, index) => {
-                        thumb.addEventListener("click", () => goToSlide(index));
-                    });
-
-                    // Soporte para navegación por teclado
-                    document.addEventListener("keydown", (e) => {
-                        if (e.key === "ArrowLeft") {
-                            prevSlide();
-                        } else if (e.key === "ArrowRight") {
-                            nextSlide();
-                        }
-                    });
-
-                    // Auto-play opcional (comentado por defecto)
-                    let autoPlayInterval;
-                    
-                    function startAutoPlay() {
-                        autoPlayInterval = setInterval(nextSlide, 5000); // Cambiar cada 5 segundos
-                    }
-
-                    function stopAutoPlay() {
-                        clearInterval(autoPlayInterval);
-                    }
-
-                    // Pausar auto-play al hacer hover
-                    if (track.parentElement) {
-                        track.parentElement.addEventListener("mouseenter", stopAutoPlay);
-                        track.parentElement.addEventListener("mouseleave", startAutoPlay);
-                    }
-
-                    // Iniciar auto-play
-                    startAutoPlay();
-
-                    // Soporte para gestos táctiles en móviles
-                    let touchStartX = 0;
-                    let touchEndX = 0;
-
-                    function handleTouch() {
-                        if (touchEndX < touchStartX - 50) {
-                            nextSlide(); // Deslizar hacia la izquierda = siguiente
-                        }
-                        if (touchEndX > touchStartX + 50) {
-                            prevSlide(); // Deslizar hacia la derecha = anterior
-                        }
-                    }
-
-                    if (track) {
-                        track.addEventListener("touchstart", (e) => {
-                            touchStartX = e.changedTouches[0].screenX;
-                        });
-
-                        track.addEventListener("touchend", (e) => {
-                            touchEndX = e.changedTouches[0].screenX;
-                            handleTouch();
-                        });
-                    }
-
-                    // Inicializar carrusel
-                    updateCarousel();
+                // Actualizar contador
+                if (currentSlideEl) {
+                    currentSlideEl.textContent = (currentSlide + 1).toString();
                 }
-            </script>
-        </div>
-    </article></GeneralLayout
->
+            }
+
+            // Función para ir a la siguiente imagen
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateCarousel();
+            }
+
+            // Función para ir a la imagen anterior
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                updateCarousel();
+            }
+
+            // Función para ir a una imagen específica
+            function goToSlide(index) {
+                currentSlide = index;
+                updateCarousel();
+            }
+
+            // Event listeners para botones de navegación
+            if (nextButton) {
+                nextButton.addEventListener("click", nextSlide);
+            }
+
+            if (prevButton) {
+                prevButton.addEventListener("click", prevSlide);
+            }
+
+            // Event listeners para indicadores de puntos
+            dots.forEach((dot, index) => {
+                dot.addEventListener("click", () => goToSlide(index));
+            });
+
+            // Event listeners para miniaturas
+            thumbnails.forEach((thumb, index) => {
+                thumb.addEventListener("click", () => goToSlide(index));
+            });
+
+            // Soporte para navegación por teclado
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "ArrowLeft") {
+                    prevSlide();
+                } else if (e.key === "ArrowRight") {
+                    nextSlide();
+                }
+            });
+
+            // Auto-play opcional
+            let autoPlayInterval;
+
+            function startAutoPlay() {
+                autoPlayInterval = setInterval(nextSlide, 5000); // Cambiar cada 5 segundos
+            }
+
+            function stopAutoPlay() {
+                clearInterval(autoPlayInterval);
+            }
+
+            // Pausar auto-play al hacer hover
+            if (track.parentElement) {
+                track.parentElement.addEventListener(
+                    "mouseenter",
+                    stopAutoPlay,
+                );
+                track.parentElement.addEventListener(
+                    "mouseleave",
+                    startAutoPlay,
+                );
+            }
+
+            // Iniciar auto-play
+            startAutoPlay();
+
+            // Soporte para gestos táctiles en móviles
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            function handleTouch() {
+                if (touchEndX < touchStartX - 50) {
+                    nextSlide(); // Deslizar hacia la izquierda = siguiente
+                }
+                if (touchEndX > touchStartX + 50) {
+                    prevSlide(); // Deslizar hacia la derecha = anterior
+                }
+            }
+
+            if (track) {
+                track.addEventListener("touchstart", (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                });
+
+                track.addEventListener("touchend", (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleTouch();
+                });
+            }
+
+            // Inicializar carrusel
+            updateCarousel();
+        }
+
+        // Función para inicializar el formulario de comentarios
+        function initCommentForm(articleId) {
+            const commentForm = document.getElementById("comment-form");
+            const formStatus = document.getElementById("form-status");
+
+            if (commentForm) {
+                commentForm.addEventListener("submit", async function (e) {
+                    e.preventDefault();
+
+                    // Obtener los valores del formulario
+                    const authorNameEl = document.getElementById("name");
+                    const authorEmailEl = document.getElementById("email");
+                    const contentEl = document.getElementById("message");
+
+                    if (!authorNameEl || !authorEmailEl || !contentEl) {
+                        console.error(
+                            "No se pudieron encontrar los campos del formulario",
+                        );
+                        return;
+                    }
+
+                    const authorName = authorNameEl.value || "";
+                    const authorEmail = authorEmailEl.value || "";
+                    const content = contentEl.value || "";
+
+                    // Actualizar el estado del formulario
+                    if (formStatus) {
+                        formStatus.innerHTML =
+                            '<span class="text-blue-500">Enviando comentario...</span>';
+                    }
+
+                    try {
+                        // Preparar los datos con el formato exacto que espera el backend
+                        const commentData = {
+                            name: authorName,
+                            email: authorEmail,
+                            message: content,
+                        };
+
+                        // URL para enviar comentarios
+                        let commentEndpoint;
+                        try {
+                            if (
+                                typeof API_CONFIG.ENDPOINTS.ARTICLE_COMMENTS ===
+                                "function"
+                            ) {
+                                commentEndpoint = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ARTICLE_COMMENTS(articleId)}`;
+                            } else {
+                                commentEndpoint = `${API_CONFIG.BASE_URL}articles/${articleId}/comments`;
+                            }
+                        } catch (error) {
+                            console.error(
+                                "Error al construir el endpoint:",
+                                error,
+                            );
+                            commentEndpoint = `${API_CONFIG.BASE_URL}articles/${articleId}/comments`;
+                        }
+
+                        console.log("Enviando comentario a:", commentEndpoint);
+                        console.log("Datos del comentario:", commentData);
+
+                        const response = await fetch(commentEndpoint, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Accept: "application/json",
+                            },
+                            body: JSON.stringify(commentData),
+                        });
+
+                        console.log(
+                            "Estado de la respuesta:",
+                            response.status,
+                            response.statusText,
+                        );
+
+                        let resultText = "";
+                        try {
+                            const result = await response.json();
+                            console.log(
+                                "Respuesta completa de la API:",
+                                result,
+                            );
+                            resultText = JSON.stringify(result, null, 2);
+
+                            if (response.ok && formStatus) {
+                                // Mostrar mensaje de éxito
+                                formStatus.innerHTML = `
+                                <div class="p-4 bg-green-50 text-green-700 rounded-lg mb-4">
+                                    <p class="font-medium">¡Comentario enviado con éxito!</p>
+                                    <p class="text-sm mt-1">Tu comentario aparecerá después de ser revisado.</p>
+                                    <details class="mt-3">
+                                        <summary class="cursor-pointer text-xs text-green-600">Ver detalles de respuesta</summary>
+                                        <pre class="mt-2 p-2 bg-gray-50 rounded text-xs overflow-auto max-h-40">${resultText}</pre>
+                                    </details>
+                                </div>
+                            `;
+
+                                // Limpiar el formulario
+                                if (commentForm instanceof HTMLFormElement) {
+                                    commentForm.reset();
+                                }
+
+                                // Opcional: recargar la página después de un breve retraso
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 3000);
+                            } else if (formStatus) {
+                                // Mostrar mensaje de error
+                                const errorMessage =
+                                    result.message ||
+                                    "Hubo un error al enviar el comentario. Por favor, intenta de nuevo.";
+                                formStatus.innerHTML = `
+                                <div class="p-4 bg-red-50 text-red-700 rounded-lg mb-4">
+                                    <p class="font-medium">Error al enviar el comentario</p>
+                                    <p class="text-sm mt-1">${errorMessage}</p>
+                                    <details class="mt-3">
+                                        <summary class="cursor-pointer text-xs text-red-600">Ver detalles del error</summary>
+                                        <pre class="mt-2 p-2 bg-gray-50 rounded text-xs overflow-auto max-h-40">${resultText}</pre>
+                                    </details>
+                                </div>
+                            `;
+                            }
+                        } catch (jsonError) {
+                            console.error(
+                                "Error al procesar la respuesta JSON:",
+                                jsonError,
+                            );
+                            // Si no se puede parsear la respuesta como JSON
+                            const responseText = await response.text();
+                            if (formStatus) {
+                                formStatus.innerHTML = `
+                                <div class="p-4 bg-red-50 text-red-700 rounded-lg mb-4">
+                                    <p class="font-medium">Error al procesar la respuesta</p>
+                                    <p class="text-sm mt-1">No se pudo interpretar la respuesta del servidor.</p>
+                                    <details class="mt-3">
+                                        <summary class="cursor-pointer text-xs text-red-600">Ver respuesta del servidor</summary>
+                                        <pre class="mt-2 p-2 bg-gray-50 rounded text-xs overflow-auto max-h-40">${responseText}</pre>
+                                    </details>
+                                </div>
+                            `;
+                            }
+                        }
+                    } catch (error) {
+                        console.error("Error en la solicitud:", error);
+                        if (formStatus) {
+                            formStatus.innerHTML = `
+                            <div class="p-4 bg-red-50 text-red-700 rounded-lg mb-4">
+                                <p class="font-medium">Error de conexión</p>
+                                <p class="text-sm mt-1">No se pudo conectar con el servidor. Verifica tu conexión a internet.</p>
+                            </div>
+                        `;
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</GeneralLayout>

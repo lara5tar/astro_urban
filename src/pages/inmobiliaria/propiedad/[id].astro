@@ -192,14 +192,19 @@ const currentPropertyId = propertyId || id;
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <div class="bg-white mb-5">
-                                    <h2 class="text-xl md:text-2xl font-bold uppercase text-gray-800 text-center mb-4 border border-gray-800 py-2">
-                                        UBICACIÓN
-                                    </h2>
-                                    <p class="text-lg md:text-xl text-center">
-                                        ${property.location?.line1 || "Dirección no disponible"}<br/>
-                                        ${property.location?.line2 || ""}<br/>
-                                        ${property.location?.line3 || ""}
-                                    </p>
+                                    <a href="${property.google_maps_url || "#"}" target="_blank" rel="noopener noreferrer" class="block hover:opacity-90 transition-opacity">
+                                        <h2 class="text-xl md:text-2xl font-bold uppercase text-gray-800 text-center mb-4 border border-gray-800 py-2 hover:bg-gray-100 transition-colors flex items-center justify-center">
+                                            UBICACIÓN
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                            </svg>
+                                        </h2>
+                                        <div class="text-lg md:text-xl text-center">
+                                            ${property.location?.line1 || "Dirección no disponible"}<br/>
+                                            ${property.location?.line2 || ""}<br/>
+                                            ${property.location?.line3 || ""}
+                                        </div>
+                                    </a>
                                 </div>
                                 <div class="bg-white">
                                     <h2 class="text-xl md:text-2xl font-bold uppercase text-gray-800 text-center mb-4 border border-gray-800 py-2">

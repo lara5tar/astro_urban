@@ -330,9 +330,14 @@ const initialMeta = { current_page: 1, last_page: 1 };
 
         // Crear elemento HTML para un artículo
         function createArticleElement(article) {
+            // Crear el enlace contenedor que envuelve toda la tarjeta
+            const articleLink = document.createElement("a");
+            articleLink.href = `/blog/article?id=${article.id}`;
+            articleLink.className = "block h-full";
+
             const articleCard = document.createElement("div");
             articleCard.className =
-                "bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 hover:translate-y-[-5px] flex flex-col h-full";
+                "bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 hover:translate-y-[-5px] flex flex-col h-full cursor-pointer";
 
             // Imagen destacada o carrusel de imágenes
             const imageContainer = document.createElement("div");
@@ -578,50 +583,12 @@ const initialMeta = { current_page: 1, last_page: 1 };
                 article.description || "Sin descripción disponible";
             contentDiv.appendChild(description);
 
-            // Footer con etiquetas y botón de leer más - mejor espacio para tocar
-            const footerDiv = document.createElement("div");
-            footerDiv.className =
-                "mt-auto pt-3 sm:pt-4 flex flex-wrap items-center justify-between border-t border-gray-100";
-
-            // Crear un div espaciador para mantener el layout
-            const spacerDiv = document.createElement("div");
-            spacerDiv.className = "flex-grow";
-            footerDiv.appendChild(spacerDiv);
-
-            // Enlace "Leer más" con área de toque mejorada
-            const link = document.createElement("a");
-            link.href = `/blog/article?id=${article.id}`;
-            link.className =
-                "inline-flex items-center text-primary text-sm font-medium hover:text-primary/80 transition-colors py-1 px-1";
-            link.textContent = "Leer más";
-
-            const svg = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "svg",
-            );
-            svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-            svg.setAttribute("class", "h-4 w-4 ml-1");
-            svg.setAttribute("fill", "none");
-            svg.setAttribute("viewBox", "0 0 24 24");
-            svg.setAttribute("stroke", "currentColor");
-
-            const path = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "path",
-            );
-            path.setAttribute("stroke-linecap", "round");
-            path.setAttribute("stroke-linejoin", "round");
-            path.setAttribute("stroke-width", "2");
-            path.setAttribute("d", "M14 5l7 7m0 0l-7 7m7-7H3");
-
-            svg.appendChild(path);
-            link.appendChild(svg);
-            footerDiv.appendChild(link);
-
-            contentDiv.appendChild(footerDiv);
             articleCard.appendChild(contentDiv);
 
-            return articleCard;
+            // Envolver la tarjeta en el enlace
+            articleLink.appendChild(articleCard);
+
+            return articleLink;
         }
 
         // Renderizar controles de paginación
